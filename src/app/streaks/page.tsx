@@ -19,7 +19,7 @@ import {
   ArrowLeft
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
 // Make this a dynamic route to prevent static generation
@@ -55,8 +55,6 @@ const DAYS = [
 export default function StreaksPage() {
   const { user, loading: authLoading } = useAuth()
   const router = useRouter()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [supabase, setSupabase] = useState<any>(null)
   
   const [habits, setHabits] = useState<Habit[]>([])
   const [todayCompletions, setTodayCompletions] = useState<string[]>([])
@@ -77,23 +75,14 @@ export default function StreaksPage() {
     sunday: false
   })
 
-  // Initialize Supabase client
-  useEffect(() => {
-    try {
-      const client = createClientComponentClient()
-      setSupabase(client)
-    } catch (error) {
-      console.error('Error initializing Supabase:', error)
-    }
-  }, [])
-
   const loadHabits = useCallback(async () => {
-    if (!supabase) return
+    if (!user) return
     
     try {
       const { data, error } = await supabase
         .from('habits')
         .select('*')
+        .eq('user_id', user.id)
         .eq('is_active', true)
         .order('created_at', { ascending: false })
 
@@ -104,11 +93,9 @@ export default function StreaksPage() {
     } finally {
       setLoading(false)
     }
-  }, [supabase])
+  }, [user])
 
   const loadTodayCompletions = useCallback(async () => {
-    if (!supabase) return
-    
     try {
       const today = new Date().toISOString().split('T')[0]
       const { data, error } = await supabase
@@ -122,7 +109,7 @@ export default function StreaksPage() {
     } catch (error) {
       console.error('Error loading today\'s completions:', error)
     }
-  }, [supabase])
+  }, [])
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -133,16 +120,16 @@ export default function StreaksPage() {
 
   // Load habits and today's completions
   useEffect(() => {
-    if (user && supabase) {
+    if (user) {
       loadHabits()
       loadTodayCompletions()
     }
-  }, [user, supabase, loadHabits, loadTodayCompletions])
+  }, [user, loadHabits, loadTodayCompletions])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!formData.name.trim() || !supabase) return
+    if (!formData.name.trim() || !user) return
 
     try {
       if (editingHabit) {
@@ -159,15 +146,24 @@ export default function StreaksPage() {
         if (error) throw error
       } else {
         // Create new habit
-        const { error } = await supabase
+        console.log('Creating habit with user_id:', user.id)
+        const habitData = {
+          user_id: user.id,
+          name: formData.name,
+          description: formData.description,
+          ...Object.fromEntries(DAYS.map(day => [day.key, formData[day.key as keyof typeof formData]]))
+        }
+        console.log('Habit data:', habitData)
+        
+        const { data, error } = await supabase
           .from('habits')
-          .insert({
-            name: formData.name,
-            description: formData.description,
-            ...Object.fromEntries(DAYS.map(day => [day.key, formData[day.key as keyof typeof formData]]))
-          })
+          .insert(habitData)
 
-        if (error) throw error
+        if (error) {
+          console.error('Supabase error details:', error)
+          throw error
+        }
+        console.log('Habit created successfully:', data)
       }
 
       // Reset form
@@ -187,12 +183,11 @@ export default function StreaksPage() {
       loadHabits()
     } catch (error) {
       console.error('Error saving habit:', error)
+      console.error('Error details:', JSON.stringify(error, null, 2))
     }
   }
 
   const toggleCompletion = async (habitId: string) => {
-    if (!supabase) return
-    
     const today = new Date().toISOString().split('T')[0]
     const isCompleted = todayCompletions.includes(habitId)
 
@@ -226,7 +221,7 @@ export default function StreaksPage() {
   }
 
   const deleteHabit = async (habitId: string) => {
-    if (!confirm('Are you sure you want to delete this habit?') || !supabase) return
+    if (!confirm('Are you sure you want to delete this habit?')) return
 
     try {
       const { error } = await supabase
