@@ -581,29 +581,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Link Section */}
-      <section className="py-16 bg-white border-t border-gray-100">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-            Want to Know Our Story?
-          </h3>
-          <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
-            Learn more about what RepentDaily is, why we built it, and our mission to help people grow in all four areas of life.
-          </p>
-          <Button 
-            asChild 
-            variant="outline"
-            size="lg"
-            className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 px-8 py-3 text-lg font-medium transition-all duration-300"
-          >
-            <Link href="/about">
-              Learn Our Story
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Link>
-          </Button>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="py-12 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -614,9 +591,25 @@ export default function Home() {
               </div>
               <span className="text-xl font-bold text-white">RepentDaily</span>
             </div>
-            <p className="text-gray-400 mb-4">
+            <p className="text-gray-400 mb-6">
               Empowering anyone who seeks to do God&apos;s will to achieve their goals and grow in all four areas of life.
             </p>
+            
+            {/* About Link */}
+            <div className="mb-6">
+              <Button 
+                asChild 
+                variant="outline"
+                size="sm"
+                className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:border-gray-500 hover:text-white transition-all duration-300"
+              >
+                <Link href="/about">
+                  Learn Our Story
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Link>
+              </Button>
+            </div>
+            
             <p className="text-gray-500 text-sm">
               &copy; 2024 RepentDaily. Built with ❤️ for all who desire to follow Christ.
             </p>
