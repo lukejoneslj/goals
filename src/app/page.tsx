@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import AutoHideHeader from '@/components/AutoHideHeader'
 import { 
   Target, 
   ClipboardList, 
@@ -25,8 +26,8 @@ import {
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
+      {/* Auto-Hide Navigation */}
+      <AutoHideHeader className="bg-white/80 backdrop-blur-lg border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
@@ -53,10 +54,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </nav>
+      </AutoHideHeader>
 
-      {/* Hero Section */}
-      <section className="pt-20 pb-32 bg-gradient-to-br from-gray-50 to-blue-50">
+      {/* Hero Section with top padding for fixed header */}
+      <section className="pt-24 pb-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
             {/* Free Badge */}

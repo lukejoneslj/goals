@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import AutoHideHeader from '@/components/AutoHideHeader'
 import { 
   Target, 
   Heart,
@@ -18,8 +19,8 @@ import {
 export default function About() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
+      {/* Auto-Hide Navigation */}
+      <AutoHideHeader className="bg-white/80 backdrop-blur-lg border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <Link href="/" className="flex items-center space-x-3">
@@ -43,10 +44,10 @@ export default function About() {
             </div>
           </div>
         </div>
-      </nav>
+      </AutoHideHeader>
 
-      {/* Hero Section */}
-      <section className="pt-20 pb-16 bg-gradient-to-br from-gray-50 to-blue-50">
+      {/* Hero Section with top padding for fixed header */}
+      <section className="pt-24 pb-20 bg-gradient-to-br from-blue-50 to-purple-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-8">
             <Heart className="w-10 h-10 text-white" />

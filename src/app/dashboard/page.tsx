@@ -30,6 +30,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { supabase, Goal } from '@/lib/supabase'
 import GoalModal from '@/components/GoalModal'
 import GoalDetailModal from '@/components/GoalDetailModal'
+import AutoHideHeader from '@/components/AutoHideHeader'
 import Link from 'next/link'
 
 const categoryConfig = {
@@ -189,8 +190,8 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      {/* Modern Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
+      {/* Auto-Hide Navigation */}
+      <AutoHideHeader className="bg-white/90 backdrop-blur-lg border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
@@ -221,9 +222,10 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-      </nav>
+      </AutoHideHeader>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Content with top padding for fixed header */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         {/* Welcome Section */}
         <div className="mb-12">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-4">
