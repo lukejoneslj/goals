@@ -1,5 +1,7 @@
 # 🎯 Master Goal Tracker - Next.js Edition
 
+> Last deployed: January 31, 2025
+
 A beautiful, modern goal-setting application built with Next.js, TypeScript, and shadcn/ui. Inspired by Luke 2:52, this app helps you grow in all four areas of life: Spiritual, Physical, Social, and Intellectual.
 
 ## ✨ Features
