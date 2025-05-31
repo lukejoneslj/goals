@@ -1,0 +1,12 @@
+{
+  "name": "goal-setting-app",
+  "version": "1.0.0",
+  "description": "A goal setting web application built with Supabase",
+  "scripts": {
+    "start": "npx http-server . -p 3000 -o",
+    "dev": "npx http-server . -p 3000 -o"
+  },
+  "keywords": ["goals", "productivity", "supabase", "web-app"],
+  "author": "",
+  "license": "MIT"
+} 

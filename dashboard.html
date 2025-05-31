@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Goal Setting App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div id="loading" class="fixed inset-0 bg-white flex items-center justify-center">
+        <div class="text-2xl text-gray-600">Loading...</div>
+    </div>
+    
+    <div id="dashboard" class="hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center">
+                        <h1 class="text-2xl font-bold text-gray-900">🎯 Goal Dashboard</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span id="userEmail" class="text-sm text-gray-600"></span>
+                        <button id="signOutBtn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm transition duration-300">
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <!-- Welcome Section -->
+            <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg p-8 mb-8 text-white">
+                <h2 class="text-3xl font-bold mb-2">Welcome back! 🎉</h2>
+                <p class="text-blue-100">Ready to conquer your goals today?</p>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="text-2xl">🎯</div>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-500">Active Goals</p>
+                            <p class="text-2xl font-semibold text-gray-900">5</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="text-2xl">✅</div>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-500">Completed</p>
+                            <p class="text-2xl font-semibold text-gray-900">12</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="text-2xl">📈</div>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-500">Success Rate</p>
+                            <p class="text-2xl font-semibold text-gray-900">85%</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="text-2xl">🔥</div>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-500">Streak</p>
+                            <p class="text-2xl font-semibold text-gray-900">7 days</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-lg shadow mb-8">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">Quick Actions</h3>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg transition duration-300 flex items-center justify-center">
+                            <span class="mr-2">➕</span>
+                            Add New Goal
+                        </button>
+                        <button class="bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg transition duration-300 flex items-center justify-center">
+                            <span class="mr-2">📊</span>
+                            View Progress
+                        </button>
+                        <button class="bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-lg transition duration-300 flex items-center justify-center">
+                            <span class="mr-2">🏆</span>
+                            Achievements
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Goals -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">Recent Goals</h3>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <!-- Placeholder goals -->
+                        <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                            <div class="flex-shrink-0">
+                                <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <h4 class="text-sm font-medium text-gray-900">Learn a new programming language</h4>
+                                <p class="text-sm text-gray-500">Progress: 65% • Due: Next month</p>
+                            </div>
+                            <div class="ml-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">In Progress</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                            <div class="flex-shrink-0">
+                                <div class="w-4 h-4 bg-green-500 rounded-full"></div>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <h4 class="text-sm font-medium text-gray-900">Exercise 3 times per week</h4>
+                                <p class="text-sm text-gray-500">Progress: 100% • Completed yesterday</p>
+                            </div>
+                            <div class="ml-4">
+                                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Completed</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                            <div class="flex-shrink-0">
+                                <div class="w-4 h-4 bg-yellow-500 rounded-full"></div>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <h4 class="text-sm font-medium text-gray-900">Read 12 books this year</h4>
+                                <p class="text-sm text-gray-500">Progress: 40% • Due: End of year</p>
+                            </div>
+                            <div class="ml-4">
+                                <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">On Track</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 text-center">
+                        <button class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                            View All Goals →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://zivunqqfxbrzabjinrjz.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppdnVucXFmeGJyemFiamlucmp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2NDc1MTQsImV4cCI6MjA2NDIyMzUxNH0.SGl6KzqMkE3YBKafC_H2fk2GL9m1J4uP15Ivise4YNE';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Check authentication state
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_OUT' || !session) {
+                window.location.href = 'signin.html';
+            } else if (event === 'SIGNED_IN' || session) {
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('userEmail').textContent = session.user.email;
+            }
+        });
+
+        // Check current session
+        const checkSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'signin.html';
+            } else {
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('userEmail').textContent = session.user.email;
+            }
+        };
+
+        // Sign out functionality
+        document.getElementById('signOutBtn').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+        });
+
+        // Initialize
+        checkSession();
+    </script>
+</body>
+</html> 

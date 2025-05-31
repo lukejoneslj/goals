@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goal Setting App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-bold text-gray-800 mb-4">🎯 Goal Setting App</h1>
+            <p class="text-xl text-gray-600">Transform your dreams into achievements</p>
+        </header>
+
+        <!-- Hero Section -->
+        <div class="max-w-4xl mx-auto text-center mb-12">
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+                <h2 class="text-3xl font-semibold text-gray-800 mb-6">Achieve Your Goals with Purpose</h2>
+                <p class="text-lg text-gray-600 mb-8">Set, track, and accomplish your goals with our intuitive goal-setting platform. Turn your aspirations into reality.</p>
+                
+                <div class="space-x-4">
+                    <button onclick="window.location.href='signup.html'" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300">
+                        Get Started
+                    </button>
+                    <button onclick="window.location.href='signin.html'" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300">
+                        Sign In
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                <div class="text-4xl mb-4">📋</div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Set Clear Goals</h3>
+                <p class="text-gray-600">Define specific, measurable, and achievable goals with deadlines.</p>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                <div class="text-4xl mb-4">📊</div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Track Progress</h3>
+                <p class="text-gray-600">Monitor your progress with visual charts and milestone tracking.</p>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                <div class="text-4xl mb-4">🏆</div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Achieve Success</h3>
+                <p class="text-gray-600">Celebrate your achievements and build momentum for future goals.</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center mt-16 text-gray-500">
+            <p>&copy; 2024 Goal Setting App. Built with Supabase.</p>
+        </footer>
+    </div>
+</body>
+</html> 

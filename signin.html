@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Goal Setting App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <div>
+                <div class="text-center">
+                    <h1 class="text-4xl font-bold text-gray-800 mb-2">🎯</h1>
+                    <h2 class="text-3xl font-extrabold text-gray-900">Welcome Back</h2>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Sign in to continue your goal journey
+                    </p>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <form id="signinForm" class="space-y-6">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+                        <input id="email" name="email" type="email" autocomplete="email" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input id="password" name="password" type="password" autocomplete="current-password" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    
+                    <div id="error-message" class="hidden text-red-600 text-sm text-center"></div>
+                    
+                    <div>
+                        <button type="submit" id="signinBtn"
+                                class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">
+                            Sign In
+                        </button>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="text-sm text-gray-600">
+                            Don't have an account?
+                            <a href="signup.html" class="font-medium text-blue-600 hover:text-blue-500">Sign up</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="text-center">
+                <a href="index.html" class="text-sm text-gray-500 hover:text-gray-700">← Back to home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://zivunqqfxbrzabjinrjz.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppdnVucXFmeGJyemFiamlucmp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2NDc1MTQsImV4cCI6MjA2NDIyMzUxNH0.SGl6KzqMkE3YBKafC_H2fk2GL9m1J4uP15Ivise4YNE';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Check if user is already signed in
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+
+        document.getElementById('signinForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error-message');
+            const signinBtn = document.getElementById('signinBtn');
+            
+            // Clear previous messages
+            errorDiv.classList.add('hidden');
+            
+            // Show loading state
+            signinBtn.textContent = 'Signing In...';
+            signinBtn.disabled = true;
+            
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+                
+                if (error) {
+                    errorDiv.textContent = error.message;
+                    errorDiv.classList.remove('hidden');
+                } else {
+                    // Redirect will happen via the auth state change listener
+                    console.log('Sign in successful');
+                }
+            } catch (error) {
+                errorDiv.textContent = 'An unexpected error occurred. Please try again.';
+                errorDiv.classList.remove('hidden');
+            } finally {
+                signinBtn.textContent = 'Sign In';
+                signinBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html> 
