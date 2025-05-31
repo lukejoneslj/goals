@@ -16,7 +16,6 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
   const { signUp } = useAuth()
   const router = useRouter()
 
@@ -24,7 +23,6 @@ export default function SignUp() {
     e.preventDefault()
     setLoading(true)
     setError('')
-    setSuccess(false)
 
     if (password !== confirmPassword) {
       setError('Passwords do not match')
@@ -44,36 +42,9 @@ export default function SignUp() {
       setError(error.message)
       setLoading(false)
     } else {
-      setSuccess(true)
-      setLoading(false)
-      // Note: With email confirmation enabled, user needs to verify email first
-      setTimeout(() => {
-        router.push('/signin')
-      }, 3000)
+      // Redirect directly to dashboard since email verification is disabled
+      router.push('/dashboard')
     }
-  }
-
-  if (success) {
-    return (
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-        <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-          <Card className="max-w-md w-full shadow-2xl border-0 bg-white/90 backdrop-blur-sm">
-            <CardContent className="text-center p-8">
-              <div className="flex justify-center mb-4">
-                <Target className="w-16 h-16 text-green-600" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Check Your Email!</h2>
-              <p className="text-gray-600 mb-6">
-                We&apos;ve sent you a confirmation email. Please check your inbox and click the link to verify your account.
-              </p>
-              <p className="text-sm text-gray-500">
-                Redirecting to sign in page in a moment...
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    )
   }
 
   return (
