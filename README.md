@@ -1,78 +1,171 @@
-# 🎯 Goal Setting App
+# 🎯 Master Goal Tracker - Next.js Edition
 
-A beautiful, modern goal setting web application built with Supabase for authentication and data management.
+A beautiful, modern goal-setting application built with Next.js, TypeScript, and shadcn/ui. Inspired by Luke 2:52, this app helps you grow in all four areas of life: Spiritual, Physical, Social, and Intellectual.
 
-## Features
+## ✨ Features
 
-- ✨ Beautiful, responsive UI with Tailwind CSS
-- 🔐 Secure user authentication with Supabase
-- 📱 Mobile-friendly design
-- 🎯 Goal tracking and management (placeholder UI)
-- 📊 Progress visualization (placeholder)
-- 🏆 Achievement system (placeholder)
+- **📋 Comprehensive Goal Setting**: Follow the 7-step framework for effective goal setting
+- **📊 Progress Tracking**: Visual progress bars and milestone tracking
+- **🏷️ Categorized Goals**: Organize goals by Spiritual, Physical, Social, and Intellectual categories
+- **🔐 Secure Authentication**: Powered by Supabase Auth
+- **📱 Responsive Design**: Beautiful UI that works on all devices
+- **🎨 Modern Interface**: Built with shadcn/ui and Tailwind CSS
+- **⚡ Fast & Reliable**: Next.js App Router for optimal performance
 
-## Project Structure
+## 🚀 Tech Stack
 
-```
-.
-├── index.html          # Landing page
-├── signup.html         # User registration
-├── signin.html         # User login
-├── dashboard.html      # Authenticated user dashboard
-├── config.js          # Supabase configuration
-├── package.json       # Project dependencies
-└── README.md          # This file
-```
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth
+- **Icons**: Lucide React
+- **Deployment**: Ready for Vercel
 
-## Getting Started
+## 📋 Prerequisites
 
-### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+- Supabase account and project
 
-- Node.js installed on your system
-- A Supabase account and project
+## 🛠️ Installation
 
-### Running the App
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd goals-nextjs
+   ```
 
-1. Start the development server:
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Environment setup**
+   ```bash
+   cp .env.example .env.local
+   ```
+   
+   Update `.env.local` with your Supabase credentials:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+4. **Run the development server**
    ```bash
    npm run dev
    ```
 
-2. Open your browser and navigate to `http://localhost:3000`
+5. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-3. Test the authentication:
-   - Sign up for a new account
-   - Check your email for verification (if email confirmation is enabled)
-   - Sign in to access the dashboard
+## 📁 Project Structure
 
-## Supabase Configuration
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── dashboard/         # Protected dashboard page
+│   ├── signin/           # Authentication pages
+│   ├── signup/
+│   └── layout.tsx        # Root layout
+├── components/
+│   └── ui/               # shadcn/ui components
+├── hooks/
+│   └── useAuth.ts        # Authentication hook
+├── lib/
+│   ├── supabase.ts       # Supabase client & types
+│   └── utils.ts          # Utility functions
+└── middleware.ts         # Route protection
+```
 
-The app is connected to a Supabase project with the following details:
-- **Project URL**: `https://zivunqqfxbrzabjinrjz.supabase.co`
-- **Project ID**: `zivunqqfxbrzabjinrjz`
+## 🗄️ Database Schema
 
-Authentication is handled entirely by Supabase, providing secure user management out of the box.
+The app uses three main tables:
 
-## Next Steps
+### Goals
+- `id` (UUID, Primary Key)
+- `user_id` (UUID, Foreign Key to auth.users)
+- `category` (Enum: spiritual, physical, social, intellectual)
+- `status` (Enum: planning, active, completed, paused, abandoned)
+- `outcome` (Text) - What you want to achieve
+- `target_date` (Date) - When you want to achieve it
+- `obstacles` (Text Array) - Potential obstacles
+- `resources` (Text Array) - Available resources
+- `detailed_plan` (Text) - Your action plan
+- `why_leverage` (Text) - Why this goal matters
+- `progress_percentage` (Integer 0-100)
+- `notes` (Text)
+- `created_at`, `updated_at` (Timestamps)
 
-This is a foundation for a goal setting app. To extend it, you could add:
+### Action Items
+- `id` (UUID, Primary Key)
+- `goal_id` (UUID, Foreign Key to goals)
+- `action_description` (Text)
+- `is_completed` (Boolean)
+- `due_date` (Date)
+- `completed_at` (Timestamp)
 
-1. **Database Schema**: Create tables for goals, progress tracking, etc.
-2. **Goal CRUD Operations**: Add, edit, delete, and update goals
-3. **Progress Tracking**: Real progress updates and visualization
-4. **Notifications**: Reminders and achievement notifications
-5. **Analytics**: Goal completion statistics and insights
+### Progress Updates
+- `id` (UUID, Primary Key)
+- `goal_id` (UUID, Foreign Key to goals)
+- `update_text` (Text)
+- `progress_percentage` (Integer 0-100)
+- `created_at` (Timestamp)
 
-## Technologies Used
+## 🎨 Design Philosophy
 
-- **Frontend**: HTML5, CSS3 (Tailwind CSS), Vanilla JavaScript
-- **Backend**: Supabase (PostgreSQL, Authentication, Real-time)
-- **Development**: http-server for local development
+This app follows the Luke 2:52 principle of balanced growth:
 
-## Contributing
+- **🙏 Spiritual**: Faith, values, purpose, meditation
+- **💪 Physical**: Health, fitness, energy, vitality  
+- **👥 Social**: Relationships, communication, community
+- **🧠 Intellectual**: Learning, skills, knowledge, wisdom
 
-Feel free to fork this project and submit pull requests for any improvements!
+The 7-step goal framework includes:
+1. **Outcome** - What specifically you want to achieve
+2. **Date** - Specific target date
+3. **Obstacles** - What might prevent success
+4. **Resources** - What you have to help you succeed
+5. **Plan** - Detailed action steps
+6. **Why** - Your motivation and leverage
+7. **Notes** - Additional thoughts and tracking
 
-## License
+## 🚀 Deployment
 
-MIT License - see LICENSE file for details. 
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Add your environment variables in Vercel dashboard
+4. Deploy!
+
+### Environment Variables for Production
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_production_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_supabase_anon_key
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Inspired by Luke 2:52 and the principle of balanced growth
+- Built with amazing tools from Vercel, Supabase, and the React ecosystem
+- UI components from shadcn/ui
+- Icons from Lucide React
+
+---
+
+**"And Jesus increased in wisdom and stature, and in favour with God and man."** - Luke 2:52
