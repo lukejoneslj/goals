@@ -261,6 +261,122 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Two Approaches Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Two Powerful Approaches to Growth
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Whether you&apos;re pursuing major life changes or building simple daily habits, we&apos;ve got you covered.
+            </p>
+          </div>
+          
+          <div className="grid lg:grid-cols-2 gap-12">
+            {/* Goal Setting */}
+            <Card className="hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-0 bg-gradient-to-br from-blue-50 to-purple-50">
+              <CardHeader className="text-center pb-6">
+                <div className="flex justify-center mb-4">
+                  <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center">
+                    <Target className="w-10 h-10 text-white" />
+                  </div>
+                </div>
+                <CardTitle className="text-2xl font-bold text-gray-900">🎯 Seven-Step Goal Setting</CardTitle>
+                <CardDescription className="text-lg text-gray-600">
+                  For your biggest dreams and life-changing aspirations
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-gray-700 leading-relaxed">
+                  Perfect for major goals that require planning, strategy, and sustained effort. Whether it&apos;s getting in shape, 
+                  advancing your career, strengthening relationships, or deepening your faith—our comprehensive seven-step process 
+                  guides you from dream to reality.
+                </p>
+                <div className="bg-white rounded-lg p-4 border border-blue-200">
+                  <p className="text-sm text-gray-600 mb-3"><strong>Examples:</strong></p>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• Complete a degree or certification</li>
+                    <li>• Run a marathon or lose 30 pounds</li>
+                    <li>• Read the entire Book of Mormon</li>
+                    <li>• Build an emergency fund of $10,000</li>
+                    <li>• Strengthen your marriage relationship</li>
+                  </ul>
+                </div>
+                <div className="flex items-center justify-center pt-4">
+                  <Button 
+                    asChild 
+                    variant="outline"
+                    className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50"
+                  >
+                    <Link href="/goals-guide">
+                      Learn the Seven Steps
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Daily Streaks */}
+            <Card className="hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-0 bg-gradient-to-br from-orange-50 to-red-50">
+              <CardHeader className="text-center pb-6">
+                <div className="flex justify-center mb-4">
+                  <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-red-500 rounded-3xl flex items-center justify-center">
+                    <span className="text-4xl">🔥</span>
+                  </div>
+                </div>
+                <CardTitle className="text-2xl font-bold text-gray-900">🔥 Daily Streaks</CardTitle>
+                <CardDescription className="text-lg text-gray-600">
+                  For the small, consistent habits that transform your character
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-gray-700 leading-relaxed">
+                  Some of life&apos;s most important practices don&apos;t need elaborate plans—they just need consistency. 
+                  Daily Streaks helps you build momentum with simple habits that compound over time, creating lasting change 
+                  through small, faithful actions.
+                </p>
+                <div className="bg-white rounded-lg p-4 border border-orange-200">
+                  <p className="text-sm text-gray-600 mb-3"><strong>Examples:</strong></p>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• Daily scripture study and prayer</li>
+                    <li>• Take vitamins or medications</li>
+                    <li>• Clean up before bed each night</li>
+                    <li>• Write in a gratitude journal</li>
+                    <li>• Call a family member or friend</li>
+                  </ul>
+                </div>
+                <div className="flex items-center justify-center pt-4">
+                  <Button 
+                    asChild 
+                    variant="outline"
+                    className="border-2 border-orange-500 text-orange-600 hover:bg-orange-50"
+                  >
+                    <Link href="/signup">
+                      Start Building Streaks
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center mt-12">
+            <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-8 border border-blue-100">
+              <p className="text-lg text-gray-700 mb-4 leading-relaxed">
+                <strong>The beautiful truth:</strong> Both approaches work together. Use goal setting for your big dreams 
+                and daily streaks for building character. Small, consistent habits create the foundation for achieving larger aspirations.
+              </p>
+              <p className="text-base text-gray-600 italic">
+                &ldquo;By small and simple things are great things brought to pass.&rdquo; —Alma 37:6
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Seven Steps Process */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -365,11 +481,11 @@ export default function Home() {
               Everything You Need to Succeed
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Powerful features designed to keep you motivated and on track toward your goals.
+              Powerful features designed to keep you motivated and on track toward your goals and daily habits.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Card className="text-center hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0 bg-white/80 backdrop-blur-sm">
               <CardHeader>
                 <div className="flex justify-center mb-4">
@@ -398,6 +514,24 @@ export default function Home() {
               <CardContent>
                 <CardDescription className="text-gray-600">
                   Break down big goals into actionable tasks with due dates and completion tracking.
+                </CardDescription>
+              </CardContent>
+            </Card>
+            
+            <Card className="text-center hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0 bg-white/80 backdrop-blur-sm">
+              <CardHeader>
+                <div className="flex justify-center mb-4">
+                  <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                    <span className="text-2xl">🔥</span>
+                  </div>
+                </div>
+                <CardTitle className="text-xl font-semibold text-gray-800">
+                  Daily Streaks
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-gray-600">
+                  Build consistent daily habits with streak tracking. Perfect for simple routines that build character over time.
                 </CardDescription>
               </CardContent>
             </Card>
