@@ -1,7 +1,7 @@
 {
-  "name": "master-goal-tracker",
+  "name": "repent-daily",
   "version": "2.0.0",
-  "description": "A beautiful, modern goal-setting application inspired by Luke 2:52. Built with Next.js, TypeScript, and shadcn/ui.",
+  "description": "A beautiful, modern goal-setting application inspired by Luke 2:52. Built with Next.js, TypeScript, and shadcn/ui. Designed for anyone who wants to do God's will by setting goals and plans.",
   "private": true,
   "keywords": [
     "goals",
@@ -9,6 +9,9 @@
     "luke-2-52",
     "spiritual-growth",
     "personal-development",
+    "repentance",
+    "christian-goals",
+    "faith-based",
     "nextjs",
     "supabase",
     "typescript",

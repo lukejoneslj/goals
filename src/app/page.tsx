@@ -34,7 +34,7 @@ export default function Home() {
                 <Target className="w-6 h-6 text-white" />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Master Goal Tracker
+                RepentDaily
               </span>
             </div>
             <div className="flex items-center space-x-4">
@@ -68,7 +68,7 @@ export default function Home() {
             </h1>
             
             <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Built specifically for LDS youth, this goal-tracking platform uses proven principles 
+              Designed for anyone who wants to do God&apos;s will by setting goals and plans. This goal-tracking platform uses proven principles 
               to help you grow spiritually, physically, socially, and intellectually. Based on Luke 2:52 
               and the seven critical steps to effective goal setting.
             </p>
@@ -121,8 +121,8 @@ export default function Home() {
           </h2>
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 border border-blue-100">
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              Let&rsquo;s be brutally honest: Most goal-tracking apps are designed to extract money from you through 
-              subscriptions, ads, or selling your data. We&rsquo;re different.
+              Let&apos;s be brutally honest: Most goal-tracking apps are designed to extract money from you through 
+              subscriptions, ads, or selling your data. We&apos;re different.
             </p>
             <div className="grid md:grid-cols-3 gap-6 text-left">
               <div className="flex items-start space-x-3">
@@ -148,7 +148,7 @@ export default function Home() {
               </div>
             </div>
             <p className="text-base text-gray-600 mt-8 italic">
-              Our only purpose is to help you succeed. That&rsquo;s it. No ulterior motives, no hidden agendas.
+              Our only purpose is to help you succeed. That&apos;s it. No ulterior motives, no hidden agendas.
             </p>
           </div>
         </div>
@@ -384,7 +384,7 @@ export default function Home() {
             Ready to Transform Your Life?
           </h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of LDS youth who are achieving their goals and growing in all four areas of life. 
+            Join thousands of people from all walks of life who are achieving their goals and growing in all four areas of life. 
             Start your journey today—completely free, forever.
           </p>
           <Button 
@@ -411,13 +411,13 @@ export default function Home() {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                 <Target className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">Master Goal Tracker</span>
+              <span className="text-xl font-bold text-white">RepentDaily</span>
             </div>
             <p className="text-gray-400 mb-4">
-              Empowering LDS youth to achieve their goals and grow in all four areas of life.
+              Empowering anyone who seeks to do God&apos;s will to achieve their goals and grow in all four areas of life.
             </p>
             <p className="text-gray-500 text-sm">
-              &copy; 2024 Master Goal Tracker. Built with ❤️ for LDS youth everywhere.
+              &copy; 2024 RepentDaily. Built with ❤️ for all who desire to follow Christ.
             </p>
           </div>
         </div>
