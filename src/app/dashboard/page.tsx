@@ -293,6 +293,42 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Quick Navigation - Goal Creation CTA */}
+        <Card className="mb-8 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 cursor-pointer"
+              onClick={() => {
+                const createGoalButton = document.querySelector('[data-create-goal-button]')
+                if (createGoalButton) {
+                  createGoalButton.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                }
+              }}>
+          <CardContent className="p-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mr-6">
+                  <Target className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-3xl font-bold text-gray-900 mb-2">Create New Goal</h3>
+                  <p className="text-xl text-gray-600">
+                    Set a new goal and start your journey toward growth
+                  </p>
+                </div>
+              </div>
+              <Button 
+                size="lg"
+                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleCreateGoal()
+                }}
+              >
+                Create Goal
+                <Plus className="ml-3 h-5 w-5" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Quick Navigation - Daily Streaks */}
         <Card className="mb-12 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-200 hover:border-orange-300 transition-all duration-300 transform hover:scale-105">
           <CardContent className="p-8">
@@ -396,6 +432,7 @@ export default function Dashboard() {
         <div className="text-center mb-12">
           <Button 
             onClick={handleCreateGoal}
+            data-create-goal-button
             className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-12 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
             size="lg"
           >
