@@ -293,6 +293,35 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Quick Navigation - Daily Streaks */}
+        <Card className="mb-12 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-200 hover:border-orange-300 transition-all duration-300 transform hover:scale-105">
+          <CardContent className="p-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mr-6">
+                  <span className="text-3xl">🔥</span>
+                </div>
+                <div>
+                  <h3 className="text-3xl font-bold text-gray-900 mb-2">Daily Streaks</h3>
+                  <p className="text-xl text-gray-600">
+                    Build consistent habits and track your daily progress
+                  </p>
+                </div>
+              </div>
+              <Button 
+                asChild 
+                size="lg"
+                className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300"
+              >
+                <Link href="/streaks">
+                  View Streaks
+                  <ArrowRight className="ml-3 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Luke 2:52 Quote */}
         <Card className="mb-12 bg-gradient-to-r from-purple-600 to-blue-600 border-0 text-white shadow-2xl">
           <CardContent className="p-8 text-center">
