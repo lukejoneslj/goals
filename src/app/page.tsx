@@ -38,6 +38,12 @@ export default function Home() {
               </span>
             </div>
             <div className="flex items-center space-x-4">
+              <Link href="/goals-guide" className="text-gray-600 hover:text-gray-900 font-medium transition-colors hidden md:block">
+                Goals Guide
+              </Link>
+              <Link href="/about" className="text-gray-600 hover:text-gray-900 font-medium transition-colors hidden md:block">
+                About
+              </Link>
               <Button variant="ghost" asChild>
                 <Link href="/signin">Sign In</Link>
               </Button>
@@ -150,6 +156,27 @@ export default function Home() {
             <p className="text-base text-gray-600 mt-8 italic">
               Our only purpose is to help you succeed. That&apos;s it. No ulterior motives, no hidden agendas.
             </p>
+          </div>
+          
+          {/* Prominent Goals Guide Link */}
+          <div className="mt-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white shadow-2xl transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-center justify-center mb-4">
+              <FileText className="w-12 h-12 text-white mr-4" />
+              <h3 className="text-3xl font-bold">Complete Goal Mastery Guide</h3>
+            </div>
+            <p className="text-xl text-purple-100 mb-6 max-w-2xl mx-auto">
+              Master the seven critical steps to effective goal setting. Learn the proven methodology that transforms dreams into reality.
+            </p>
+            <Button 
+              asChild 
+              size="lg"
+              className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300"
+            >
+              <Link href="/goals-guide">
+                Read the Complete Guide
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -309,6 +336,23 @@ export default function Home() {
               <h3 className="font-bold text-gray-900 mb-2">Know Your Why</h3>
               <p className="text-sm text-gray-600">Understand the deeper purpose behind your goal.</p>
             </div>
+          </div>
+          
+          <div className="text-center mt-12">
+            <p className="text-gray-600 mb-6">
+              Want to master each step and learn how to stay motivated? Get the complete guide.
+            </p>
+            <Button 
+              asChild 
+              variant="outline"
+              size="lg"
+              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-4 text-lg font-semibold"
+            >
+              <Link href="/goals-guide">
+                Read the Complete Goal Mastery Guide
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
