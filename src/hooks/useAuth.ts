@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { User, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut as firebaseSignOut, onAuthStateChanged } from 'firebase/auth'
+import { User, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut as firebaseSignOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 
 export function useAuth() {
@@ -21,6 +21,16 @@ export function useAuth() {
   const signIn = async (email: string, password: string) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password)
+      return { data: { user: result.user }, error: null }
+    } catch (error) {
+      return { data: null, error: { message: (error as Error).message } }
+    }
+  }
+
+  const signInWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider()
+      const result = await signInWithPopup(auth, provider)
       return { data: { user: result.user }, error: null }
     } catch (error) {
       return { data: null, error: { message: (error as Error).message } }
@@ -49,6 +59,7 @@ export function useAuth() {
     user,
     loading,
     signIn,
+    signInWithGoogle,
     signUp,
     signOut,
   }
