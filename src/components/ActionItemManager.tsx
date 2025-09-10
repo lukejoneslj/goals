@@ -16,7 +16,8 @@ import {
   Clock,
   AlertTriangle
 } from 'lucide-react'
-import { supabase, ActionItem } from '@/lib/supabase'
+import { ActionItem } from '@/lib/firebase'
+import { actionItemsService } from '@/lib/database'
 
 interface ActionItemManagerProps {
   goalId: string
@@ -31,18 +32,14 @@ export default function ActionItemManager({ goalId, onProgressUpdate }: ActionIt
 
   const loadActionItems = useCallback(async () => {
     try {
-      const { data, error } = await supabase
-        .from('action_items')
-        .select('*')
-        .eq('goal_id', goalId)
-        .order('created_at', { ascending: true })
+      const { data, error } = await actionItemsService.getAll(goalId)
 
       if (error) throw error
       setActionItems(data || [])
-      
+
       // Calculate and update progress
       if (data && data.length > 0) {
-        const completedCount = data.filter(item => item.is_completed).length
+        const completedCount = data.filter(item => item.isCompleted).length
         const progressPercentage = Math.round((completedCount / data.length) * 100)
         onProgressUpdate?.(progressPercentage)
       }
@@ -61,25 +58,23 @@ export default function ActionItemManager({ goalId, onProgressUpdate }: ActionIt
     if (!newItem.description.trim()) return
 
     try {
-      const { data, error } = await supabase
-        .from('action_items')
-        .insert([{
-          goal_id: goalId,
-          action_description: newItem.description.trim(),
-          due_date: newItem.dueDate || null,
-          is_completed: false
-        }])
-        .select()
-        .single()
+      const actionItemData = {
+        goalId: goalId,
+        actionDescription: newItem.description.trim(),
+        dueDate: newItem.dueDate || undefined,
+        isCompleted: false
+      }
+
+      const { data, error } = await actionItemsService.create(actionItemData)
 
       if (error) throw error
 
-      setActionItems(prev => [...prev, data])
+      setActionItems(prev => [...prev, data!])
       setNewItem({ description: '', dueDate: '' })
       setIsAdding(false)
-      
+
       // Update progress
-      const completedCount = actionItems.filter(item => item.is_completed).length
+      const completedCount = actionItems.filter(item => item.isCompleted).length
       const totalCount = actionItems.length + 1
       const progressPercentage = Math.round((completedCount / totalCount) * 100)
       onProgressUpdate?.(progressPercentage)
@@ -91,35 +86,34 @@ export default function ActionItemManager({ goalId, onProgressUpdate }: ActionIt
 
   const toggleActionItem = async (id: string, isCompleted: boolean | undefined) => {
     const currentlyCompleted = Boolean(isCompleted)
-    
+
     try {
-      const { error } = await supabase
-        .from('action_items')
-        .update({ 
-          is_completed: !currentlyCompleted,
-          completed_at: !currentlyCompleted ? new Date().toISOString() : null
-        })
-        .eq('id', id)
+      const updates = {
+        isCompleted: !currentlyCompleted,
+        completedAt: !currentlyCompleted ? new Date().toISOString() : undefined
+      }
+
+      const { error } = await actionItemsService.update(id, updates)
 
       if (error) throw error
 
-      setActionItems(prev => 
-        prev.map(item => 
-          item.id === id 
-            ? { 
-                ...item, 
-                is_completed: !currentlyCompleted, 
-                completed_at: !currentlyCompleted ? new Date().toISOString() : undefined
+      setActionItems(prev =>
+        prev.map(item =>
+          item.id === id
+            ? {
+                ...item,
+                isCompleted: !currentlyCompleted,
+                completedAt: !currentlyCompleted ? new Date().toISOString() : undefined
               }
             : item
         )
       )
 
       // Update progress
-      const updatedItems = actionItems.map(item => 
-        item.id === id ? { ...item, is_completed: !currentlyCompleted } : item
+      const updatedItems = actionItems.map(item =>
+        item.id === id ? { ...item, isCompleted: !currentlyCompleted } : item
       )
-      const completedCount = updatedItems.filter(item => item.is_completed).length
+      const completedCount = updatedItems.filter(item => item.isCompleted).length
       const progressPercentage = Math.round((completedCount / actionItems.length) * 100)
       onProgressUpdate?.(progressPercentage)
     } catch (error) {
@@ -132,19 +126,16 @@ export default function ActionItemManager({ goalId, onProgressUpdate }: ActionIt
     if (!confirm('Are you sure you want to delete this action item?')) return
 
     try {
-      const { error } = await supabase
-        .from('action_items')
-        .delete()
-        .eq('id', id)
+      const { error } = await actionItemsService.delete(id)
 
       if (error) throw error
 
       const updatedItems = actionItems.filter(item => item.id !== id)
       setActionItems(updatedItems)
-      
+
       // Update progress
       if (updatedItems.length > 0) {
-        const completedCount = updatedItems.filter(item => item.is_completed).length
+        const completedCount = updatedItems.filter(item => item.isCompleted).length
         const progressPercentage = Math.round((completedCount / updatedItems.length) * 100)
         onProgressUpdate?.(progressPercentage)
       } else {
@@ -165,10 +156,10 @@ export default function ActionItemManager({ goalId, onProgressUpdate }: ActionIt
   }
 
   const getItemStatus = (item: ActionItem) => {
-    if (item.is_completed) return 'completed'
-    if (!item.due_date) return 'no-date'
-    
-    const daysUntilDue = getDaysUntilDue(item.due_date)
+    if (item.isCompleted) return 'completed'
+    if (!item.dueDate) return 'no-date'
+
+    const daysUntilDue = getDaysUntilDue(item.dueDate)
     if (daysUntilDue < 0) return 'overdue'
     if (daysUntilDue === 0) return 'due-today'
     if (daysUntilDue <= 3) return 'due-soon'
@@ -185,7 +176,7 @@ export default function ActionItemManager({ goalId, onProgressUpdate }: ActionIt
     }
   }
 
-  const completedCount = actionItems.filter(item => item.is_completed).length
+  const completedCount = actionItems.filter(item => item.isCompleted).length
   const totalCount = actionItems.length
   const progressPercentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0
 
@@ -302,10 +293,10 @@ export default function ActionItemManager({ goalId, onProgressUpdate }: ActionIt
                   <CardContent className="p-4">
                     <div className="flex items-start space-x-3">
                       <button
-                        onClick={() => toggleActionItem(item.id, item.is_completed ?? false)}
+                        onClick={() => toggleActionItem(item.id, item.isCompleted ?? false)}
                         className="mt-1 hover:scale-110 transition-transform"
                       >
-                        {item.is_completed ? (
+                        {item.isCompleted ? (
                           <CheckCircle2 className="w-5 h-5 text-green-600" />
                         ) : (
                           <Circle className="w-5 h-5 text-gray-400 hover:text-blue-600" />
@@ -313,18 +304,18 @@ export default function ActionItemManager({ goalId, onProgressUpdate }: ActionIt
                       </button>
                       
                       <div className="flex-1 min-w-0">
-                        <p className={`font-medium ${item.is_completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
-                          {item.action_description}
+                        <p className={`font-medium ${item.isCompleted ? 'line-through text-gray-500' : 'text-gray-900'}`}>
+                          {item.actionDescription}
                         </p>
                         
                         <div className="flex items-center space-x-4 mt-2">
-                          {item.due_date && (
+                          {item.dueDate && (
                             <div className="flex items-center text-sm text-gray-600">
                               <Calendar className="w-4 h-4 mr-1" />
                               <span>
-                                Due: {new Date(item.due_date).toLocaleDateString()}
+                                Due: {new Date(item.dueDate).toLocaleDateString()}
                                 {(() => {
-                                  const daysUntilDue = getDaysUntilDue(item.due_date)
+                                  const daysUntilDue = getDaysUntilDue(item.dueDate)
                                   if (daysUntilDue < 0) return ` (${Math.abs(daysUntilDue)} days overdue)`
                                   if (daysUntilDue === 0) return ' (Today!)'
                                   if (daysUntilDue <= 7) return ` (${daysUntilDue} days)`
@@ -332,7 +323,7 @@ export default function ActionItemManager({ goalId, onProgressUpdate }: ActionIt
                                 })()}
                               </span>
                               {(() => {
-                                const daysUntilDue = getDaysUntilDue(item.due_date)
+                                const daysUntilDue = getDaysUntilDue(item.dueDate)
                                 if (daysUntilDue < 0) return <AlertTriangle className="w-4 h-4 ml-1 text-red-500" />
                                 if (daysUntilDue === 0) return <Clock className="w-4 h-4 ml-1 text-orange-500" />
                                 return null
@@ -340,9 +331,9 @@ export default function ActionItemManager({ goalId, onProgressUpdate }: ActionIt
                             </div>
                           )}
                           
-                          {item.completed_at && (
+                          {item.completedAt && (
                             <Badge variant="secondary" className="text-xs">
-                              Completed {new Date(item.completed_at).toLocaleDateString()}
+                              Completed {new Date(item.completedAt).toLocaleDateString()}
                             </Badge>
                           )}
                         </div>

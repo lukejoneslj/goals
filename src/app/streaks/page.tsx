@@ -19,7 +19,6 @@ import {
   ArrowLeft
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
-import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 
 // Make this a dynamic route to prevent static generation
@@ -77,38 +76,17 @@ export default function StreaksPage() {
 
   const loadHabits = useCallback(async () => {
     if (!user) return
-    
-    try {
-      const { data, error } = await supabase
-        .from('habits')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('is_active', true)
-        .order('created_at', { ascending: false })
 
-      if (error) throw error
-      setHabits((data as Habit[]) || [])
-    } catch (error) {
-      console.error('Error loading habits:', error)
-    } finally {
-      setLoading(false)
-    }
+    // TODO: Implement Firebase database operations for habits
+    // For now, show empty state
+    setHabits([])
+    setLoading(false)
   }, [user])
 
   const loadTodayCompletions = useCallback(async () => {
-    try {
-      const today = new Date().toISOString().split('T')[0]
-      const { data, error } = await supabase
-        .from('habit_completions')
-        .select('habit_id')
-        .eq('completion_date', today)
-
-      if (error) throw error
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setTodayCompletions(data?.map((c: any) => c.habit_id) || [])
-    } catch (error) {
-      console.error('Error loading today\'s completions:', error)
-    }
+    // TODO: Implement Firebase database operations for habit completions
+    // For now, show empty state
+    setTodayCompletions([])
   }, [])
 
   // Redirect if not authenticated
@@ -128,112 +106,38 @@ export default function StreaksPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!formData.name.trim() || !user) return
 
-    try {
-      if (editingHabit) {
-        // Update existing habit
-        const { error } = await supabase
-          .from('habits')
-          .update({
-            name: formData.name,
-            description: formData.description,
-            ...Object.fromEntries(DAYS.map(day => [day.key, formData[day.key as keyof typeof formData]]))
-          })
-          .eq('id', editingHabit.id)
+    // TODO: Implement Firebase database operations for habits
+    alert('Habit tracking feature is coming soon with Firebase integration!')
 
-        if (error) throw error
-      } else {
-        // Create new habit
-        console.log('Creating habit with user_id:', user.id)
-        const habitData = {
-          user_id: user.id,
-          name: formData.name,
-          description: formData.description,
-          ...Object.fromEntries(DAYS.map(day => [day.key, formData[day.key as keyof typeof formData]]))
-        }
-        console.log('Habit data:', habitData)
-        
-        const { data, error } = await supabase
-          .from('habits')
-          .insert(habitData)
-
-        if (error) {
-          console.error('Supabase error details:', error)
-          throw error
-        }
-        console.log('Habit created successfully:', data)
-      }
-
-      // Reset form
-      setFormData({
-        name: '',
-        description: '',
-        monday: false,
-        tuesday: false,
-        wednesday: false,
-        thursday: false,
-        friday: false,
-        saturday: false,
-        sunday: false
-      })
-      setShowAddForm(false)
-      setEditingHabit(null)
-      loadHabits()
-    } catch (error) {
-      console.error('Error saving habit:', error)
-      console.error('Error details:', JSON.stringify(error, null, 2))
-    }
+    // Reset form
+    setFormData({
+      name: '',
+      description: '',
+      monday: false,
+      tuesday: false,
+      wednesday: false,
+      thursday: false,
+      friday: false,
+      saturday: false,
+      sunday: false
+    })
+    setShowAddForm(false)
+    setEditingHabit(null)
   }
 
-  const toggleCompletion = async (habitId: string) => {
-    const today = new Date().toISOString().split('T')[0]
-    const isCompleted = todayCompletions.includes(habitId)
-
-    try {
-      if (isCompleted) {
-        // Remove completion
-        const { error } = await supabase
-          .from('habit_completions')
-          .delete()
-          .eq('habit_id', habitId)
-          .eq('completion_date', today)
-
-        if (error) throw error
-        setTodayCompletions(prev => prev.filter(id => id !== habitId))
-      } else {
-        // Add completion
-        const { error } = await supabase
-          .from('habit_completions')
-          .insert({ habit_id: habitId, completion_date: today })
-
-        if (error) throw error
-        setTodayCompletions(prev => [...prev, habitId])
-      }
-
-      // Update streaks
-      await supabase.rpc('update_habit_streaks', { habit_uuid: habitId })
-      loadHabits() // Refresh to get updated streak counts
-    } catch (error) {
-      console.error('Error toggling completion:', error)
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const toggleCompletion = async (_habitId: string) => {
+    // TODO: Implement Firebase database operations for habit completions
+    alert('Habit completion tracking is coming soon with Firebase integration!')
   }
 
-  const deleteHabit = async (habitId: string) => {
-    if (!confirm('Are you sure you want to delete this habit?')) return
-
-    try {
-      const { error } = await supabase
-        .from('habits')
-        .update({ is_active: false })
-        .eq('id', habitId)
-
-      if (error) throw error
-      loadHabits()
-    } catch (error) {
-      console.error('Error deleting habit:', error)
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const deleteHabit = async (_habitId: string) => {
+    // TODO: Implement Firebase database operations for habits
+    alert('Habit deletion is coming soon with Firebase integration!')
   }
 
   const startEdit = (habit: Habit) => {

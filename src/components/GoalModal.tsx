@@ -23,7 +23,7 @@ import {
   Zap,
   MessageCircle
 } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
+import { goalsService, actionItemsService } from '@/lib/database'
 
 type Category = 'spiritual' | 'physical' | 'social' | 'intellectual'
 
@@ -174,42 +174,37 @@ export default function GoalModal({ isOpen, onClose, onGoalCreated, userId }: Go
     try {
       // Create the goal
       const goalData = {
-        user_id: userId,
+        userId: userId,
         category: selectedCategory,
         status: 'planning' as const,
         outcome: formData.outcome,
-        target_date: formData.targetDate,
+        targetDate: formData.targetDate,
         obstacles: formData.obstacles.filter(o => o.trim() !== ''),
         resources: formData.resources.filter(r => r.trim() !== ''),
-        detailed_plan: formData.detailedPlan || null,
-        why_leverage: formData.whyLeverage,
-        progress_percentage: 0,
-        notes: formData.notes || null
+        detailedPlan: formData.detailedPlan || undefined,
+        whyLeverage: formData.whyLeverage,
+        progressPercentage: 0,
+        notes: formData.notes || undefined
       }
 
-      const { data: goalResult, error: goalError } = await supabase
-        .from('goals')
-        .insert([goalData])
-        .select()
-        .single()
+      const { data: goalResult, error: goalError } = await goalsService.create(goalData)
 
       if (goalError) throw goalError
 
       // Create action items if any
       const validActionItems = actionItems.filter(item => item.description.trim() !== '')
       if (validActionItems.length > 0) {
-        const actionItemsData = validActionItems.map(item => ({
-          goal_id: goalResult.id,
-          action_description: item.description,
-          due_date: item.dueDate || null,
-          is_completed: false
-        }))
+        for (const item of validActionItems) {
+          const actionItemData = {
+            goalId: goalResult!.id,
+            actionDescription: item.description,
+            dueDate: item.dueDate || undefined,
+            isCompleted: false
+          }
 
-        const { error: actionError } = await supabase
-          .from('action_items')
-          .insert(actionItemsData)
-
-        if (actionError) throw actionError
+          const { error: actionError } = await actionItemsService.create(actionItemData)
+          if (actionError) throw actionError
+        }
       }
 
       onGoalCreated()

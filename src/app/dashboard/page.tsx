@@ -27,7 +27,8 @@ import {
   ArrowRight
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
-import { supabase, Goal } from '@/lib/supabase'
+import { Goal } from '@/lib/firebase'
+import { goalsService } from '@/lib/database'
 import GoalModal from '@/components/GoalModal'
 import GoalDetailModal from '@/components/GoalDetailModal'
 import Link from 'next/link'
@@ -77,14 +78,10 @@ export default function Dashboard() {
   const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null)
 
   const loadGoals = useCallback(async () => {
-    if (!user?.id) return
-    
+    if (!user?.uid) return
+
     try {
-      const { data, error } = await supabase
-        .from('goals')
-        .select('*')
-        .eq('user_id', user?.id)
-        .order('created_at', { ascending: false })
+      const { data, error } = await goalsService.getAll(user.uid)
 
       if (error) throw error
       setGoals(data || [])
@@ -93,7 +90,7 @@ export default function Dashboard() {
     } finally {
       setLoadingGoals(false)
     }
-  }, [user?.id])
+  }, [user?.uid])
 
   useEffect(() => {
     if (!loading && !user) {
@@ -127,16 +124,13 @@ export default function Dashboard() {
 
   const deleteGoal = async (goalId: string, event: React.MouseEvent) => {
     event.stopPropagation()
-    
+
     if (!confirm('Are you sure you want to delete this goal? This action cannot be undone.')) {
       return
     }
 
     try {
-      const { error } = await supabase
-        .from('goals')
-        .delete()
-        .eq('id', goalId)
+      const { error } = await goalsService.delete(goalId)
 
       if (error) throw error
 
@@ -151,8 +145,8 @@ export default function Dashboard() {
     const categoryGoals = goals.filter(goal => goal.category === category)
     const totalGoals = categoryGoals.length
     const completedGoals = categoryGoals.filter(goal => goal.status === 'completed').length
-    const avgProgress = totalGoals > 0 
-      ? Math.round(categoryGoals.reduce((sum, goal) => sum + (goal.progress_percentage || 0), 0) / totalGoals)
+    const avgProgress = totalGoals > 0
+      ? Math.round(categoryGoals.reduce((sum, goal) => sum + (goal.progressPercentage || 0), 0) / totalGoals)
       : 0
 
     return { totalGoals, completedGoals, avgProgress }
@@ -162,8 +156,8 @@ export default function Dashboard() {
     const totalGoals = goals.length
     const completedGoals = goals.filter(goal => goal.status === 'completed').length
     const activeGoals = goals.filter(goal => goal.status === 'active').length
-    const avgProgress = totalGoals > 0 
-      ? Math.round(goals.reduce((sum, goal) => sum + (goal.progress_percentage || 0), 0) / totalGoals)
+    const avgProgress = totalGoals > 0
+      ? Math.round(goals.reduce((sum, goal) => sum + (goal.progressPercentage || 0), 0) / totalGoals)
       : 0
 
     return { totalGoals, completedGoals, activeGoals, avgProgress }
@@ -208,7 +202,7 @@ export default function Dashboard() {
                     {user.email?.[0].toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-gray-700 font-medium">{user.email}</span>
+                <span className="text-gray-700 font-medium">{user.email || user.displayName}</span>
               </div>
               <Button 
                 onClick={handleSignOut}
@@ -474,7 +468,7 @@ export default function Dashboard() {
                 const config = categoryConfig[goal.category]
                 const IconComponent = config.icon
                 const daysUntilTarget = Math.ceil(
-                  (new Date(goal.target_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+                  (new Date(goal.targetDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
                 )
 
                 return (
@@ -508,7 +502,7 @@ export default function Dashboard() {
                             <div className="flex items-center bg-gray-50 rounded-lg px-3 py-2">
                               <Calendar className="w-4 h-4 mr-2" />
                               <span className="font-medium">
-                                {new Date(goal.target_date).toLocaleDateString()}
+                                {new Date(goal.targetDate).toLocaleDateString()}
                               </span>
                             </div>
                             {daysUntilTarget !== 0 && (
@@ -557,14 +551,14 @@ export default function Dashboard() {
                         <div>
                           <div className="flex justify-between text-sm mb-3">
                             <span className="font-semibold text-gray-700">Progress</span>
-                            <span className="font-bold text-gray-900">{goal.progress_percentage || 0}%</span>
+                            <span className="font-bold text-gray-900">{goal.progressPercentage || 0}%</span>
                           </div>
-                          <Progress value={goal.progress_percentage || 0} className="h-3" />
+                          <Progress value={goal.progressPercentage || 0} className="h-3" />
                         </div>
                         
                         <div className="bg-gray-50 rounded-xl p-4">
                           <p className="font-semibold text-gray-900 mb-2">Why this matters:</p>
-                          <p className="text-gray-700 line-clamp-2">{goal.why_leverage}</p>
+                          <p className="text-gray-700 line-clamp-2">{goal.whyLeverage}</p>
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-6">
@@ -648,7 +642,7 @@ export default function Dashboard() {
         isOpen={isGoalModalOpen}
         onClose={() => setIsGoalModalOpen(false)}
         onGoalCreated={handleGoalCreated}
-        userId={user.id}
+        userId={user.uid}
       />
 
       <GoalDetailModal

@@ -22,7 +22,8 @@ import {
   Play,
   Pause
 } from 'lucide-react'
-import { supabase, Goal } from '@/lib/supabase'
+import { Goal } from '@/lib/firebase'
+import { goalsService } from '@/lib/database'
 import ActionItemManager from './ActionItemManager'
 
 const categoryConfig = {
@@ -81,14 +82,10 @@ export default function GoalDetailModal({ goalId, isOpen, onClose, onGoalUpdated
 
   const loadGoal = useCallback(async () => {
     if (!goalId) return
-    
+
     setLoading(true)
     try {
-      const { data, error } = await supabase
-        .from('goals')
-        .select('*')
-        .eq('id', goalId)
-        .single()
+      const { data, error } = await goalsService.get(goalId)
 
       if (error) throw error
       setGoal(data)
@@ -110,14 +107,11 @@ export default function GoalDetailModal({ goalId, isOpen, onClose, onGoalUpdated
     if (!goal) return
 
     try {
-      const { error } = await supabase
-        .from('goals')
-        .update({ progress_percentage: progressPercentage })
-        .eq('id', goal.id)
+      const { error } = await goalsService.update(goal.id, { progressPercentage })
 
       if (error) throw error
 
-      setGoal(prev => prev ? { ...prev, progress_percentage: progressPercentage } : null)
+      setGoal(prev => prev ? { ...prev, progressPercentage } : null)
       onGoalUpdated()
     } catch (error) {
       console.error('Error updating goal progress:', error)
@@ -128,10 +122,7 @@ export default function GoalDetailModal({ goalId, isOpen, onClose, onGoalUpdated
     if (!goal) return
 
     try {
-      const { error } = await supabase
-        .from('goals')
-        .update({ status: newStatus })
-        .eq('id', goal.id)
+      const { error } = await goalsService.update(goal.id, { status: newStatus })
 
       if (error) throw error
 
@@ -146,7 +137,7 @@ export default function GoalDetailModal({ goalId, isOpen, onClose, onGoalUpdated
   const getDaysUntilTarget = () => {
     if (!goal) return 0
     const today = new Date()
-    const target = new Date(goal.target_date)
+    const target = new Date(goal.targetDate)
     const diffTime = target.getTime() - today.getTime()
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
   }
@@ -209,7 +200,7 @@ export default function GoalDetailModal({ goalId, isOpen, onClose, onGoalUpdated
                     Target Date
                   </div>
                   <p className="text-lg font-semibold">
-                    {new Date(goal.target_date).toLocaleDateString()}
+                    {new Date(goal.targetDate).toLocaleDateString()}
                   </p>
                   <p className="text-sm text-gray-600">
                     {daysUntilTarget > 0 && `${daysUntilTarget} days remaining`}
@@ -225,9 +216,9 @@ export default function GoalDetailModal({ goalId, isOpen, onClose, onGoalUpdated
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-2xl font-bold">{goal.progress_percentage || 0}%</span>
+                      <span className="text-2xl font-bold">{goal.progressPercentage || 0}%</span>
                     </div>
-                    <Progress value={goal.progress_percentage || 0} className="h-3" />
+                    <Progress value={goal.progressPercentage || 0} className="h-3" />
                   </div>
                 </div>
 
@@ -315,7 +306,28 @@ export default function GoalDetailModal({ goalId, isOpen, onClose, onGoalUpdated
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-900 font-medium">
-                      {new Date(goal.target_date).toLocaleDateString()}
+                      {new Date(goal.targetDate).toLocaleDateString()}
+                    </p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {daysUntilTarget > 0 && `${daysUntilTarget} days remaining`}
+                      {daysUntilTarget === 0 && 'Due today!'}
+                      {daysUntilTarget < 0 && `${Math.abs(daysUntilTarget)} days overdue`}
+                    </p>
+                  </CardContent>
+                </Card>
+
+                {/* Step 2: Target Date */}
+                <Card className="border-l-4 border-green-500">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg flex items-center">
+                      <Badge className="bg-green-500 text-white mr-3 px-2 py-1">2</Badge>
+                      <Calendar className="w-5 h-5 mr-2" />
+                      Target Date
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-900 font-medium">
+                      {new Date(goal.targetDate).toLocaleDateString()}
                     </p>
                     <p className="text-sm text-gray-600 mt-1">
                       {daysUntilTarget > 0 && `${daysUntilTarget} days remaining`}
@@ -385,8 +397,8 @@ export default function GoalDetailModal({ goalId, isOpen, onClose, onGoalUpdated
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {goal.detailed_plan ? (
-                      <p className="text-gray-700 whitespace-pre-wrap">{goal.detailed_plan}</p>
+                    {goal.detailedPlan ? (
+                      <p className="text-gray-700 whitespace-pre-wrap">{goal.detailedPlan}</p>
                     ) : (
                       <p className="text-gray-500 italic">No detailed plan provided</p>
                     )}
@@ -403,7 +415,7 @@ export default function GoalDetailModal({ goalId, isOpen, onClose, onGoalUpdated
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-700 whitespace-pre-wrap">{goal.why_leverage}</p>
+                    <p className="text-gray-700 whitespace-pre-wrap">{goal.whyLeverage}</p>
                   </CardContent>
                 </Card>
               </div>
@@ -443,11 +455,11 @@ export default function GoalDetailModal({ goalId, isOpen, onClose, onGoalUpdated
                   <CardContent className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="font-medium">Created:</span>
-                      <span>{goal.created_at ? new Date(goal.created_at).toLocaleDateString() : 'Unknown'}</span>
+                      <span>{goal.createdAt ? new Date(goal.createdAt).toLocaleDateString() : 'Unknown'}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="font-medium">Last Updated:</span>
-                      <span>{goal.updated_at ? new Date(goal.updated_at).toLocaleDateString() : 'Unknown'}</span>
+                      <span>{goal.updatedAt ? new Date(goal.updatedAt).toLocaleDateString() : 'Unknown'}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="font-medium">Status:</span>
