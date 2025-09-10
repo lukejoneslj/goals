@@ -19,27 +19,12 @@ import {
   ArrowLeft
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
+import { Habit } from '@/lib/firebase'
+import { habitsService, habitCompletionsService } from '@/lib/database'
 import Link from 'next/link'
 
 // Make this a dynamic route to prevent static generation
 export const dynamic = 'force-dynamic'
-
-interface Habit {
-  id: string
-  name: string
-  description: string
-  monday: boolean
-  tuesday: boolean
-  wednesday: boolean
-  thursday: boolean
-  friday: boolean
-  saturday: boolean
-  sunday: boolean
-  current_streak: number
-  longest_streak: number
-  is_active: boolean
-  created_at: string
-}
 
 const DAYS = [
   { key: 'monday', label: 'Mon', full: 'Monday' },
@@ -77,16 +62,29 @@ export default function StreaksPage() {
   const loadHabits = useCallback(async () => {
     if (!user) return
 
-    // TODO: Implement Firebase database operations for habits
-    // For now, show empty state
-    setHabits([])
-    setLoading(false)
+    try {
+      const { data, error } = await habitsService.getAll(user.uid)
+
+      if (error) throw error
+      setHabits((data as Habit[]) || [])
+    } catch (error) {
+      console.error('Error loading habits:', error)
+    } finally {
+      setLoading(false)
+    }
   }, [user])
 
   const loadTodayCompletions = useCallback(async () => {
-    // TODO: Implement Firebase database operations for habit completions
-    // For now, show empty state
-    setTodayCompletions([])
+    try {
+      const today = new Date().toISOString().split('T')[0]
+      const { data, error } = await habitCompletionsService.getForDate(today)
+
+      if (error) throw error
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setTodayCompletions(data?.map((c: any) => c.habitId) || [])
+    } catch (error) {
+      console.error('Error loading today\'s completions:', error)
+    }
   }, [])
 
   // Redirect if not authenticated
@@ -109,35 +107,110 @@ export default function StreaksPage() {
 
     if (!formData.name.trim() || !user) return
 
-    // TODO: Implement Firebase database operations for habits
-    alert('Habit tracking feature is coming soon with Firebase integration!')
+    try {
+      if (editingHabit) {
+        // Update existing habit
+        const { error } = await habitsService.update(editingHabit.id, {
+          name: formData.name,
+          description: formData.description,
+          monday: formData.monday,
+          tuesday: formData.tuesday,
+          wednesday: formData.wednesday,
+          thursday: formData.thursday,
+          friday: formData.friday,
+          saturday: formData.saturday,
+          sunday: formData.sunday
+        })
 
-    // Reset form
-    setFormData({
-      name: '',
-      description: '',
-      monday: false,
-      tuesday: false,
-      wednesday: false,
-      thursday: false,
-      friday: false,
-      saturday: false,
-      sunday: false
-    })
-    setShowAddForm(false)
-    setEditingHabit(null)
+        if (error) throw error
+      } else {
+        // Create new habit
+        const habitData = {
+          userId: user.uid,
+          name: formData.name,
+          description: formData.description,
+          monday: formData.monday,
+          tuesday: formData.tuesday,
+          wednesday: formData.wednesday,
+          thursday: formData.thursday,
+          friday: formData.friday,
+          saturday: formData.saturday,
+          sunday: formData.sunday,
+          isActive: true
+        }
+
+        const { error } = await habitsService.create(habitData)
+
+        if (error) {
+          console.error('Firebase error details:', error)
+          throw error
+        }
+      }
+
+      // Reset form
+      setFormData({
+        name: '',
+        description: '',
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+        sunday: false
+      })
+      setShowAddForm(false)
+      setEditingHabit(null)
+      loadHabits()
+    } catch (error) {
+      console.error('Error saving habit:', error)
+      console.error('Error details:', JSON.stringify(error, null, 2))
+    }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const toggleCompletion = async (_habitId: string) => {
-    // TODO: Implement Firebase database operations for habit completions
-    alert('Habit completion tracking is coming soon with Firebase integration!')
+  const toggleCompletion = async (habitId: string) => {
+    const today = new Date().toISOString().split('T')[0]
+    const isCompleted = todayCompletions.includes(habitId)
+
+    try {
+      if (isCompleted) {
+        // Remove completion
+        const { error } = await habitCompletionsService.deleteForHabitAndDate(habitId, today)
+
+        if (error) throw error
+        setTodayCompletions(prev => prev.filter(id => id !== habitId))
+      } else {
+        // Add completion
+        const { error } = await habitCompletionsService.create({
+          habitId: habitId,
+          completionDate: today
+        })
+
+        if (error) throw error
+        setTodayCompletions(prev => [...prev, habitId])
+      }
+
+      // Recalculate streak for this habit
+      await calculateAndUpdateStreak(habitId)
+
+      // Refresh habits to get updated streak counts
+      loadHabits()
+    } catch (error) {
+      console.error('Error toggling completion:', error)
+    }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const deleteHabit = async (_habitId: string) => {
-    // TODO: Implement Firebase database operations for habits
-    alert('Habit deletion is coming soon with Firebase integration!')
+  const deleteHabit = async (habitId: string) => {
+    if (!confirm('Are you sure you want to delete this habit?')) return
+
+    try {
+      const { error } = await habitsService.delete(habitId)
+
+      if (error) throw error
+      loadHabits()
+    } catch (error) {
+      console.error('Error deleting habit:', error)
+    }
   }
 
   const startEdit = (habit: Habit) => {
@@ -154,6 +227,48 @@ export default function StreaksPage() {
     })
     setEditingHabit(habit)
     setShowAddForm(true)
+  }
+
+  const calculateAndUpdateStreak = async (habitId: string) => {
+    try {
+      // Get all completions for this habit (this would be more efficient with a better query in production)
+      // For now, we'll get recent completions and calculate the streak
+      const habit = habits.find(h => h.id === habitId)
+      if (!habit) return
+
+      // Get completions for the last 60 days to calculate streak
+      const completions: string[] = []
+      for (let i = 0; i < 60; i++) {
+        const date = new Date()
+        date.setDate(date.getDate() - i)
+        const dateStr = date.toISOString().split('T')[0]
+
+        // Check if habit is scheduled for this day
+        const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase()
+        const isScheduled = habit[dayOfWeek as keyof Habit] as boolean
+
+        if (isScheduled) {
+          // Check if completed on this date
+          const { data } = await habitCompletionsService.getForDate(dateStr)
+          const completedToday = data?.some(c => c.habitId === habitId) || false
+          if (completedToday) {
+            completions.push(dateStr)
+          } else {
+            // If not completed on a scheduled day, break the streak
+            break
+          }
+        }
+      }
+
+      const currentStreak = completions.length
+      const { error } = await habitCompletionsService.updateStreak(habitId, currentStreak, habit.longestStreak)
+
+      if (error) {
+        console.error('Error updating streak:', error)
+      }
+    } catch (error) {
+      console.error('Error calculating streak:', error)
+    }
   }
 
   const getTodayDay = () => {
@@ -322,11 +437,11 @@ export default function StreaksPage() {
                           <div className="flex space-x-2">
                             <Badge variant="outline" className="flex items-center">
                               <Flame className="w-3 h-3 mr-1 text-orange-500" />
-                              {habit.current_streak} day streak
+                              {habit.currentStreak} day streak
                             </Badge>
                             <Badge variant="outline" className="flex items-center">
                               <Trophy className="w-3 h-3 mr-1 text-yellow-500" />
-                              Best: {habit.longest_streak}
+                              Best: {habit.longestStreak}
                             </Badge>
                           </div>
                         </div>

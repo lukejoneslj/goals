@@ -60,3 +60,30 @@ export type ActionItem = {
 
 // Helper function to get current timestamp
 export const getTimestamp = () => new Date().toISOString();
+
+// Types for habits and habit completions
+export type Habit = {
+  id: string
+  userId: string
+  name: string
+  description?: string
+  monday: boolean
+  tuesday: boolean
+  wednesday: boolean
+  thursday: boolean
+  friday: boolean
+  saturday: boolean
+  sunday: boolean
+  currentStreak: number
+  longestStreak: number
+  isActive: boolean
+  createdAt: string
+  updatedAt?: string
+}
+
+export type HabitCompletion = {
+  id: string
+  habitId: string
+  completionDate: string
+  createdAt: string
+}
