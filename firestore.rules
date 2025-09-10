@@ -1,28 +1,72 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users can only read/write their own data
+    // Users can only read/write their own goals
     match /goals/{goalId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.userId is string &&
+        request.resource.data.userId.size() > 0;
+
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      allow delete: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
     }
 
     // Users can only read/write their own action items
     match /action_items/{actionItemId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.userId is string &&
+        request.resource.data.userId.size() > 0;
+
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      allow delete: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
     }
 
     // Users can only read/write their own habits
     match /habits/{habitId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.userId is string &&
+        request.resource.data.userId.size() > 0;
+
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      allow delete: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
     }
 
     // Users can only read/write their own habit completions
     match /habit_completions/{completionId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.userId is string &&
+        request.resource.data.userId.size() > 0;
+
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      allow delete: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
     }
   }
 }

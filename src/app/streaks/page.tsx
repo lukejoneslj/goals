@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
 import { 
   Plus, 
   Flame, 
@@ -45,6 +44,8 @@ export default function StreaksPage() {
   const [loading, setLoading] = useState(true)
   const [showAddForm, setShowAddForm] = useState(false)
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null)
+  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0])
+  const [dateCompletions, setDateCompletions] = useState<string[]>([])
   
   // Form state
   const [formData, setFormData] = useState({
@@ -66,7 +67,9 @@ export default function StreaksPage() {
       const { data, error } = await habitsService.getAll(user.uid)
 
       if (error) throw error
-      setHabits((data as Habit[]) || [])
+
+      const habitsData = (data as Habit[]) || []
+      setHabits(habitsData)
     } catch (error) {
       console.error('Error loading habits:', error)
     } finally {
@@ -75,17 +78,35 @@ export default function StreaksPage() {
   }, [user])
 
   const loadTodayCompletions = useCallback(async () => {
+    if (!user) return
+
     try {
       const today = new Date().toISOString().split('T')[0]
-      const { data, error } = await habitCompletionsService.getForDate(today)
+      const { data, error } = await habitCompletionsService.getForDate(today, user.uid)
 
       if (error) throw error
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setTodayCompletions(data?.map((c: any) => c.habitId) || [])
+
+      const completions = data?.map((c) => c.habitId) || []
+      setTodayCompletions(completions)
     } catch (error) {
       console.error('Error loading today\'s completions:', error)
     }
-  }, [])
+  }, [user])
+
+  const loadDateCompletions = useCallback(async (date: string) => {
+    if (!user) return
+
+    try {
+      const { data, error } = await habitCompletionsService.getForDate(date, user.uid)
+
+      if (error) throw error
+
+      const completions = data?.map((c) => c.habitId) || []
+      setDateCompletions(completions)
+    } catch (error) {
+      console.error('Error loading date completions:', error)
+    }
+  }, [user])
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -99,8 +120,16 @@ export default function StreaksPage() {
     if (user) {
       loadHabits()
       loadTodayCompletions()
+      loadDateCompletions(selectedDate)
     }
-  }, [user, loadHabits, loadTodayCompletions])
+  }, [user, loadHabits, loadTodayCompletions, loadDateCompletions, selectedDate])
+
+  // Load completions when selected date changes
+  useEffect(() => {
+    if (user && selectedDate !== new Date().toISOString().split('T')[0]) {
+      loadDateCompletions(selectedDate)
+    }
+  }, [selectedDate, user, loadDateCompletions])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -126,7 +155,7 @@ export default function StreaksPage() {
       } else {
         // Create new habit
         const habitData = {
-          userId: user.uid,
+          userId: user!.uid,
           name: formData.name,
           description: formData.description,
           monday: formData.monday,
@@ -169,32 +198,47 @@ export default function StreaksPage() {
   }
 
   const toggleCompletion = async (habitId: string) => {
-    const today = new Date().toISOString().split('T')[0]
-    const isCompleted = todayCompletions.includes(habitId)
+    if (!user) return
+
+    const isTodaySelected = selectedDate === new Date().toISOString().split('T')[0]
+    const currentCompletions = isTodaySelected ? todayCompletions : dateCompletions
+    const isCompleted = currentCompletions.includes(habitId)
 
     try {
       if (isCompleted) {
         // Remove completion
-        const { error } = await habitCompletionsService.deleteForHabitAndDate(habitId, today)
+        const { error } = await habitCompletionsService.deleteForHabitAndDate(habitId, selectedDate, user.uid)
 
         if (error) throw error
-        setTodayCompletions(prev => prev.filter(id => id !== habitId))
+
+        if (isTodaySelected) {
+          setTodayCompletions(prev => prev.filter(id => id !== habitId))
+        } else {
+          setDateCompletions(prev => prev.filter(id => id !== habitId))
+        }
       } else {
         // Add completion
         const { error } = await habitCompletionsService.create({
+          userId: user.uid,
           habitId: habitId,
-          completionDate: today
+          completionDate: selectedDate
         })
 
         if (error) throw error
-        setTodayCompletions(prev => [...prev, habitId])
+
+        if (isTodaySelected) {
+          setTodayCompletions(prev => [...prev, habitId])
+        } else {
+          setDateCompletions(prev => [...prev, habitId])
+        }
       }
 
-      // Recalculate streak for this habit
-      await calculateAndUpdateStreak(habitId)
-
-      // Refresh habits to get updated streak counts
-      loadHabits()
+      // Recalculate streak for this habit (only if we're working with today)
+      if (isTodaySelected) {
+        await calculateAndUpdateStreak(habitId)
+        // Refresh habits to get updated streak counts
+        loadHabits()
+      }
     } catch (error) {
       console.error('Error toggling completion:', error)
     }
@@ -231,13 +275,14 @@ export default function StreaksPage() {
 
   const calculateAndUpdateStreak = async (habitId: string) => {
     try {
-      // Get all completions for this habit (this would be more efficient with a better query in production)
-      // For now, we'll get recent completions and calculate the streak
       const habit = habits.find(h => h.id === habitId)
       if (!habit) return
 
-      // Get completions for the last 60 days to calculate streak
-      const completions: string[] = []
+      // Calculate current streak by going backwards from today
+      let currentStreak = 0
+      let longestStreak = habit.longestStreak || 0
+
+      // Check up to 60 days back
       for (let i = 0; i < 60; i++) {
         const date = new Date()
         date.setDate(date.getDate() - i)
@@ -249,19 +294,26 @@ export default function StreaksPage() {
 
         if (isScheduled) {
           // Check if completed on this date
-          const { data } = await habitCompletionsService.getForDate(dateStr)
+          const { data } = await habitCompletionsService.getForDate(dateStr, habit.userId)
           const completedToday = data?.some(c => c.habitId === habitId) || false
+
           if (completedToday) {
-            completions.push(dateStr)
+            currentStreak++
           } else {
-            // If not completed on a scheduled day, break the streak
+            // Break when we find the first non-completed scheduled day
             break
           }
+        } else if (i === 0) {
+          // If today is not scheduled, current streak is 0
+          currentStreak = 0
+          break
         }
       }
 
-      const currentStreak = completions.length
-      const { error } = await habitCompletionsService.updateStreak(habitId, currentStreak, habit.longestStreak)
+      // Update longest streak if current is higher
+      longestStreak = Math.max(longestStreak, currentStreak)
+
+      const { error } = await habitCompletionsService.updateStreak(habitId, currentStreak, longestStreak)
 
       if (error) {
         console.error('Error updating streak:', error)
@@ -271,14 +323,14 @@ export default function StreaksPage() {
     }
   }
 
-  const getTodayDay = () => {
-    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
-    return days[new Date().getDay()]
-  }
 
-  const shouldShowToday = (habit: Habit) => {
-    const today = getTodayDay()
-    return habit[today as keyof Habit] as boolean
+
+  const getMotivationalMessage = (streak: number) => {
+    if (streak === 0) return "Start your streak today! 💪"
+    if (streak < 7) return "You're on fire! Keep it up! 🔥"
+    if (streak < 30) return "Amazing consistency! You're crushing it! 🌟"
+    if (streak < 100) return "Incredible dedication! You're unstoppable! 🚀"
+    return "LEGENDARY! You're a habit master! 👑"
   }
 
   if (authLoading || loading) {
@@ -332,6 +384,68 @@ export default function StreaksPage() {
             <Plus className="w-4 h-4 mr-2" />
             Add Habit
           </Button>
+        </div>
+
+        {/* Date Picker and Stats */}
+        <div className="mb-8">
+          <Card className="border-0 shadow-xl bg-gradient-to-r from-blue-50 to-purple-50">
+            <CardContent className="p-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+                <div className="flex items-center space-x-4">
+                  <div>
+                    <Label htmlFor="date-picker" className="text-sm font-medium text-gray-700">
+                      Select Date
+                    </Label>
+                    <Input
+                      id="date-picker"
+                      type="date"
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                      className="mt-1 w-40"
+                      max={new Date().toISOString().split('T')[0]}
+                    />
+                  </div>
+                  {selectedDate !== new Date().toISOString().split('T')[0] && (
+                    <Button
+                      onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
+                      variant="outline"
+                      size="sm"
+                      className="mt-6"
+                    >
+                      Back to Today
+                    </Button>
+                  )}
+                </div>
+
+                <div className="flex items-center space-x-8">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-blue-600">
+                      {habits.reduce((sum, habit) => sum + (habit.currentStreak || 0), 0)}
+                    </div>
+                    <div className="text-sm text-gray-600">Total Streak Days</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-green-600">
+                      {todayCompletions.length}
+                    </div>
+                    <div className="text-sm text-gray-600">Completed Today</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-purple-600">
+                      {habits.reduce((max, habit) => Math.max(max, habit.longestStreak || 0), 0)}
+                    </div>
+                    <div className="text-sm text-gray-600">Best Streak</div>
+                  </div>
+                  <div className="text-center max-w-xs">
+                    <div className="text-lg font-semibold text-orange-600 mb-1">
+                      {getMotivationalMessage(habits.reduce((sum, habit) => sum + (habit.currentStreak || 0), 0))}
+                    </div>
+                    <div className="text-xs text-gray-500">Keep up the great work!</div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Add/Edit Form */}
@@ -424,25 +538,40 @@ export default function StreaksPage() {
             </Card>
           ) : (
             habits.map(habit => {
-              const isCompletedToday = todayCompletions.includes(habit.id)
-              const showToday = shouldShowToday(habit)
-              
+              const isTodaySelected = selectedDate === new Date().toISOString().split('T')[0]
+              const currentCompletions = isTodaySelected ? todayCompletions : dateCompletions
+              const isCompletedToday = currentCompletions.includes(habit.id)
+
+              // Check if habit is scheduled for selected date
+              const selectedDateObj = new Date(selectedDate)
+              const selectedDayOfWeek = selectedDateObj.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase()
+              const isScheduledForDate = habit[selectedDayOfWeek as keyof Habit] as boolean
+
+              // Debug logging (remove in production)
+              // console.log('Habit:', habit.name, 'isScheduledForDate:', isScheduledForDate, 'isCompletedToday:', isCompletedToday)
+
               return (
                 <Card key={habit.id} className="border-0 shadow-xl bg-white/90 backdrop-blur-sm">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <div className="flex items-center space-x-4 mb-2">
+                        <div className="flex items-center space-x-4 mb-3">
                           <h3 className="text-xl font-semibold text-gray-900">{habit.name}</h3>
-                          <div className="flex space-x-2">
-                            <Badge variant="outline" className="flex items-center">
-                              <Flame className="w-3 h-3 mr-1 text-orange-500" />
+                          <div className="flex space-x-3">
+                            <div className={`flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                              habit.currentStreak > 0
+                                ? 'bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 border border-orange-200'
+                                : 'bg-gray-100 text-gray-600 border border-gray-200'
+                            }`}>
+                              <Flame className={`w-4 h-4 mr-2 ${habit.currentStreak > 0 ? 'text-orange-500' : 'text-gray-400'}`} />
                               {habit.currentStreak} day streak
-                            </Badge>
-                            <Badge variant="outline" className="flex items-center">
-                              <Trophy className="w-3 h-3 mr-1 text-yellow-500" />
-                              Best: {habit.longestStreak}
-                            </Badge>
+                            </div>
+                            {habit.longestStreak > 0 && (
+                              <div className="flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border border-yellow-200">
+                                <Trophy className="w-4 h-4 mr-2 text-yellow-600" />
+                                Best: {habit.longestStreak}
+                              </div>
+                            )}
                           </div>
                         </div>
                         
@@ -459,20 +588,20 @@ export default function StreaksPage() {
                       </div>
                       
                       <div className="flex items-center space-x-2">
-                        {showToday && (
+                        {isScheduledForDate && (
                           <Button
                             onClick={() => toggleCompletion(habit.id)}
                             variant={isCompletedToday ? "default" : "outline"}
                             size="sm"
-                            className={isCompletedToday ? 
-                              "bg-green-600 hover:bg-green-700 text-white" : 
-                              "border-green-600 text-green-600 hover:bg-green-50"
+                            className={isCompletedToday ?
+                              "bg-green-600 hover:bg-green-700 text-white shadow-md" :
+                              "border-green-600 text-green-600 hover:bg-green-50 shadow-sm"
                             }
                           >
                             {isCompletedToday ? (
                               <>
                                 <Check className="w-4 h-4 mr-1" />
-                                Done Today
+                                Completed
                               </>
                             ) : (
                               <>
@@ -481,6 +610,11 @@ export default function StreaksPage() {
                               </>
                             )}
                           </Button>
+                        )}
+                        {!isScheduledForDate && (
+                          <span className="text-xs text-gray-500 italic">
+                            Not scheduled for {selectedDayOfWeek}
+                          </span>
                         )}
                         
                         <Button

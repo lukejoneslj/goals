@@ -95,6 +95,7 @@ export default function GoalModal({ isOpen, onClose, onGoalCreated, userId }: Go
   const [actionItems, setActionItems] = useState<ActionItem[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+
   // Reset form when modal opens
   useEffect(() => {
     if (isOpen) {
@@ -181,29 +182,36 @@ export default function GoalModal({ isOpen, onClose, onGoalCreated, userId }: Go
         targetDate: formData.targetDate,
         obstacles: formData.obstacles.filter(o => o.trim() !== ''),
         resources: formData.resources.filter(r => r.trim() !== ''),
-        detailedPlan: formData.detailedPlan || undefined,
+        ...(formData.detailedPlan && { detailedPlan: formData.detailedPlan }),
         whyLeverage: formData.whyLeverage,
         progressPercentage: 0,
-        notes: formData.notes || undefined
+        ...(formData.notes && { notes: formData.notes })
       }
 
       const { data: goalResult, error: goalError } = await goalsService.create(goalData)
 
-      if (goalError) throw goalError
+      if (goalError) {
+        console.error('Goal creation failed:', goalError)
+        throw goalError
+      }
 
       // Create action items if any
       const validActionItems = actionItems.filter(item => item.description.trim() !== '')
       if (validActionItems.length > 0) {
         for (const item of validActionItems) {
           const actionItemData = {
+            userId: userId,
             goalId: goalResult!.id,
             actionDescription: item.description,
-            dueDate: item.dueDate || undefined,
+            ...(item.dueDate && { dueDate: item.dueDate }),
             isCompleted: false
           }
 
           const { error: actionError } = await actionItemsService.create(actionItemData)
-          if (actionError) throw actionError
+          if (actionError) {
+            console.error('Action item creation failed:', actionError)
+            throw actionError
+          }
         }
       }
 

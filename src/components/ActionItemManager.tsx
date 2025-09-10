@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { ActionItem } from '@/lib/firebase'
 import { actionItemsService } from '@/lib/database'
+import { useAuth } from '@/hooks/useAuth'
 
 interface ActionItemManagerProps {
   goalId: string
@@ -25,6 +26,7 @@ interface ActionItemManagerProps {
 }
 
 export default function ActionItemManager({ goalId, onProgressUpdate }: ActionItemManagerProps) {
+  const { user } = useAuth()
   const [actionItems, setActionItems] = useState<ActionItem[]>([])
   const [loading, setLoading] = useState(true)
   const [newItem, setNewItem] = useState({ description: '', dueDate: '' })
@@ -55,10 +57,11 @@ export default function ActionItemManager({ goalId, onProgressUpdate }: ActionIt
   }, [loadActionItems])
 
   const addActionItem = async () => {
-    if (!newItem.description.trim()) return
+    if (!newItem.description.trim() || !user) return
 
     try {
       const actionItemData = {
+        userId: user.uid,
         goalId: goalId,
         actionDescription: newItem.description.trim(),
         dueDate: newItem.dueDate || undefined,

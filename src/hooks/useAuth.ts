@@ -10,6 +10,11 @@ export function useAuth() {
 
   useEffect(() => {
     // Listen for auth changes
+    if (!auth) {
+      setLoading(false)
+      return
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser)
       setLoading(false)
@@ -19,6 +24,10 @@ export function useAuth() {
   }, [])
 
   const signIn = async (email: string, password: string) => {
+    if (!auth) {
+      return { data: null, error: { message: 'Firebase auth not initialized' } }
+    }
+
     try {
       const result = await signInWithEmailAndPassword(auth, email, password)
       return { data: { user: result.user }, error: null }
@@ -28,6 +37,10 @@ export function useAuth() {
   }
 
   const signInWithGoogle = async () => {
+    if (!auth) {
+      return { data: null, error: { message: 'Firebase auth not initialized' } }
+    }
+
     try {
       const provider = new GoogleAuthProvider()
       const result = await signInWithPopup(auth, provider)
@@ -38,6 +51,10 @@ export function useAuth() {
   }
 
   const signUp = async (email: string, password: string) => {
+    if (!auth) {
+      return { data: null, error: { message: 'Firebase auth not initialized' } }
+    }
+
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password)
       return { data: { user: result.user }, error: null }
@@ -47,6 +64,10 @@ export function useAuth() {
   }
 
   const signOut = async () => {
+    if (!auth) {
+      return { error: { message: 'Firebase auth not initialized' } }
+    }
+
     try {
       await firebaseSignOut(auth)
       return { error: null }

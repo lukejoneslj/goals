@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, FirebaseApp } from "firebase/app";
+import { getAuth, Auth, setPersistence, browserLocalPersistence } from "firebase/auth";
+import { getFirestore, Firestore } from "firebase/firestore";
 import { getAnalytics, Analytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
@@ -16,15 +16,30 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+let app: FirebaseApp | undefined;
+let auth: Auth | undefined;
+let db: Firestore | undefined;
 
-// Initialize Firebase services
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+// Initialize Firebase only on client side
+if (typeof window !== 'undefined') {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+
+  // Set authentication persistence to LOCAL for better persistence
+  // This helps maintain authentication state across browser sessions
+  setPersistence(auth, browserLocalPersistence).catch((error) => {
+    console.error('Error setting auth persistence:', error);
+  });
+
+  db = getFirestore(app);
+}
+
+// Export Firebase services
+export { auth, db };
 
 // Initialize Analytics (only in browser environment)
 let analytics: Analytics | null = null;
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && app) {
   analytics = getAnalytics(app);
 }
 export { analytics };
@@ -49,6 +64,7 @@ export type Goal = {
 
 export type ActionItem = {
   id: string
+  userId: string
   goalId: string
   actionDescription: string
   isCompleted?: boolean
@@ -83,6 +99,7 @@ export type Habit = {
 
 export type HabitCompletion = {
   id: string
+  userId: string
   habitId: string
   completionDate: string
   createdAt: string
