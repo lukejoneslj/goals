@@ -125,7 +125,7 @@ export default function TodosPage() {
     }
   }, [user, loadTodos, loadUserELO])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent, keepOpen: boolean = false) => {
     e.preventDefault()
     if (!user) return
 
@@ -137,6 +137,8 @@ export default function TodosPage() {
           category: formData.category || undefined,
           dueDate: formData.dueDate
         })
+        setShowAddForm(false)
+        setEditingTodo(null)
       } else {
         await todosService.create({
           userId: user.uid,
@@ -146,16 +148,35 @@ export default function TodosPage() {
           isCompleted: false,
           dueDate: formData.dueDate
         })
+        
+        // If keepOpen is true, keep form open and clear it for next todo
+        if (keepOpen) {
+          setFormData({
+            title: '',
+            description: '',
+            category: formData.category, // Keep the same category for convenience
+            dueDate: formData.dueDate // Keep the same date
+          })
+          // Focus back on title input for quick entry
+          setTimeout(() => {
+            const titleInput = document.getElementById('title')
+            titleInput?.focus()
+          }, 100)
+        } else {
+          setShowAddForm(false)
+        }
       }
 
-      setShowAddForm(false)
-      setEditingTodo(null)
-      setFormData({
-        title: '',
-        description: '',
-        category: '',
-        dueDate: new Date().toISOString().split('T')[0]
-      })
+      if (!keepOpen) {
+        setEditingTodo(null)
+        setFormData({
+          title: '',
+          description: '',
+          category: '',
+          dueDate: new Date().toISOString().split('T')[0]
+        })
+      }
+      
       loadTodos()
     } catch (error) {
       console.error('Error saving todo:', error)
@@ -463,20 +484,51 @@ export default function TodosPage() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 border-t border-border/50">
-                <Button type="submit" className="bg-primary text-primary-foreground hover:opacity-90 w-full sm:w-auto">
-                  {editingTodo ? 'Update Todo' : 'Create Todo'}
-                </Button>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={() => {
-                    setShowAddForm(false)
-                    setEditingTodo(null)
-                  }}
-                  className="w-full sm:w-auto"
-                >
-                  Cancel
-                </Button>
+                {editingTodo ? (
+                  <>
+                    <Button type="submit" className="bg-primary text-primary-foreground hover:opacity-90 w-full sm:w-auto">
+                      Update Todo
+                    </Button>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={() => {
+                        setShowAddForm(false)
+                        setEditingTodo(null)
+                      }}
+                      className="w-full sm:w-auto"
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button 
+                      type="button"
+                      onClick={(e) => handleSubmit(e, true)}
+                      className="bg-primary text-primary-foreground hover:opacity-90 w-full sm:w-auto"
+                    >
+                      Add & Add Another
+                    </Button>
+                    <Button 
+                      type="submit" 
+                      className="bg-primary text-primary-foreground hover:opacity-90 w-full sm:w-auto"
+                    >
+                      Create Todo
+                    </Button>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={() => {
+                        setShowAddForm(false)
+                        setEditingTodo(null)
+                      }}
+                      className="w-full sm:w-auto"
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                )}
               </div>
             </form>
           </DialogContent>
