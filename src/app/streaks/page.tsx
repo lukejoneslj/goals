@@ -166,7 +166,11 @@ export default function StreaksPage() {
     if (!user) return
 
     try {
-      const { data, error } = await userELOService.getOrCreate(user.uid)
+      const { data, error } = await userELOService.getOrCreate(
+        user.uid,
+        user.displayName || undefined,
+        user.email || undefined
+      )
 
       if (error) throw error
 

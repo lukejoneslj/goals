@@ -91,7 +91,11 @@ export default function Dashboard() {
     if (!user?.uid) return
 
     try {
-      const { data, error } = await userELOService.getOrCreate(user.uid)
+      const { data, error } = await userELOService.getOrCreate(
+        user.uid,
+        user.displayName || undefined,
+        user.email || undefined
+      )
 
       if (error) throw error
       setUserELO(data as UserELO)
@@ -100,7 +104,7 @@ export default function Dashboard() {
     } finally {
       setEloLoading(false)
     }
-  }, [user?.uid])
+  }, [user?.uid, user?.displayName, user?.email])
 
   useEffect(() => {
     if (!loading && !user) {

@@ -101,6 +101,8 @@ export type Habit = {
 export type UserELO = {
   id: string
   userId: string
+  displayName?: string
+  email?: string
   eloRating: number
   currentRank: ELO_RANK
   totalWins: number

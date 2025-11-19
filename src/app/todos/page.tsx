@@ -108,7 +108,11 @@ export default function TodosPage() {
     if (!user?.uid) return
 
     try {
-      const { data, error } = await userELOService.getOrCreate(user.uid)
+      const { data, error } = await userELOService.getOrCreate(
+        user.uid,
+        user.displayName || undefined,
+        user.email || undefined
+      )
       if (error) throw error
       setUserELO(data as UserELO)
     } catch (error) {
@@ -116,7 +120,7 @@ export default function TodosPage() {
     } finally {
       setEloLoading(false)
     }
-  }, [user?.uid])
+  }, [user?.uid, user?.displayName, user?.email])
 
   useEffect(() => {
     if (user) {

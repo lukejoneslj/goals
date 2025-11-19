@@ -39,7 +39,7 @@ export default function CompetePage() {
 
     try {
       const [userResult, allUsersResult] = await Promise.all([
-        userELOService.getOrCreate(user.uid),
+        userELOService.getOrCreate(user.uid, user.displayName || undefined, user.email || undefined),
         userELOService.getAllUsers()
       ])
 
@@ -53,7 +53,7 @@ export default function CompetePage() {
     } finally {
       setLoading(false)
     }
-  }, [user?.uid])
+  }, [user?.uid, user?.displayName, user?.email])
 
   useEffect(() => {
     if (user) {
@@ -587,7 +587,10 @@ export default function CompetePage() {
                             <p className={`font-semibold text-sm sm:text-base truncate ${
                               isCurrentUser ? 'text-purple-700' : 'text-foreground'
                             }`}>
-                              {isCurrentUser ? 'You' : `User ${u.userId.slice(0, 8)}...`}
+                              {isCurrentUser 
+                                ? 'You' 
+                                : (u.displayName || u.email?.split('@')[0] || `User ${u.userId.slice(0, 8)}...`)
+                              }
                             </p>
                             {isCurrentUser && (
                               <Badge variant="default" className="bg-purple-600 text-xs">You</Badge>

@@ -468,7 +468,7 @@ export const habitCompletionsService = {
 // User ELO operations
 export const userELOService = {
   // Get or create ELO data for a user
-  async getOrCreate(userId: string) {
+  async getOrCreate(userId: string, displayName?: string, email?: string) {
     try {
       const firestoreDb = ensureFirebase()
       const q = query(collection(firestoreDb, 'user_elo'), where('userId', '==', userId))
@@ -476,12 +476,30 @@ export const userELOService = {
 
       if (!querySnapshot.empty) {
         const doc = querySnapshot.docs[0]
-        return { data: { id: doc.id, ...doc.data() } as UserELO, error: null }
+        const existingData = doc.data() as UserELO
+        
+        // Update displayName and email if provided and different
+        const needsUpdate = (displayName && existingData.displayName !== displayName) || 
+                           (email && existingData.email !== email)
+        
+        if (needsUpdate) {
+          const updates: Partial<UserELO> = {}
+          if (displayName) updates.displayName = displayName
+          if (email) updates.email = email
+          updates.updatedAt = getTimestamp()
+          
+          await updateDoc(doc.ref, updates)
+          return { data: { ...existingData, ...updates, id: doc.id } as UserELO, error: null }
+        }
+        
+        return { data: { ...existingData, id: doc.id } as UserELO, error: null }
       }
 
       // Create new ELO record
       const newELOData = {
         userId,
+        displayName: displayName || undefined,
+        email: email || undefined,
         eloRating: 1000,
         currentRank: 'Bronze III',
         totalWins: 0,
