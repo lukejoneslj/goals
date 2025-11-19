@@ -31,34 +31,34 @@ import DashboardNav from '@/components/DashboardNav'
 const categoryConfig = {
   spiritual: {
     icon: Heart,
-    color: 'from-purple-500 to-purple-600',
-    textColor: 'text-purple-600',
-    bgColor: 'bg-purple-50',
-    borderColor: 'border-purple-500',
+    color: 'from-purple-300 to-purple-400',
+    textColor: 'text-purple-500',
+    bgColor: 'bg-purple-50/50',
+    borderColor: 'border-purple-300',
     title: '🙏 Spiritual'
   },
   physical: {
     icon: Dumbbell,
-    color: 'from-red-500 to-red-600',
-    textColor: 'text-red-600',
-    bgColor: 'bg-red-50',
-    borderColor: 'border-red-500',
+    color: 'from-rose-300 to-rose-400',
+    textColor: 'text-rose-500',
+    bgColor: 'bg-rose-50/50',
+    borderColor: 'border-rose-300',
     title: '💪 Physical'
   },
   social: {
     icon: Users,
-    color: 'from-green-500 to-green-600',
-    textColor: 'text-green-600',
-    bgColor: 'bg-green-50',
-    borderColor: 'border-green-500',
+    color: 'from-emerald-300 to-emerald-400',
+    textColor: 'text-emerald-500',
+    bgColor: 'bg-emerald-50/50',
+    borderColor: 'border-emerald-300',
     title: '👥 Social'
   },
   intellectual: {
     icon: Brain,
-    color: 'from-blue-500 to-blue-600',
-    textColor: 'text-blue-600',
-    bgColor: 'bg-blue-50',
-    borderColor: 'border-blue-500',
+    color: 'from-blue-300 to-blue-400',
+    textColor: 'text-blue-500',
+    bgColor: 'bg-blue-50/50',
+    borderColor: 'border-blue-300',
     title: '🧠 Intellectual'
   }
 }
@@ -388,7 +388,7 @@ export default function TodosPage() {
                   onClick={() => setCategoryFilter(category)}
                   className={`text-xs transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 ${
                     categoryFilter === category && config
-                      ? `${config.bgColor} ${config.textColor} border-${config.borderColor.split('-')[1]}-200`
+                      ? `${config.bgColor} ${config.textColor} ${config.borderColor}`
                       : ''
                   }`}
                 >
@@ -465,7 +465,7 @@ export default function TodosPage() {
                         })}
                         className={`transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 ${
                           isSelected 
-                            ? `${config.bgColor} ${config.textColor} border-${config.borderColor.split('-')[1]}-200` 
+                            ? `${config.bgColor} ${config.textColor} ${config.borderColor}` 
                             : ''
                         }`}
                       >
@@ -579,11 +579,11 @@ export default function TodosPage() {
                 <Card 
                   key={todo.id} 
                   className={`bg-card border-border shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer flex flex-col h-full ${
-                    todo.isCompleted ? 'opacity-75' : ''
+                    todo.isCompleted ? 'opacity-50 grayscale' : ''
                   }`}
                 >
-                  {todoCategory && <div className={`h-1 bg-gradient-to-r ${todoCategory.color}`}></div>}
-                  <CardContent className="p-3 sm:p-4 md:p-5 flex flex-col flex-1">
+                  {todoCategory && <div className={`h-1 bg-gradient-to-r ${todoCategory.color} ${todo.isCompleted ? 'opacity-50' : ''}`}></div>}
+                  <CardContent className={`p-3 sm:p-4 md:p-5 flex flex-col flex-1 ${todo.isCompleted ? 'opacity-75' : ''}`}>
                     {/* Header */}
                     <div className="mb-3">
                       <div className="flex items-start justify-between gap-2 mb-2">
@@ -623,7 +623,7 @@ export default function TodosPage() {
                       {/* Badges */}
                       <div className="flex flex-wrap gap-1.5 mb-2">
                         {todoCategory && (
-                          <Badge variant="outline" className={`${todoCategory.textColor} border-${todoCategory.borderColor.split('-')[1]}-200 bg-transparent px-2 py-0.5 text-xs`}>
+                          <Badge variant="outline" className={`${todoCategory.textColor} ${todoCategory.borderColor} bg-transparent px-2 py-0.5 text-xs opacity-70`}>
                             {CategoryIcon && <CategoryIcon className="w-3 h-3 mr-1 flex-shrink-0" />}
                             <span className="whitespace-nowrap">{todoCategory.title}</span>
                           </Badge>
