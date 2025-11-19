@@ -572,113 +572,114 @@ export default function StreaksPage() {
           </div>
         )}
 
-        {/* Quick Stats and Date Picker - Compact */}
-        <div className="mb-4 sm:mb-6">
+        {/* Stats and Date Picker Grid */}
+        <div className="mb-4 sm:mb-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Date Picker Card */}
           <Card className="border border-border shadow-sm bg-card">
-            <CardContent className="p-4 sm:p-5">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                {/* Date Picker */}
-                <div className="flex items-center gap-3">
-                  <div className="w-full sm:w-auto">
-                    <Label htmlFor="date-picker" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Date
-                    </Label>
-                    <Input
-                      id="date-picker"
-                      type="date"
-                      value={selectedDate}
-                      onChange={(e) => setSelectedDate(e.target.value)}
-                      className="mt-1.5 w-full sm:w-40 text-sm bg-background"
-                      max={new Date().toISOString().split('T')[0]}
-                    />
-                  </div>
-                  {selectedDate !== new Date().toISOString().split('T')[0] && (
-                    <Button
-                      onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
-                      variant="outline"
-                      size="sm"
-                      className="mt-auto"
-                    >
-                      Today
-                    </Button>
-                  )}
-                </div>
+            <CardContent className="p-4">
+              <Label htmlFor="date-picker" className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2 block">
+                Select Date
+              </Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  id="date-picker"
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  className="flex-1 text-sm bg-background"
+                  max={new Date().toISOString().split('T')[0]}
+                />
+                {selectedDate !== new Date().toISOString().split('T')[0] && (
+                  <Button
+                    onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
+                    variant="outline"
+                    size="sm"
+                    className="flex-shrink-0"
+                  >
+                    Today
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
 
-                {/* Quick Stats */}
-                <div className="grid grid-cols-4 gap-3 sm:gap-4 flex-1">
-                  <div className="text-center p-3 bg-secondary/30 rounded-lg">
-                    <div className="text-lg sm:text-xl font-bold text-primary">
-                      {habits.reduce((sum, habit) => sum + (habit.currentStreak || 0), 0)}
-                    </div>
-                    <div className="text-[10px] xs:text-xs text-muted-foreground font-medium mt-0.5">Streaks</div>
-                  </div>
-                  <div className="text-center p-3 bg-secondary/30 rounded-lg">
-                    <div className="text-lg sm:text-xl font-bold text-emerald-600">
-                      {todayCompletions.length}
-                    </div>
-                    <div className="text-[10px] xs:text-xs text-muted-foreground font-medium mt-0.5">Today</div>
-                  </div>
-                  <div className="text-center p-3 bg-secondary/30 rounded-lg">
-                    <div className="text-lg sm:text-xl font-bold text-violet-600">
-                      {habits.reduce((max, habit) => Math.max(max, habit.longestStreak || 0), 0)}
-                    </div>
-                    <div className="text-[10px] xs:text-xs text-muted-foreground font-medium mt-0.5">Best</div>
-                  </div>
-                  {!eloLoading && userELO && (
-                    <div className="text-center p-3 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg border border-purple-200 cursor-pointer hover:shadow-md transition-all duration-300"
-                         onClick={() => setShowStats(!showStats)}>
-                      <div className="flex items-center justify-center mb-1">
-                        <div className={`w-6 h-6 rounded-full bg-gradient-to-r ${getRankInfo(userELO.currentRank).color} flex items-center justify-center text-white font-bold text-xs`}>
-                          {userELO.currentRank.split(' ')[0][0]}{userELO.currentRank.split(' ')[1]?.[0] || ''}
-                        </div>
-                      </div>
-                      <div className="text-xs sm:text-sm font-bold text-purple-700">{userELO.eloRating}</div>
-                      <div className="text-[10px] text-purple-600 font-medium">ELO</div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Expand Stats Button */}
+          {/* Quick Stats Grid */}
+          <Card className="border border-border shadow-sm bg-card lg:col-span-2">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Quick Stats</span>
                 {!eloLoading && userELO && (
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowStats(!showStats)}
-                    className="cursor-pointer"
+                    className="cursor-pointer h-7 px-2"
                   >
-                    <BarChart3 className="w-4 h-4 mr-1.5" />
-                    {showStats ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    <BarChart3 className="w-3 h-3 mr-1" />
+                    {showStats ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                   </Button>
+                )}
+              </div>
+              <div className="grid grid-cols-4 gap-3">
+                <div className="text-center p-3 bg-secondary/30 rounded-lg">
+                  <div className="text-xl font-bold text-primary">
+                    {habits.reduce((sum, habit) => sum + (habit.currentStreak || 0), 0)}
+                  </div>
+                  <div className="text-[10px] xs:text-xs text-muted-foreground font-medium mt-0.5">Streaks</div>
+                </div>
+                <div className="text-center p-3 bg-secondary/30 rounded-lg">
+                  <div className="text-xl font-bold text-emerald-600">
+                    {todayCompletions.length}
+                  </div>
+                  <div className="text-[10px] xs:text-xs text-muted-foreground font-medium mt-0.5">Today</div>
+                </div>
+                <div className="text-center p-3 bg-secondary/30 rounded-lg">
+                  <div className="text-xl font-bold text-violet-600">
+                    {habits.reduce((max, habit) => Math.max(max, habit.longestStreak || 0), 0)}
+                  </div>
+                  <div className="text-[10px] xs:text-xs text-muted-foreground font-medium mt-0.5">Best</div>
+                </div>
+                {!eloLoading && userELO && (
+                  <div className="text-center p-3 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg border border-purple-200 cursor-pointer hover:shadow-md transition-all duration-300"
+                       onClick={() => setShowStats(!showStats)}>
+                    <div className="flex items-center justify-center mb-1">
+                      <div className={`w-6 h-6 rounded-full bg-gradient-to-r ${getRankInfo(userELO.currentRank).color} flex items-center justify-center text-white font-bold text-xs`}>
+                        {userELO.currentRank.split(' ')[0][0]}{userELO.currentRank.split(' ')[1]?.[0] || ''}
+                      </div>
+                    </div>
+                    <div className="text-xs font-bold text-purple-700">{userELO.eloRating}</div>
+                    <div className="text-[10px] text-purple-600 font-medium">ELO</div>
+                  </div>
                 )}
               </div>
 
               {/* Expanded Stats Section */}
               {showStats && !eloLoading && userELO && (
-                <div className="mt-4 pt-4 border-t border-border space-y-4 animate-fade-in">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border border-purple-200">
-                      <div className="flex items-center justify-center mb-2">
-                        <div className={`w-10 h-10 rounded-full bg-gradient-to-r ${getRankInfo(userELO.currentRank).color} flex items-center justify-center text-white font-bold text-sm`}>
+                <div className="mt-4 pt-4 border-t border-border animate-fade-in">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+                    <div className="text-center p-3 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg border border-purple-200">
+                      <div className="flex items-center justify-center mb-1.5">
+                        <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${getRankInfo(userELO.currentRank).color} flex items-center justify-center text-white font-bold text-xs`}>
                           {userELO.currentRank.split(' ')[0][0]}{userELO.currentRank.split(' ')[1]?.[0] || ''}
                         </div>
                       </div>
-                      <div className="text-xl font-bold text-purple-700">{userELO.eloRating}</div>
+                      <div className="text-lg font-bold text-purple-700">{userELO.eloRating}</div>
                       <div className="text-xs text-purple-600 font-medium">ELO Rating</div>
                     </div>
 
-                    <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-200">
-                      <div className="text-xl font-bold text-blue-700 mb-1">{userELO.currentRank}</div>
-                      <div className="text-xs text-blue-600 font-medium mb-2">Current Rank</div>
+                    <div className="text-center p-3 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
+                      <div className="text-lg font-bold text-blue-700 mb-1">{userELO.currentRank}</div>
+                      <div className="text-xs text-blue-600 font-medium mb-1">Current Rank</div>
                       {getNextRank(userELO.eloRating) && (
                         <div className="text-xs text-blue-500">Next: {getNextRank(userELO.eloRating)}</div>
                       )}
                     </div>
 
-                    <div className="text-center p-4 bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl border border-emerald-200">
-                      <div className="text-xl font-bold text-emerald-700 mb-1">
+                    <div className="text-center p-3 bg-gradient-to-br from-emerald-50 to-green-50 rounded-lg border border-emerald-200">
+                      <div className="text-lg font-bold text-emerald-700 mb-1">
                         {userELO.totalWins}/{userELO.totalWins + userELO.totalLosses}
                       </div>
-                      <div className="text-xs text-emerald-600 font-medium mb-2">Win Rate</div>
+                      <div className="text-xs text-emerald-600 font-medium mb-1">Win Rate</div>
                       <div className="text-xs text-emerald-500">
                         {userELO.totalWins + userELO.totalLosses > 0
                           ? `${Math.round((userELO.totalWins / (userELO.totalWins + userELO.totalLosses)) * 100)}%`
@@ -688,15 +689,15 @@ export default function StreaksPage() {
                   </div>
 
                   {/* Rank Progress Bar */}
-                  <div className="p-4 bg-secondary/30 rounded-xl border border-border">
+                  <div className="p-3 bg-secondary/30 rounded-lg border border-border">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium text-foreground">Rank Progress</span>
-                      <span className="text-sm text-muted-foreground">
+                      <span className="text-xs font-medium text-foreground">Rank Progress</span>
+                      <span className="text-xs text-muted-foreground">
                         {getEloProgress(userELO.eloRating).percentage}% to next rank
                       </span>
                     </div>
-                    <Progress value={getEloProgress(userELO.eloRating).percentage} className="h-3 bg-secondary" />
-                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                    <Progress value={getEloProgress(userELO.eloRating).percentage} className="h-2 bg-secondary" />
+                    <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
                       <span>{userELO.currentRank}</span>
                       <span>{getNextRank(userELO.eloRating) || 'Max Rank'}</span>
                     </div>
@@ -808,8 +809,8 @@ export default function StreaksPage() {
           </DialogContent>
         </Dialog>
 
-        {/* Habits List */}
-        <div className="grid gap-3 sm:gap-4">
+        {/* Habits List - Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {habits.length === 0 ? (
             <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm">
               <CardContent className="text-center py-12">
@@ -840,7 +841,7 @@ export default function StreaksPage() {
               </CardContent>
             </Card>
           ) : habits.filter(habit => categoryFilter === 'all' || habit.category === categoryFilter).length === 0 ? (
-            <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm">
+            <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm md:col-span-2 lg:col-span-3">
               <CardContent className="text-center py-12">
                 <Filter className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">No habits in this category</h3>
@@ -892,99 +893,99 @@ export default function StreaksPage() {
               const CategoryIcon = habitCategory?.icon
 
               return (
-                <Card key={habit.id} className="border border-border shadow-sm hover:shadow-md transition-all duration-200 bg-card group cursor-pointer hover:scale-[1.01] active:scale-[0.99]">
+                <Card key={habit.id} className="border border-border shadow-sm hover:shadow-md transition-all duration-200 bg-card group cursor-pointer hover:scale-[1.02] active:scale-[0.98] flex flex-col h-full">
                   {habitCategory && <div className={`h-1 bg-gradient-to-r ${habitCategory.color}`}></div>}
-                  <CardContent className="p-3 sm:p-4">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                      <div className="flex-1 min-w-0 w-full">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-2">
-                          <h3 className="text-base sm:text-lg font-bold text-foreground truncate w-full sm:w-auto tracking-tight">{habit.name}</h3>
-                          <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                            {habitCategory && (
-                              <div className={`flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${habitCategory.bgColor} ${habitCategory.textColor} border ${habitCategory.borderColor}`}>
-                                {CategoryIcon && <CategoryIcon className="w-3 h-3 mr-1 flex-shrink-0" />}
-                                <span className="whitespace-nowrap">{habitCategory.title}</span>
-                              </div>
-                            )}
-                            <div className={`flex items-center px-2 py-0.5 rounded-full text-xs font-medium transition-colors ${
-                              habit.currentStreak > 0
-                                ? 'bg-orange-100 text-orange-800 border border-orange-200'
-                                : 'bg-secondary text-muted-foreground border border-border'
-                            }`}>
-                              <Flame className={`w-3 h-3 mr-1 flex-shrink-0 ${habit.currentStreak > 0 ? 'text-orange-500' : 'text-muted-foreground'}`} />
-                              <span className="whitespace-nowrap">{habit.currentStreak} day</span>
-                            </div>
-                            {habit.longestStreak > 0 && habit.longestStreak !== habit.currentStreak && (
-                              <div className="flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-800 border border-yellow-200">
-                                <Trophy className="w-3 h-3 mr-1 text-yellow-600 flex-shrink-0" />
-                                <span className="whitespace-nowrap">Best: {habit.longestStreak}</span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        
-                        {habit.description && (
-                          <p className="text-xs sm:text-sm text-muted-foreground mb-2 line-clamp-1">{habit.description}</p>
-                        )}
-                        
-                        <div className="flex items-center space-x-2">
-                          <Calendar className="w-3 h-3 text-muted-foreground flex-shrink-0" />
-                          <span className="text-xs text-muted-foreground">
-                            {DAYS.filter(day => habit[day.key as keyof Habit] as boolean).map(day => day.label).join(', ')}
-                          </span>
+                  <CardContent className="p-4 flex flex-col flex-1">
+                    {/* Header */}
+                    <div className="mb-3">
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <h3 className="text-base font-bold text-foreground tracking-tight flex-1 line-clamp-2">{habit.name}</h3>
+                        <div className="flex gap-1 flex-shrink-0">
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              startEdit(habit)
+                            }}
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 w-7 p-0 hover:bg-secondary"
+                          >
+                            <Edit3 className="w-3 h-3 text-muted-foreground" />
+                          </Button>
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              deleteHabit(habit.id)
+                            }}
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 w-7 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
                         </div>
                       </div>
                       
-                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:space-x-2 w-full sm:w-auto">
-                        {isScheduledForDate && (
-                          <Button
-                            onClick={() => toggleCompletion(habit.id)}
-                            variant={isCompletedToday ? "default" : "outline"}
-                            size="sm"
-                            className={isCompletedToday ?
-                              "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md w-full sm:w-auto font-medium border-none" :
-                              "border-emerald-600 text-emerald-600 hover:bg-emerald-50 shadow-sm w-full sm:w-auto font-medium"
-                            }
-                          >
-                            {isCompletedToday ? (
-                              <>
-                                <Check className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                                <span className="text-xs sm:text-sm">Completed</span>
-                              </>
-                            ) : (
-                              <>
-                                <Check className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                                <span className="text-xs sm:text-sm">Mark Complete</span>
-                              </>
-                            )}
-                          </Button>
+                      {/* Badges */}
+                      <div className="flex flex-wrap gap-1.5 mb-2">
+                        {habitCategory && (
+                          <div className={`flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${habitCategory.bgColor} ${habitCategory.textColor} border ${habitCategory.borderColor}`}>
+                            {CategoryIcon && <CategoryIcon className="w-3 h-3 mr-1 flex-shrink-0" />}
+                            <span className="whitespace-nowrap">{habitCategory.title}</span>
+                          </div>
                         )}
-                        {!isScheduledForDate && (
-                          <span className="text-xs text-muted-foreground italic text-center sm:text-left py-2">
-                            Not scheduled for {selectedDayOfWeek}
-                          </span>
-                        )}
-                        
-                        <div className="flex gap-2 sm:gap-0 justify-end sm:justify-start">
-                          <Button
-                            onClick={() => startEdit(habit)}
-                            variant="ghost"
-                            size="sm"
-                            className="flex-1 sm:flex-none hover:bg-secondary"
-                          >
-                            <Edit3 className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                          </Button>
-                          
-                          <Button
-                            onClick={() => deleteHabit(habit.id)}
-                            variant="ghost"
-                            size="sm"
-                            className="text-destructive hover:text-destructive hover:bg-destructive/10 flex-1 sm:flex-none"
-                          >
-                            <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                          </Button>
+                        <div className={`flex items-center px-2 py-0.5 rounded-full text-xs font-medium transition-colors ${
+                          habit.currentStreak > 0
+                            ? 'bg-orange-100 text-orange-800 border border-orange-200'
+                            : 'bg-secondary text-muted-foreground border border-border'
+                        }`}>
+                          <Flame className={`w-3 h-3 mr-1 flex-shrink-0 ${habit.currentStreak > 0 ? 'text-orange-500' : 'text-muted-foreground'}`} />
+                          <span className="whitespace-nowrap">{habit.currentStreak} day</span>
                         </div>
+                        {habit.longestStreak > 0 && habit.longestStreak !== habit.currentStreak && (
+                          <div className="flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-800 border border-yellow-200">
+                            <Trophy className="w-3 h-3 mr-1 text-yellow-600 flex-shrink-0" />
+                            <span className="whitespace-nowrap">Best: {habit.longestStreak}</span>
+                          </div>
+                        )}
                       </div>
+                      
+                      {habit.description && (
+                        <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{habit.description}</p>
+                      )}
+                      
+                      <div className="flex items-center space-x-1.5 text-xs text-muted-foreground">
+                        <Calendar className="w-3 h-3 flex-shrink-0" />
+                        <span className="line-clamp-1">
+                          {DAYS.filter(day => habit[day.key as keyof Habit] as boolean).map(day => day.label).join(', ')}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Action Button */}
+                    <div className="mt-auto pt-3 border-t border-border/50">
+                      {isScheduledForDate ? (
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            toggleCompletion(habit.id)
+                          }}
+                          variant={isCompletedToday ? "default" : "outline"}
+                          size="sm"
+                          className={`w-full font-medium transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 ${
+                            isCompletedToday
+                              ? "bg-emerald-600 hover:bg-emerald-700 text-white border-none"
+                              : "border-emerald-600 text-emerald-600 hover:bg-emerald-50"
+                          }`}
+                        >
+                          <Check className="w-3 h-3 mr-1.5" />
+                          {isCompletedToday ? 'Completed' : 'Mark Complete'}
+                        </Button>
+                      ) : (
+                        <div className="text-xs text-muted-foreground italic text-center py-2">
+                          Not scheduled for {selectedDayOfWeek}
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
