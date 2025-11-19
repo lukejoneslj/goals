@@ -24,6 +24,7 @@ import {
 } from 'lucide-react'
 import { Goal } from '@/lib/firebase'
 import { goalsService } from '@/lib/database'
+import { parseLocalDate } from '@/lib/utils'
 import ActionItemManager from './ActionItemManager'
 
 const categoryConfig = {
@@ -137,7 +138,9 @@ export default function GoalDetailModal({ goalId, isOpen, onClose, onGoalUpdated
   const getDaysUntilTarget = () => {
     if (!goal) return 0
     const today = new Date()
-    const target = new Date(goal.targetDate)
+    today.setHours(0, 0, 0, 0)
+    const target = parseLocalDate(goal.targetDate)
+    target.setHours(0, 0, 0, 0)
     const diffTime = target.getTime() - today.getTime()
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
   }

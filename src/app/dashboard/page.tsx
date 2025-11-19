@@ -28,6 +28,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { Goal, UserELO } from '@/lib/firebase'
 import { goalsService, userELOService } from '@/lib/database'
 import { getRankInfo, ELO_RANKS, getEloProgress, getNextRank } from '@/lib/elo'
+import { parseLocalDate } from '@/lib/utils'
 import GoalModal from '@/components/GoalModal'
 import DashboardNav from '@/components/DashboardNav'
 import Link from 'next/link'
@@ -146,7 +147,7 @@ export default function Dashboard() {
     return goals
       .filter(goal => goal.status === 'active')
       .map(goal => {
-        const targetDate = new Date(goal.targetDate)
+        const targetDate = parseLocalDate(goal.targetDate)
         targetDate.setHours(0, 0, 0, 0)
         const daysUntil = Math.ceil((targetDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
         return { ...goal, daysUntil }

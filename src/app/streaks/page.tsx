@@ -32,6 +32,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { Habit, UserELO } from '@/lib/firebase'
 import { habitsService, habitCompletionsService, userELOService } from '@/lib/database'
 import { calculateHabitEloChange, getRankInfo, getEloProgress, getNextRank } from '@/lib/elo'
+import { getWeekdayFromDateString } from '@/lib/utils'
 import DashboardNav from '@/components/DashboardNav'
 
 // Make this a dynamic route to prevent static generation
@@ -890,8 +891,7 @@ export default function StreaksPage() {
               const isCompletedToday = currentCompletions.includes(habit.id)
 
               // Check if habit is scheduled for selected date
-              const selectedDateObj = new Date(selectedDate)
-              const selectedDayOfWeek = selectedDateObj.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase()
+              const selectedDayOfWeek = getWeekdayFromDateString(selectedDate)
               const isScheduledForDate = habit[selectedDayOfWeek as keyof Habit] as boolean
 
               const habitCategory = habit.category ? categoryConfig[habit.category] : null

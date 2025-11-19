@@ -19,6 +19,7 @@ import {
 import { ActionItem } from '@/lib/firebase'
 import { actionItemsService } from '@/lib/database'
 import { useAuth } from '@/hooks/useAuth'
+import { parseLocalDate } from '@/lib/utils'
 
 interface ActionItemManagerProps {
   goalId: string
@@ -152,7 +153,9 @@ export default function ActionItemManager({ goalId, onProgressUpdate }: ActionIt
 
   const getDaysUntilDue = (dueDate: string) => {
     const today = new Date()
-    const due = new Date(dueDate)
+    today.setHours(0, 0, 0, 0)
+    const due = parseLocalDate(dueDate)
+    due.setHours(0, 0, 0, 0)
     const diffTime = due.getTime() - today.getTime()
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
     return diffDays

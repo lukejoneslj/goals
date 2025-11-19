@@ -27,6 +27,7 @@ import {
 import { useAuth } from '@/hooks/useAuth'
 import { Goal } from '@/lib/firebase'
 import { goalsService } from '@/lib/database'
+import { parseLocalDate } from '@/lib/utils'
 import GoalModal from '@/components/GoalModal'
 import GoalDetailModal from '@/components/GoalDetailModal'
 import DashboardNav from '@/components/DashboardNav'
@@ -314,8 +315,12 @@ export default function GoalsPage() {
             {filteredGoals.map((goal) => {
               const config = categoryConfig[goal.category]
               const IconComponent = config.icon
+              const today = new Date()
+              today.setHours(0, 0, 0, 0)
+              const targetDate = parseLocalDate(goal.targetDate)
+              targetDate.setHours(0, 0, 0, 0)
               const daysUntilTarget = Math.ceil(
-                (new Date(goal.targetDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+                (targetDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
               )
 
               return (
