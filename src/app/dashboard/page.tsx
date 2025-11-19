@@ -17,7 +17,8 @@ import {
   Clock,
   ArrowRight,
   ListTodo,
-  Flame
+  Flame,
+  BookOpen
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { Goal, UserELO } from '@/lib/firebase'
@@ -264,7 +265,7 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <Card className="bg-primary text-primary-foreground border-none shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group hover:scale-[1.02] active:scale-[0.98]"
                 onClick={handleCreateGoal}>
             <CardContent className="p-6 sm:p-8">
@@ -296,6 +297,25 @@ export default function Dashboard() {
                     </p>
                   </div>
                   <ArrowRight className="w-5 h-5 text-orange-600 group-hover:translate-x-1 transition-transform duration-300" />
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/how-it-works">
+            <Card className="bg-blue-50 border-blue-100 hover:border-blue-200 transition-all duration-300 cursor-pointer group hover:scale-[1.02] active:scale-[0.98] hover:shadow-lg">
+              <CardContent className="p-6 sm:p-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-blue-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl sm:text-2xl font-bold text-blue-900 mb-1 transition-colors duration-300 group-hover:text-blue-700">How It Works</h3>
+                    <p className="text-sm sm:text-base text-blue-800/80">
+                      Learn about the app
+                    </p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-blue-600 group-hover:translate-x-1 transition-transform duration-300" />
                 </div>
               </CardContent>
             </Card>
