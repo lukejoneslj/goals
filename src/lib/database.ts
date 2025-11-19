@@ -21,6 +21,13 @@ const ensureFirebase = () => {
   return db
 }
 
+// Helper function to remove undefined values from objects (Firebase doesn't accept undefined)
+const removeUndefined = <T extends Record<string, unknown>>(obj: T): Partial<T> => {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, value]) => value !== undefined)
+  ) as Partial<T>
+}
+
 // Goals collection operations
 export const goalsService = {
   // Create a new goal
@@ -620,7 +627,7 @@ export const todosService = {
       const firestoreDb = ensureFirebase()
 
       const docRef = await addDoc(collection(firestoreDb, 'todos'), {
-        ...todoData,
+        ...removeUndefined(todoData),
         createdAt: getTimestamp(),
         updatedAt: getTimestamp()
       })
@@ -703,7 +710,7 @@ export const todosService = {
       const firestoreDb = ensureFirebase()
       const todoRef = doc(firestoreDb, 'todos', todoId)
       await updateDoc(todoRef, {
-        ...updates,
+        ...removeUndefined(updates),
         updatedAt: getTimestamp()
       })
       return { data: { id: todoId, ...updates }, error: null }
