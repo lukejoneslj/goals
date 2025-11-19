@@ -165,13 +165,13 @@ export default function Dashboard() {
 
   if (loading || loadingGoals) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mb-6 mx-auto">
-            <Target className="w-8 h-8 text-white animate-spin" />
+          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+            <Target className="w-8 h-8 text-primary animate-spin" />
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Loading Your Dashboard</h3>
-          <p className="text-gray-600">Preparing your goals and progress...</p>
+          <h3 className="text-xl font-semibold text-foreground mb-2">Loading Your Dashboard</h3>
+          <p className="text-muted-foreground">Preparing your goals and progress...</p>
         </div>
       </div>
     )
@@ -182,33 +182,33 @@ export default function Dashboard() {
   const overallStats = getOverallStats()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-background">
       {/* Modern Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
+      <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           <div className="flex justify-between items-center py-2 sm:py-3 md:py-4">
             <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Target className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
+              <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-primary rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                <Target className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-primary-foreground" />
               </div>
-              <span className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent truncate">
+              <span className="text-lg sm:text-xl md:text-2xl font-bold text-foreground tracking-tight truncate">
                 RepentDaily
               </span>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 flex-shrink-0">
-              <div className="hidden sm:flex items-center space-x-2 md:space-x-3 bg-gray-50 rounded-xl px-2 md:px-4 py-1.5 md:py-2">
-                <Avatar className="w-6 h-6 md:w-8 md:h-8">
-                  <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-blue-600 font-semibold text-xs md:text-sm">
+              <div className="hidden sm:flex items-center space-x-2 md:space-x-3 bg-secondary/50 rounded-full px-2 md:px-4 py-1.5 md:py-2 border border-border/50">
+                <Avatar className="w-6 h-6 md:w-8 md:h-8 border border-border">
+                  <AvatarFallback className="bg-primary/10 text-primary font-semibold text-xs md:text-sm">
                     {user.email?.[0].toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-gray-700 font-medium text-xs md:text-sm hidden md:inline truncate max-w-[120px] lg:max-w-none">{user.email || user.displayName}</span>
+                <span className="text-foreground font-medium text-xs md:text-sm hidden md:inline truncate max-w-[120px] lg:max-w-none">{user.email || user.displayName}</span>
               </div>
               <Button 
                 onClick={handleSignOut}
-                variant="outline"
+                variant="ghost"
                 size="sm"
-                className="hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all duration-300 text-xs sm:text-sm px-2 sm:px-3 md:px-4"
+                className="hover:bg-destructive/10 hover:text-destructive transition-all duration-300 text-xs sm:text-sm px-2 sm:px-3 md:px-4"
               >
                 <LogOut className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">Sign Out</span>
@@ -218,69 +218,69 @@ export default function Dashboard() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
         {/* Welcome Section */}
-        <div className="mb-6 sm:mb-8 md:mb-12">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-2 sm:mb-3 md:mb-4">
+        <div className="mb-8 sm:mb-10 md:mb-16">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-tight mb-3 sm:mb-4">
             Welcome back! 👋
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-4 sm:mb-6 md:mb-8">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 md:mb-10 max-w-2xl">
             Track your progress and achieve your goals across all four areas of life.
           </p>
 
           {/* Overall Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8">
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-3 sm:p-4 md:p-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8 md:mb-10">
+            <Card className="bg-card border-border shadow-sm hover:shadow-md transition-all duration-300">
+              <CardContent className="p-4 sm:p-5 md:p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs sm:text-sm font-medium text-gray-600">Total Goals</p>
-                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">{overallStats.totalGoals}</p>
+                    <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">Total Goals</p>
+                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mt-1">{overallStats.totalGoals}</p>
                   </div>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Target className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-blue-600" />
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-primary/5 rounded-xl flex items-center justify-center flex-shrink-0 text-primary">
+                    <Target className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-3 sm:p-4 md:p-6">
+            <Card className="bg-card border-border shadow-sm hover:shadow-md transition-all duration-300">
+              <CardContent className="p-4 sm:p-5 md:p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs sm:text-sm font-medium text-gray-600">Completed</p>
-                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600">{overallStats.completedGoals}</p>
+                    <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">Completed</p>
+                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-emerald-600 mt-1">{overallStats.completedGoals}</p>
                   </div>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Award className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-600" />
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-emerald-50 rounded-xl flex items-center justify-center flex-shrink-0 text-emerald-600">
+                    <Award className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-3 sm:p-4 md:p-6">
+            <Card className="bg-card border-border shadow-sm hover:shadow-md transition-all duration-300">
+              <CardContent className="p-4 sm:p-5 md:p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs sm:text-sm font-medium text-gray-600">Active Goals</p>
-                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-orange-600">{overallStats.activeGoals}</p>
+                    <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">Active</p>
+                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-amber-600 mt-1">{overallStats.activeGoals}</p>
                   </div>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-orange-600" />
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0 text-amber-600">
+                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-3 sm:p-4 md:p-6">
+            <Card className="bg-card border-border shadow-sm hover:shadow-md transition-all duration-300">
+              <CardContent className="p-4 sm:p-5 md:p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs sm:text-sm font-medium text-gray-600">Avg Progress</p>
-                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-600">{overallStats.avgProgress}%</p>
+                    <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">Avg Progress</p>
+                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-violet-600 mt-1">{overallStats.avgProgress}%</p>
                   </div>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-purple-600" />
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-violet-50 rounded-xl flex items-center justify-center flex-shrink-0 text-violet-600">
+                    <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                   </div>
                 </div>
               </CardContent>
@@ -289,7 +289,7 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Navigation - Goal Creation CTA */}
-        <Card className="mb-4 sm:mb-6 md:mb-8 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 cursor-pointer"
+        <Card className="mb-4 sm:mb-6 md:mb-8 bg-primary text-primary-foreground border-none shadow-lg cursor-pointer group"
               onClick={() => {
                 const createGoalButton = document.querySelector('[data-create-goal-button]')
                 if (createGoalButton) {
@@ -299,19 +299,20 @@ export default function Dashboard() {
           <CardContent className="p-4 sm:p-6 md:p-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center flex-1 min-w-0">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mr-3 sm:mr-4 md:mr-6 flex-shrink-0">
-                  <Target className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+                <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-primary-foreground/10 rounded-2xl flex items-center justify-center mr-3 sm:mr-4 md:mr-6 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                  <Target className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-primary-foreground" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Create New Goal</h3>
-                  <p className="text-sm sm:text-base md:text-xl text-gray-600">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-primary-foreground mb-1 sm:mb-2">Create New Goal</h3>
+                  <p className="text-sm sm:text-base md:text-xl text-primary-foreground/80">
                     Set a new goal and start your journey toward growth
                   </p>
                 </div>
               </div>
               <Button 
                 size="lg"
-                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 w-full sm:w-auto"
+                variant="secondary"
+                className="text-secondary-foreground font-bold px-6 sm:px-8 py-3 sm:py-4 shadow-md w-full sm:w-auto hover:bg-secondary/90"
                 onClick={(e) => {
                   e.stopPropagation()
                   handleCreateGoal()
@@ -325,16 +326,16 @@ export default function Dashboard() {
         </Card>
 
         {/* Quick Navigation - Daily Streaks */}
-        <Card className="mb-4 sm:mb-6 md:mb-12 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-200 hover:border-orange-300 transition-all duration-300 transform hover:scale-105">
+        <Card className="mb-4 sm:mb-6 md:mb-12 bg-orange-50 border-orange-100 hover:border-orange-200 transition-all duration-300">
           <CardContent className="p-4 sm:p-6 md:p-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center flex-1 min-w-0">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mr-3 sm:mr-4 md:mr-6 flex-shrink-0">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-orange-100 rounded-2xl flex items-center justify-center mr-3 sm:mr-4 md:mr-6 flex-shrink-0">
                   <span className="text-2xl sm:text-3xl">🔥</span>
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Daily Streaks</h3>
-                  <p className="text-sm sm:text-base md:text-xl text-gray-600">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-orange-900 mb-1 sm:mb-2">Daily Streaks</h3>
+                  <p className="text-sm sm:text-base md:text-xl text-orange-800/80">
                     Build consistent habits and track your daily progress
                   </p>
                 </div>
@@ -342,7 +343,7 @@ export default function Dashboard() {
               <Button 
                 asChild 
                 size="lg"
-                className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 w-full sm:w-auto"
+                className="bg-orange-600 hover:bg-orange-700 text-white px-6 sm:px-8 py-3 sm:py-4 font-bold shadow-md w-full sm:w-auto"
               >
                 <Link href="/streaks">
                   View Streaks
@@ -354,21 +355,21 @@ export default function Dashboard() {
         </Card>
 
         {/* Luke 2:52 Quote */}
-        <Card className="mb-4 sm:mb-6 md:mb-12 bg-gradient-to-r from-purple-600 to-blue-600 border-0 text-white shadow-2xl">
+        <Card className="mb-4 sm:mb-6 md:mb-12 bg-secondary text-secondary-foreground border-none shadow-md">
           <CardContent className="p-4 sm:p-6 md:p-8 text-center">
-            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3 md:mb-4">
+            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif font-bold mb-2 sm:mb-3 md:mb-4 leading-tight">
               &ldquo;And Jesus increased in wisdom and stature, and in favour with God and man.&rdquo;
             </h2>
-            <p className="text-purple-100 text-sm sm:text-base md:text-xl mb-2">— Luke 2:52</p>
-            <p className="text-sm sm:text-base md:text-lg text-purple-200 mt-4 sm:mt-6">
-              Grow in all four areas: Spiritual • Physical • Social • Intellectual
+            <p className="text-secondary-foreground/80 text-sm sm:text-base md:text-xl mb-2 font-medium">— Luke 2:52</p>
+            <p className="text-sm sm:text-base md:text-lg text-secondary-foreground/60 mt-4 sm:mt-6 uppercase tracking-widest font-bold text-xs">
+              Spiritual • Physical • Social • Intellectual
             </p>
           </CardContent>
         </Card>
 
         {/* Goal Categories Overview */}
         <div className="mb-6 sm:mb-8 md:mb-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8">Progress by Category</h2>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-4 sm:mb-6 md:mb-8 tracking-tight">Progress by Category</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             {Object.entries(categoryConfig).map(([category, config]) => {
               const stats = getCategoryStats(category)
@@ -377,41 +378,41 @@ export default function Dashboard() {
               return (
                 <Card 
                   key={category}
-                  className="group cursor-pointer hover:shadow-2xl transition-all duration-500 transform hover:scale-105 border-0 bg-white/80 backdrop-blur-sm overflow-hidden"
+                  className="group cursor-pointer hover:shadow-lg transition-all duration-300 bg-card border-border overflow-hidden"
                 >
-                  <div className={`h-2 bg-gradient-to-r ${config.color}`}></div>
-                  <CardHeader className="pb-4">
+                  <div className={`h-1 bg-gradient-to-r ${config.color}`}></div>
+                  <CardHeader className="pb-4 pt-5">
                     <div className="flex items-center justify-between">
                       <div>
-                        <CardTitle className="text-xl font-bold text-gray-900 mb-2">
+                        <CardTitle className="text-lg font-bold text-foreground mb-1">
                           {config.title}
                         </CardTitle>
-                        <p className="text-gray-600 font-medium">
+                        <p className="text-muted-foreground text-sm font-medium">
                           {stats.totalGoals} goal{stats.totalGoals !== 1 ? 's' : ''}
                         </p>
                       </div>
-                      <div className={`p-4 rounded-2xl ${config.bgColor} group-hover:scale-110 transition-transform duration-300`}>
-                        <IconComponent className={`w-8 h-8 ${config.textColor}`} />
+                      <div className={`p-3 rounded-xl bg-secondary/50 group-hover:bg-secondary transition-colors duration-300`}>
+                        <IconComponent className={`w-6 h-6 ${config.textColor}`} />
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div>
-                        <div className="flex justify-between text-sm mb-3">
-                          <span className="font-medium text-gray-700">Progress</span>
-                          <span className="font-bold text-gray-900">{stats.avgProgress}%</span>
+                        <div className="flex justify-between text-sm mb-2">
+                          <span className="font-medium text-muted-foreground">Progress</span>
+                          <span className="font-bold text-foreground">{stats.avgProgress}%</span>
                         </div>
                         <Progress 
                           value={stats.avgProgress} 
-                          className="h-3"
+                          className="h-2 bg-secondary"
                         />
                       </div>
-                      <div className="flex justify-between text-sm pt-2 border-t border-gray-100">
-                        <span className="text-green-600 font-medium">
+                      <div className="flex justify-between text-xs pt-2 border-t border-border/50">
+                        <span className="text-emerald-600 font-medium">
                           ✓ {stats.completedGoals} completed
                         </span>
-                        <span className="text-orange-600 font-medium">
+                        <span className="text-amber-600 font-medium">
                           ⚡ {stats.totalGoals - stats.completedGoals} active
                         </span>
                       </div>
@@ -428,43 +429,43 @@ export default function Dashboard() {
           <Button 
             onClick={handleCreateGoal}
             data-create-goal-button
-            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 sm:px-8 md:px-12 py-2 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
+            className="bg-primary text-primary-foreground hover:opacity-90 px-6 sm:px-8 md:px-12 py-2 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 w-full sm:w-auto rounded-full"
             size="lg"
           >
             <Plus className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" />
             Create New Goal
           </Button>
-          <p className="text-gray-600 mt-3 sm:mt-4 text-sm sm:text-base md:text-lg">
+          <p className="text-muted-foreground mt-3 sm:mt-4 text-sm sm:text-base md:text-lg">
             Set a new goal and start your journey toward growth
           </p>
         </div>
 
         {/* Goals List */}
         <div className="space-y-4 sm:space-y-6 md:space-y-8">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Your Goals</h2>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground tracking-tight">Your Goals</h2>
           
           {goals.length === 0 ? (
-            <Card className="text-center py-16 bg-white/80 backdrop-blur-sm border-0 shadow-xl">
+            <Card className="text-center py-12 sm:py-16 bg-card border-dashed border-2 border-border shadow-none">
               <CardContent>
-                <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                  <Target className="w-12 h-12 text-blue-600" />
+                <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Target className="w-10 h-10 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Start Your Journey?</h3>
-                <p className="text-gray-600 mb-8 text-lg max-w-md mx-auto">
+                <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3">Ready to Start Your Journey?</h3>
+                <p className="text-muted-foreground mb-8 text-base sm:text-lg max-w-md mx-auto">
                   Create your first goal and begin growing in all four areas of life: spiritual, physical, social, and intellectual.
                 </p>
                 <Button 
                   onClick={handleCreateGoal}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  className="bg-primary text-primary-foreground px-8 py-3 text-lg font-bold shadow-md hover:shadow-lg transition-all duration-300"
                   size="lg"
                 >
-                  <Plus className="mr-3 h-5 w-5" />
+                  <Plus className="mr-2 h-5 w-5" />
                   Create Your First Goal
                 </Button>
               </CardContent>
             </Card>
           ) : (
-            <div className="grid gap-8">
+            <div className="grid gap-6">
               {goals.map((goal) => {
                 const config = categoryConfig[goal.category]
                 const IconComponent = config.icon
@@ -475,39 +476,39 @@ export default function Dashboard() {
                 return (
                   <Card 
                     key={goal.id}
-                    className="group hover:shadow-2xl transition-all duration-500 border-0 bg-white/90 backdrop-blur-sm cursor-pointer overflow-hidden transform hover:scale-[1.02]"
+                    className="group hover:shadow-md transition-all duration-300 border bg-card cursor-pointer overflow-hidden"
                     onClick={() => handleViewGoal(goal.id)}
                   >
-                    <div className={`h-2 bg-gradient-to-r ${config.color}`}></div>
-                    <CardHeader className="pb-6">
+                    <div className={`h-1 bg-gradient-to-r ${config.color}`}></div>
+                    <CardHeader className="pb-4 sm:pb-6">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <div className="flex items-center mb-4">
-                            <div className={`p-2 rounded-xl ${config.bgColor} mr-3`}>
-                              <IconComponent className={`w-5 h-5 ${config.textColor}`} />
+                          <div className="flex items-center mb-3 sm:mb-4">
+                            <div className={`p-2 rounded-lg ${config.bgColor} mr-3`}>
+                              <IconComponent className={`w-4 h-4 ${config.textColor}`} />
                             </div>
-                            <Badge className={`${config.textColor} ${config.borderColor} border-2 px-3 py-1 text-sm font-medium`}>
+                            <Badge variant="outline" className={`${config.textColor} border-${config.borderColor.split('-')[1]}-200 bg-transparent px-3 py-1`}>
                               {config.title}
                             </Badge>
                             <Badge 
                               variant={goal.status === 'completed' ? 'default' : 'secondary'}
-                              className="ml-3 px-3 py-1 text-sm"
+                              className="ml-3 px-3 py-1"
                             >
                               {goal.status.charAt(0).toUpperCase() + goal.status.slice(1)}
                             </Badge>
                           </div>
-                          <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4 group-hover:text-blue-600 transition-colors duration-300">
+                          <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-foreground mb-2 sm:mb-3 md:mb-4 group-hover:text-primary transition-colors duration-300">
                             {goal.outcome}
                           </CardTitle>
-                          <div className="flex flex-wrap items-center text-gray-600 gap-2 sm:gap-3 md:gap-6">
-                            <div className="flex items-center bg-gray-50 rounded-lg px-2 sm:px-3 py-1 sm:py-2">
+                          <div className="flex flex-wrap items-center text-muted-foreground gap-2 sm:gap-3 md:gap-6">
+                            <div className="flex items-center bg-secondary rounded-md px-2 sm:px-3 py-1">
                               <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
                               <span className="font-medium text-xs sm:text-sm">
                                 {new Date(goal.targetDate).toLocaleDateString()}
                               </span>
                             </div>
                             {daysUntilTarget !== 0 && (
-                              <div className={`flex items-center rounded-lg px-2 sm:px-3 py-1 sm:py-2 ${
+                              <div className={`flex items-center rounded-md px-2 sm:px-3 py-1 ${
                                 daysUntilTarget > 0 ? 'bg-blue-50 text-blue-700' : 'bg-red-50 text-red-700'
                               }`}>
                                 <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
@@ -517,7 +518,7 @@ export default function Dashboard() {
                               </div>
                             )}
                             {daysUntilTarget === 0 && (
-                              <div className="flex items-center bg-orange-50 text-orange-700 rounded-lg px-2 sm:px-3 py-1 sm:py-2">
+                              <div className="flex items-center bg-orange-50 text-orange-700 rounded-md px-2 sm:px-3 py-1">
                                 <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
                                 <span className="font-medium text-xs sm:text-sm">Due Today!</span>
                               </div>
@@ -526,23 +527,23 @@ export default function Dashboard() {
                         </div>
                         <div className="flex space-x-1 sm:space-x-2 ml-2 sm:ml-4 md:ml-6 flex-shrink-0">
                           <Button 
-                            variant="outline" 
+                            variant="ghost" 
                             size="sm" 
-                            className="hover:scale-110 transition-transform duration-200 hover:bg-blue-50 hover:border-blue-200 p-1.5 sm:p-2"
+                            className="hover:bg-secondary p-2 h-8 w-8"
                             onClick={(e) => {
                               e.stopPropagation()
                               handleViewGoal(goal.id)
                             }}
                           >
-                            <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
+                            <Eye className="h-4 w-4 text-muted-foreground" />
                           </Button>
                           <Button 
-                            variant="outline" 
+                            variant="ghost" 
                             size="sm" 
-                            className="hover:scale-110 transition-transform duration-200 hover:bg-red-50 hover:border-red-200 hover:text-red-600 p-1.5 sm:p-2"
+                            className="hover:bg-destructive/10 hover:text-destructive p-2 h-8 w-8"
                             onClick={(e) => deleteGoal(goal.id, e)}
                           >
-                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </div>
@@ -550,54 +551,54 @@ export default function Dashboard() {
                     <CardContent className="pt-0">
                       <div className="space-y-6">
                         <div>
-                          <div className="flex justify-between text-sm mb-3">
-                            <span className="font-semibold text-gray-700">Progress</span>
-                            <span className="font-bold text-gray-900">{goal.progressPercentage || 0}%</span>
+                          <div className="flex justify-between text-sm mb-2">
+                            <span className="font-medium text-muted-foreground">Progress</span>
+                            <span className="font-bold text-foreground">{goal.progressPercentage || 0}%</span>
                           </div>
-                          <Progress value={goal.progressPercentage || 0} className="h-3" />
+                          <Progress value={goal.progressPercentage || 0} className="h-2 bg-secondary" />
                         </div>
                         
-                        <div className="bg-gray-50 rounded-xl p-4">
-                          <p className="font-semibold text-gray-900 mb-2">Why this matters:</p>
-                          <p className="text-gray-700 line-clamp-2">{goal.whyLeverage}</p>
+                        <div className="bg-secondary/30 rounded-lg p-4 border border-border/50">
+                          <p className="font-semibold text-foreground mb-1 text-sm">Why this matters:</p>
+                          <p className="text-muted-foreground text-sm line-clamp-2 italic">{goal.whyLeverage}</p>
                         </div>
 
-                        <div className="grid md:grid-cols-2 gap-6">
+                        <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
                           {goal.obstacles && goal.obstacles.length > 0 && (
-                            <div className="bg-red-50 rounded-xl p-4">
-                              <p className="font-semibold text-red-800 mb-3 flex items-center">
-                                <AlertTriangle className="w-4 h-4 mr-2" />
-                                Obstacles to overcome:
+                            <div className="bg-red-50/50 rounded-lg p-3 sm:p-4 border border-red-100">
+                              <p className="font-semibold text-red-800 mb-2 flex items-center text-sm">
+                                <AlertTriangle className="w-3 h-3 mr-2" />
+                                Obstacles
                               </p>
-                              <ul className="space-y-2">
+                              <ul className="space-y-1.5">
                                 {goal.obstacles.slice(0, 2).map((obstacle, index) => (
-                                  <li key={index} className="text-red-700 text-sm flex items-start">
-                                    <span className="w-2 h-2 bg-red-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                  <li key={index} className="text-red-700 text-xs sm:text-sm flex items-start">
+                                    <span className="w-1.5 h-1.5 bg-red-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
                                     <span className="line-clamp-1">{obstacle}</span>
                                   </li>
                                 ))}
                                 {goal.obstacles.length > 2 && (
-                                  <li className="text-red-600 text-sm">+{goal.obstacles.length - 2} more obstacles...</li>
+                                  <li className="text-red-600 text-xs">+ {goal.obstacles.length - 2} more</li>
                                 )}
                               </ul>
                             </div>
                           )}
 
                           {goal.resources && goal.resources.length > 0 && (
-                            <div className="bg-green-50 rounded-xl p-4">
-                              <p className="font-semibold text-green-800 mb-3 flex items-center">
-                                <CheckCircle className="w-4 h-4 mr-2" />
-                                Resources available:
+                            <div className="bg-green-50/50 rounded-lg p-3 sm:p-4 border border-green-100">
+                              <p className="font-semibold text-green-800 mb-2 flex items-center text-sm">
+                                <CheckCircle className="w-3 h-3 mr-2" />
+                                Resources
                               </p>
-                              <ul className="space-y-2">
+                              <ul className="space-y-1.5">
                                 {goal.resources.slice(0, 2).map((resource, index) => (
-                                  <li key={index} className="text-green-700 text-sm flex items-start">
-                                    <span className="w-2 h-2 bg-green-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                  <li key={index} className="text-green-700 text-xs sm:text-sm flex items-start">
+                                    <span className="w-1.5 h-1.5 bg-green-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
                                     <span className="line-clamp-1">{resource}</span>
                                   </li>
                                 ))}
                                 {goal.resources.length > 2 && (
-                                  <li className="text-green-600 text-sm">+{goal.resources.length - 2} more resources...</li>
+                                  <li className="text-green-600 text-xs">+ {goal.resources.length - 2} more</li>
                                 )}
                               </ul>
                             </div>
@@ -613,25 +614,25 @@ export default function Dashboard() {
         </div>
 
         {/* Goals Guide Link - Moved to bottom for better UX */}
-        <Card className="mb-6 sm:mb-8 md:mb-12 bg-gradient-to-r from-green-50 to-blue-50 border-2 border-blue-200 hover:border-blue-300 transition-all duration-300 transform hover:scale-105">
-          <CardContent className="p-4 sm:p-6 md:p-8 text-center">
-            <div className="flex flex-col sm:flex-row items-center justify-center mb-3 sm:mb-4 gap-3 sm:gap-4">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0">
-                <FileText className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+        <Card className="mb-6 sm:mb-8 md:mb-12 bg-secondary/30 border border-border hover:border-primary/30 transition-all duration-300 cursor-pointer mt-12">
+          <CardContent className="p-6 sm:p-8 text-center">
+            <div className="flex flex-col sm:flex-row items-center justify-center mb-4 gap-4">
+              <div className="w-12 h-12 bg-primary text-primary-foreground rounded-xl flex items-center justify-center flex-shrink-0">
+                <FileText className="w-6 h-6" />
               </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Master Your Goal Setting</h3>
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground">Master Your Goal Setting</h3>
             </div>
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 mb-4 sm:mb-6 max-w-2xl mx-auto">
+            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
               Ready to take your goals to the next level? Learn the complete methodology behind effective goal setting.
             </p>
             <Button 
               asChild 
               size="lg"
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 w-full sm:w-auto"
+              className="bg-foreground text-background hover:bg-foreground/90 font-bold px-8"
             >
               <Link href="/goals-guide">
-                Read the Complete Goal Mastery Guide
-                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
+                Read the Complete Guide
+                <ArrowRight className="ml-2 w-4 h-4" />
               </Link>
             </Button>
           </CardContent>

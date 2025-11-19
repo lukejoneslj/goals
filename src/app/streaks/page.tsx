@@ -344,23 +344,23 @@ export default function StreaksPage() {
   if (!user) return null
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
+    <div className="min-h-screen bg-background">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8 md:py-12">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 md:mb-8 gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 md:mb-10 gap-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 flex-1 min-w-0">
             <Link href="/dashboard" className="w-full sm:w-auto">
-              <Button variant="ghost" size="sm" className="w-full sm:w-auto">
+              <Button variant="ghost" size="sm" className="w-full sm:w-auto pl-0 sm:pl-3 hover:bg-transparent hover:text-primary">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Dashboard
               </Button>
             </Link>
             <div className="min-w-0 flex-1">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 flex items-center">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground flex items-center tracking-tight">
                 <Flame className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-orange-500 mr-2 sm:mr-3 flex-shrink-0" />
                 <span className="truncate">Daily Streaks</span>
               </h1>
-              <p className="text-sm sm:text-base text-gray-600">Build consistent habits and track your progress</p>
+              <p className="text-sm sm:text-base text-muted-foreground mt-1">Build consistent habits and track your progress</p>
             </div>
           </div>
           <Button 
@@ -379,7 +379,7 @@ export default function StreaksPage() {
                 sunday: false
               })
             }}
-            className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto"
+            className="bg-primary text-primary-foreground hover:opacity-90 w-full sm:w-auto shadow-md"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Habit
@@ -387,13 +387,13 @@ export default function StreaksPage() {
         </div>
 
         {/* Date Picker and Stats */}
-        <div className="mb-4 sm:mb-6 md:mb-8">
-          <Card className="border-0 shadow-xl bg-gradient-to-r from-blue-50 to-purple-50">
+        <div className="mb-6 sm:mb-8 md:mb-10">
+          <Card className="border border-border shadow-sm bg-card">
             <CardContent className="p-4 sm:p-6">
-              <div className="flex flex-col space-y-4">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+              <div className="flex flex-col space-y-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 border-b border-border pb-6">
                   <div className="w-full sm:w-auto">
-                    <Label htmlFor="date-picker" className="text-xs sm:text-sm font-medium text-gray-700">
+                    <Label htmlFor="date-picker" className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">
                       Select Date
                     </Label>
                     <Input
@@ -401,7 +401,7 @@ export default function StreaksPage() {
                       type="date"
                       value={selectedDate}
                       onChange={(e) => setSelectedDate(e.target.value)}
-                      className="mt-1 w-full sm:w-40 text-sm"
+                      className="mt-2 w-full sm:w-48 text-sm bg-background"
                       max={new Date().toISOString().split('T')[0]}
                     />
                   </div>
@@ -410,7 +410,7 @@ export default function StreaksPage() {
                       onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
                       variant="outline"
                       size="sm"
-                      className="mt-6 sm:mt-0 w-full sm:w-auto"
+                      className="mt-auto w-full sm:w-auto"
                     >
                       Back to Today
                     </Button>
@@ -418,29 +418,29 @@ export default function StreaksPage() {
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-                  <div className="text-center">
-                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600">
+                  <div className="text-center p-4 bg-secondary/30 rounded-xl">
+                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-primary">
                       {habits.reduce((sum, habit) => sum + (habit.currentStreak || 0), 0)}
                     </div>
-                    <div className="text-xs sm:text-sm text-gray-600">Total Streak Days</div>
+                    <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">Total Streak Days</div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600">
+                  <div className="text-center p-4 bg-secondary/30 rounded-xl">
+                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-emerald-600">
                       {todayCompletions.length}
                     </div>
-                    <div className="text-xs sm:text-sm text-gray-600">Completed Today</div>
+                    <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">Completed Today</div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-600">
+                  <div className="text-center p-4 bg-secondary/30 rounded-xl">
+                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-violet-600">
                       {habits.reduce((max, habit) => Math.max(max, habit.longestStreak || 0), 0)}
                     </div>
-                    <div className="text-xs sm:text-sm text-gray-600">Best Streak</div>
+                    <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">Best Streak</div>
                   </div>
-                  <div className="text-center col-span-2 sm:col-span-1">
-                    <div className="text-sm sm:text-base md:text-lg font-semibold text-orange-600 mb-1">
+                  <div className="text-center col-span-2 sm:col-span-1 p-4 bg-orange-50 rounded-xl border border-orange-100 flex flex-col justify-center items-center">
+                    <div className="text-sm sm:text-base font-bold text-orange-700 mb-1">
                       {getMotivationalMessage(habits.reduce((sum, habit) => sum + (habit.currentStreak || 0), 0))}
                     </div>
-                    <div className="text-xs text-gray-500">Keep up the great work!</div>
+                    <div className="text-xs text-orange-600/80">Keep up the great work!</div>
                   </div>
                 </div>
               </div>
@@ -450,11 +450,11 @@ export default function StreaksPage() {
 
         {/* Add/Edit Form */}
         {showAddForm && (
-          <Card className="mb-4 sm:mb-6 md:mb-8 border-0 shadow-xl bg-white/90 backdrop-blur-sm">
-            <CardHeader className="p-4 sm:p-6">
-              <CardTitle className="text-lg sm:text-xl">{editingHabit ? 'Edit Habit' : 'Add New Habit'}</CardTitle>
+          <Card className="mb-6 sm:mb-8 md:mb-10 border border-border shadow-lg bg-card">
+            <CardHeader className="p-4 sm:p-6 border-b border-border/50">
+              <CardTitle className="text-lg sm:text-xl font-bold">{editingHabit ? 'Edit Habit' : 'Add New Habit'}</CardTitle>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6 pt-0">
+            <CardContent className="p-4 sm:p-6">
               <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 <div>
                   <Label htmlFor="name">Habit Name</Label>
@@ -499,8 +499,8 @@ export default function StreaksPage() {
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                  <Button type="submit" className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 border-t border-border/50">
+                  <Button type="submit" className="bg-primary text-primary-foreground hover:opacity-90 w-full sm:w-auto">
                     {editingHabit ? 'Update Habit' : 'Create Habit'}
                   </Button>
                   <Button 
@@ -552,23 +552,23 @@ export default function StreaksPage() {
               // console.log('Habit:', habit.name, 'isScheduledForDate:', isScheduledForDate, 'isCompletedToday:', isCompletedToday)
 
               return (
-                <Card key={habit.id} className="border-0 shadow-xl bg-white/90 backdrop-blur-sm">
+                <Card key={habit.id} className="border border-border shadow-sm hover:shadow-md transition-all duration-200 bg-card group">
                   <CardContent className="p-4 sm:p-6">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                       <div className="flex-1 min-w-0 w-full">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 sm:space-x-4 mb-2 sm:mb-3">
-                          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 truncate w-full sm:w-auto">{habit.name}</h3>
+                          <h3 className="text-lg sm:text-xl font-bold text-foreground truncate w-full sm:w-auto tracking-tight">{habit.name}</h3>
                           <div className="flex flex-wrap gap-2 sm:gap-3">
-                            <div className={`flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
+                            <div className={`flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium transition-colors ${
                               habit.currentStreak > 0
-                                ? 'bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 border border-orange-200'
-                                : 'bg-gray-100 text-gray-600 border border-gray-200'
+                                ? 'bg-orange-100 text-orange-800 border border-orange-200'
+                                : 'bg-secondary text-muted-foreground border border-border'
                             }`}>
-                              <Flame className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0 ${habit.currentStreak > 0 ? 'text-orange-500' : 'text-gray-400'}`} />
+                              <Flame className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0 ${habit.currentStreak > 0 ? 'text-orange-500' : 'text-muted-foreground'}`} />
                               <span className="whitespace-nowrap">{habit.currentStreak} day streak</span>
                             </div>
                             {habit.longestStreak > 0 && (
-                              <div className="flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border border-yellow-200">
+                              <div className="flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-yellow-50 text-yellow-800 border border-yellow-200">
                                 <Trophy className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-yellow-600 flex-shrink-0" />
                                 <span className="whitespace-nowrap">Best: {habit.longestStreak}</span>
                               </div>
@@ -577,12 +577,12 @@ export default function StreaksPage() {
                         </div>
                         
                         {habit.description && (
-                          <p className="text-sm sm:text-base text-gray-600 mb-2 sm:mb-3">{habit.description}</p>
+                          <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4 leading-relaxed">{habit.description}</p>
                         )}
                         
-                        <div className="flex items-center space-x-2 mb-3 sm:mb-4">
-                          <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 flex-shrink-0" />
-                          <span className="text-xs sm:text-sm text-gray-600">
+                        <div className="flex items-center space-x-2 mb-3 sm:mb-0">
+                          <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground flex-shrink-0" />
+                          <span className="text-xs sm:text-sm text-muted-foreground">
                             {DAYS.filter(day => habit[day.key as keyof Habit] as boolean).map(day => day.label).join(', ')}
                           </span>
                         </div>
@@ -595,8 +595,8 @@ export default function StreaksPage() {
                             variant={isCompletedToday ? "default" : "outline"}
                             size="sm"
                             className={isCompletedToday ?
-                              "bg-green-600 hover:bg-green-700 text-white shadow-md w-full sm:w-auto" :
-                              "border-green-600 text-green-600 hover:bg-green-50 shadow-sm w-full sm:w-auto"
+                              "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md w-full sm:w-auto font-medium border-none" :
+                              "border-emerald-600 text-emerald-600 hover:bg-emerald-50 shadow-sm w-full sm:w-auto font-medium"
                             }
                           >
                             {isCompletedToday ? (
@@ -613,26 +613,26 @@ export default function StreaksPage() {
                           </Button>
                         )}
                         {!isScheduledForDate && (
-                          <span className="text-xs text-gray-500 italic text-center sm:text-left py-2">
+                          <span className="text-xs text-muted-foreground italic text-center sm:text-left py-2">
                             Not scheduled for {selectedDayOfWeek}
                           </span>
                         )}
                         
-                        <div className="flex gap-2 sm:gap-0">
+                        <div className="flex gap-2 sm:gap-0 justify-end sm:justify-start">
                           <Button
                             onClick={() => startEdit(habit)}
                             variant="ghost"
                             size="sm"
-                            className="flex-1 sm:flex-none"
+                            className="flex-1 sm:flex-none hover:bg-secondary"
                           >
-                            <Edit3 className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <Edit3 className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
                           </Button>
                           
                           <Button
                             onClick={() => deleteHabit(habit.id)}
                             variant="ghost"
                             size="sm"
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50 flex-1 sm:flex-none"
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10 flex-1 sm:flex-none"
                           >
                             <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                           </Button>

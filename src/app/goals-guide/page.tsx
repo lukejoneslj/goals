@@ -437,93 +437,93 @@ export default function GoalsGuide() {
       </section>
 
       {/* Motivation Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+      <section className="py-12 sm:py-16 md:py-20 bg-background">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4 sm:mb-6 tracking-tight">
               When Motivation Dies (And It Will)
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
               Let's talk about the elephant in the room. You're going to lose motivation. You're going to want to quit. Here's how to keep going anyway.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            <Card className="border-0 bg-gradient-to-br from-red-50 to-red-100 shadow-xl">
+          <div className="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-12 md:mb-16">
+            <Card className="border border-border bg-card shadow-md hover:shadow-lg transition-all">
               <CardHeader>
                 <div className="flex items-center space-x-3">
-                  <XCircle className="w-8 h-8 text-red-600" />
-                  <CardTitle className="text-2xl text-gray-900">The Motivation Myth</CardTitle>
+                  <XCircle className="w-8 h-8 text-destructive" />
+                  <CardTitle className="text-xl sm:text-2xl text-foreground">The Motivation Myth</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 mb-4">
+                <p className="text-foreground mb-4">
                   <strong>Motivation is not reliable.</strong> It comes and goes like the weather. Successful people don't depend on feeling motivated—they depend on systems and habits.
                 </p>
-                <p className="text-gray-600 mb-4">
+                <p className="text-muted-foreground mb-4">
                   You don't brush your teeth because you're motivated. You do it because it's a habit. That's how goals should work too.
                 </p>
-                <div className="bg-red-200 p-4 rounded-lg">
-                  <p className="text-sm font-semibold text-red-800">Reality Check:</p>
-                  <p className="text-sm text-red-700">If you only work on your goals when you feel like it, you'll quit within 30 days. Guaranteed.</p>
+                <div className="bg-destructive/10 p-4 rounded-lg border border-destructive/20">
+                  <p className="text-sm font-semibold text-destructive">Reality Check:</p>
+                  <p className="text-sm text-destructive/80">If you only work on your goals when you feel like it, you'll quit within 30 days. Guaranteed.</p>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="border-0 bg-gradient-to-br from-green-50 to-green-100 shadow-xl">
+            <Card className="border border-border bg-card shadow-md hover:shadow-lg transition-all">
               <CardHeader>
                 <div className="flex items-center space-x-3">
-                  <CheckCircle2 className="w-8 h-8 text-green-600" />
-                  <CardTitle className="text-2xl text-gray-900">The System Solution</CardTitle>
+                  <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+                  <CardTitle className="text-xl sm:text-2xl text-foreground">The System Solution</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 mb-4">
+                <p className="text-foreground mb-4">
                   <strong>Systems beat motivation every time.</strong> Create an environment that makes success inevitable and failure difficult.
                 </p>
-                <p className="text-gray-600 mb-4">
+                <p className="text-muted-foreground mb-4">
                   Use apps like this one. Set reminders. Create accountability. Make it harder to fail than to succeed.
                 </p>
-                <div className="bg-green-200 p-4 rounded-lg">
-                  <p className="text-sm font-semibold text-green-800">The Truth:</p>
-                  <p className="text-sm text-green-700">Motivation gets you started. Systems keep you going. This app is your system.</p>
+                <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
+                  <p className="text-sm font-semibold text-emerald-800">The Truth:</p>
+                  <p className="text-sm text-emerald-700">Motivation gets you started. Systems keep you going. This app is your system.</p>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center border-0 bg-gradient-to-br from-blue-50 to-blue-100 shadow-lg">
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+            <Card className="text-center border border-border bg-card shadow-sm hover:shadow-md transition-all">
               <CardHeader>
-                <RotateCcw className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-                <CardTitle className="text-xl text-gray-900">It's Okay to Restart</CardTitle>
+                <RotateCcw className="w-12 h-12 text-primary mx-auto mb-4" />
+                <CardTitle className="text-lg sm:text-xl text-foreground">It's Okay to Restart</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
+                <p className="text-muted-foreground text-sm sm:text-base">
                   Fell off the wagon? So what. Get back on. The only real failure is not trying again. Every restart is practice for the final success.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="text-center border-0 bg-gradient-to-br from-purple-50 to-purple-100 shadow-lg">
+            <Card className="text-center border border-border bg-card shadow-sm hover:shadow-md transition-all">
               <CardHeader>
-                <TrendingUp className="w-12 h-12 text-purple-600 mx-auto mb-4" />
-                <CardTitle className="text-xl text-gray-900">Progress &gt; Perfection</CardTitle>
+                <TrendingUp className="w-12 h-12 text-violet-600 mx-auto mb-4" />
+                <CardTitle className="text-lg sm:text-xl text-foreground">Progress &gt; Perfection</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
+                <p className="text-muted-foreground text-sm sm:text-base">
                   Did 80% this week instead of 100%? That's still 80% more than doing nothing. Celebrate small wins—they compound into big victories.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="text-center border-0 bg-gradient-to-br from-orange-50 to-orange-100 shadow-lg">
+            <Card className="text-center border border-border bg-card shadow-sm hover:shadow-md transition-all">
               <CardHeader>
                 <RefreshCw className="w-12 h-12 text-orange-600 mx-auto mb-4" />
-                <CardTitle className="text-xl text-gray-900">The Comeback Kid</CardTitle>
+                <CardTitle className="text-lg sm:text-xl text-foreground">The Comeback Kid</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">
+                <p className="text-muted-foreground text-sm sm:text-base">
                   Your past failures don't define your future success. Every expert was once a beginner. Every champion was once a quitter who got back up.
                 </p>
               </CardContent>
@@ -533,62 +533,62 @@ export default function GoalsGuide() {
       </section>
 
       {/* How This App Helps Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+      <section className="py-12 sm:py-16 md:py-20 bg-secondary/10 border-t border-border">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4 sm:mb-6 tracking-tight">
               How This App Becomes Your Secret Weapon
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
               We built this to be your accountability partner, your progress tracker, and your motivation keeper all in one. Here's how it works:
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="text-center border-0 bg-white/80 backdrop-blur-sm shadow-xl">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+            <Card className="text-center border border-border bg-card shadow-sm hover:shadow-md transition-all">
               <CardHeader>
-                <ClipboardList className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-                <CardTitle className="text-xl text-gray-900">Organizes Everything</CardTitle>
+                <ClipboardList className="w-12 h-12 text-primary mx-auto mb-4" />
+                <CardTitle className="text-lg sm:text-xl text-foreground">Organizes Everything</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-4">
+                <p className="text-muted-foreground text-sm sm:text-base">
                   All 7 steps in one place. Your goals, deadlines, obstacles, resources, and action plans—organized so you can focus on doing instead of remembering.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="text-center border-0 bg-white/80 backdrop-blur-sm shadow-xl">
+            <Card className="text-center border border-border bg-card shadow-sm hover:shadow-md transition-all">
               <CardHeader>
-                <BarChart3 className="w-12 h-12 text-green-600 mx-auto mb-4" />
-                <CardTitle className="text-xl text-gray-900">Tracks Your Progress</CardTitle>
+                <BarChart3 className="w-12 h-12 text-emerald-600 mx-auto mb-4" />
+                <CardTitle className="text-lg sm:text-xl text-foreground">Tracks Your Progress</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-4">
+                <p className="text-muted-foreground text-sm sm:text-base">
                   Visual progress bars show you how far you've come. On rough days, seeing your progress can be the difference between quitting and pushing through.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="text-center border-0 bg-white/80 backdrop-blur-sm shadow-xl">
+            <Card className="text-center border border-border bg-card shadow-sm hover:shadow-md transition-all">
               <CardHeader>
-                <Shield className="w-12 h-12 text-purple-600 mx-auto mb-4" />
-                <CardTitle className="text-xl text-gray-900">Keeps You Accountable</CardTitle>
+                <Shield className="w-12 h-12 text-violet-600 mx-auto mb-4" />
+                <CardTitle className="text-lg sm:text-xl text-foreground">Keeps You Accountable</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-4">
+                <p className="text-muted-foreground text-sm sm:text-base">
                   Gentle reminders, milestone celebrations, and honest progress tracking. It's like having a coach who never judges but never lets you off the hook.
                 </p>
               </CardContent>
             </Card>
           </div>
 
-          <div className="mt-16 max-w-4xl mx-auto">
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-center text-white">
-              <h3 className="text-2xl font-bold mb-4">But Here's the Hard Truth...</h3>
-              <p className="text-xl mb-6 text-blue-100">
+          <div className="mt-12 sm:mt-16 max-w-4xl mx-auto px-2">
+            <div className="bg-primary text-primary-foreground rounded-2xl p-6 sm:p-8 text-center shadow-xl">
+              <h3 className="text-xl sm:text-2xl font-bold mb-4">But Here's the Hard Truth...</h3>
+              <p className="text-lg sm:text-xl mb-6 text-primary-foreground/90">
                 This app can organize everything for you, track your progress, and send you reminders. But it can't do the work for you.
               </p>
-              <p className="text-lg text-blue-100">
+              <p className="text-base sm:text-lg text-primary-foreground/80">
                 <strong>You</strong> have to be accountable. <strong>You</strong> have to be responsible. <strong>You</strong> have to show up—even when you don't feel like it. 
                 The app is just your tool. You're the craftsperson.
               </p>
@@ -598,27 +598,27 @@ export default function GoalsGuide() {
       </section>
 
       {/* Final Message Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-gray-900 mb-8">
+      <section className="py-12 sm:py-16 md:py-20 bg-background">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-6 sm:mb-8 tracking-tight">
             Your Goals Are Waiting for You
           </h2>
-          <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed px-2">
             You now know the system. You understand what it takes. The only question left is: 
             <strong> Are you ready to stop making excuses and start making progress?</strong>
           </p>
           
-          <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-8 mb-12">
-            <p className="text-lg text-gray-700 italic">
+          <div className="bg-secondary/30 rounded-2xl p-6 sm:p-8 mb-8 sm:mb-12 border border-border">
+            <p className="text-lg sm:text-xl text-foreground italic font-serif">
               "When you know how to effectively set meaningful goals, make detailed plans and take massive action, you can achieve almost anything! BE A MASTER PLANNER."
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-2">
             <Button 
               asChild 
               size="lg" 
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+              className="bg-primary text-primary-foreground hover:opacity-90 px-8 py-4 text-lg font-bold shadow-xl w-full sm:w-auto"
             >
               <Link href="/signup">
                 Start Your Journey Now
@@ -629,32 +629,32 @@ export default function GoalsGuide() {
               asChild 
               variant="outline" 
               size="lg"
-              className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-4 text-lg font-semibold"
+              className="border-border text-foreground hover:bg-secondary px-8 py-4 text-lg font-medium w-full sm:w-auto"
             >
               <Link href="/">Back to Home</Link>
             </Button>
           </div>
 
-          <p className="text-gray-500 text-sm mt-6">
+          <p className="text-muted-foreground text-sm mt-6">
             Still 100% free. Still no ads. Still rooting for your success.
           </p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 bg-gray-900">
+      <footer className="py-12 bg-foreground text-background border-t border-border/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center space-x-3 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <Target className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-sm shadow-primary/20">
+                <Target className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold text-white">RepentDaily</span>
+              <span className="text-xl font-bold">RepentDaily</span>
             </div>
-            <p className="text-gray-400 mb-4">
+            <p className="text-background/60 mb-4 max-w-md mx-auto">
               Empowering anyone who seeks to do God&apos;s will to achieve their goals and grow in all four areas of life.
             </p>
-            <p className="text-gray-500 text-sm">
+            <p className="text-background/40 text-sm">
               &copy; 2024 RepentDaily. Built with ❤️ for all who desire to follow Christ.
             </p>
           </div>
