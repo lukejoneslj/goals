@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -897,13 +898,13 @@ export default function StreaksPage() {
               const CategoryIcon = habitCategory?.icon
 
               return (
-                <Card key={habit.id} className="border border-border shadow-sm hover:shadow-md transition-all duration-200 bg-card group cursor-pointer hover:scale-[1.02] active:scale-[0.98] flex flex-col h-full">
+                <Card key={habit.id} className="bg-card border-border shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer flex flex-col h-full">
                   {habitCategory && <div className={`h-1 bg-gradient-to-r ${habitCategory.color}`}></div>}
-                  <CardContent className="p-4 flex flex-col flex-1">
+                  <CardContent className="p-3 sm:p-4 md:p-5 flex flex-col flex-1">
                     {/* Header */}
                     <div className="mb-3">
                       <div className="flex items-start justify-between gap-2 mb-2">
-                        <h3 className="text-base font-bold text-foreground tracking-tight flex-1 line-clamp-2">{habit.name}</h3>
+                        <h3 className="text-base sm:text-lg font-bold text-foreground tracking-tight flex-1 line-clamp-2">{habit.name}</h3>
                         <div className="flex gap-1 flex-shrink-0">
                           <Button
                             onClick={(e) => {
@@ -933,29 +934,29 @@ export default function StreaksPage() {
                       {/* Badges */}
                       <div className="flex flex-wrap gap-1.5 mb-2">
                         {habitCategory && (
-                          <div className={`flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${habitCategory.bgColor} ${habitCategory.textColor} border ${habitCategory.borderColor}`}>
+                          <Badge variant="outline" className={`${habitCategory.textColor} border-${habitCategory.borderColor.split('-')[1]}-200 bg-transparent px-2 py-0.5 text-xs`}>
                             {CategoryIcon && <CategoryIcon className="w-3 h-3 mr-1 flex-shrink-0" />}
                             <span className="whitespace-nowrap">{habitCategory.title}</span>
-                          </div>
+                          </Badge>
                         )}
-                        <div className={`flex items-center px-2 py-0.5 rounded-full text-xs font-medium transition-colors ${
+                        <Badge variant="outline" className={`px-2 py-0.5 text-xs transition-colors ${
                           habit.currentStreak > 0
-                            ? 'bg-orange-100 text-orange-800 border border-orange-200'
-                            : 'bg-secondary text-muted-foreground border border-border'
+                            ? 'bg-orange-50 text-orange-800 border-orange-200'
+                            : 'bg-secondary text-muted-foreground border-border'
                         }`}>
                           <Flame className={`w-3 h-3 mr-1 flex-shrink-0 ${habit.currentStreak > 0 ? 'text-orange-500' : 'text-muted-foreground'}`} />
                           <span className="whitespace-nowrap">{habit.currentStreak} day</span>
-                        </div>
+                        </Badge>
                         {habit.longestStreak > 0 && habit.longestStreak !== habit.currentStreak && (
-                          <div className="flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-800 border border-yellow-200">
+                          <Badge variant="outline" className="px-2 py-0.5 text-xs bg-yellow-50 text-yellow-800 border-yellow-200">
                             <Trophy className="w-3 h-3 mr-1 text-yellow-600 flex-shrink-0" />
                             <span className="whitespace-nowrap">Best: {habit.longestStreak}</span>
-                          </div>
+                          </Badge>
                         )}
                       </div>
                       
                       {habit.description && (
-                        <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{habit.description}</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground mb-2 line-clamp-2 leading-relaxed">{habit.description}</p>
                       )}
                       
                       <div className="flex items-center space-x-1.5 text-xs text-muted-foreground">

@@ -321,32 +321,32 @@ export default function GoalsPage() {
               return (
                 <Card 
                   key={goal.id}
-                  className="group hover:shadow-md transition-all duration-300 border bg-card cursor-pointer overflow-hidden"
+                  className="group bg-card border-border shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer overflow-hidden"
                   onClick={() => handleViewGoal(goal.id)}
                 >
                   <div className={`h-1 bg-gradient-to-r ${config.color}`}></div>
-                  <CardHeader className="pb-3">
+                  <CardHeader className="pb-3 sm:pb-4">
                     <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center mb-3 sm:mb-4">
-                          <div className={`p-2 rounded-lg ${config.bgColor} mr-3`}>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center mb-3 sm:mb-4 flex-wrap gap-2">
+                          <div className={`p-2 rounded-lg ${config.bgColor} flex-shrink-0`}>
                             <IconComponent className={`w-4 h-4 ${config.textColor}`} />
                           </div>
-                          <Badge variant="outline" className={`${config.textColor} border-${config.borderColor.split('-')[1]}-200 bg-transparent px-3 py-1`}>
+                          <Badge variant="outline" className={`${config.textColor} border-${config.borderColor.split('-')[1]}-200 bg-transparent px-2 sm:px-3 py-0.5 sm:py-1 text-xs`}>
                             {config.title}
                           </Badge>
                           <Badge 
                             variant={goal.status === 'completed' ? 'default' : 'secondary'}
-                            className="ml-3 px-3 py-1"
+                            className="px-2 sm:px-3 py-0.5 sm:py-1 text-xs"
                           >
                             {goal.status.charAt(0).toUpperCase() + goal.status.slice(1)}
                           </Badge>
                         </div>
-                        <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-foreground mb-2 sm:mb-3 md:mb-4 group-hover:text-primary transition-colors duration-300">
+                        <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-foreground mb-2 sm:mb-3 group-hover:text-primary transition-colors duration-300 tracking-tight">
                           {goal.outcome}
                         </CardTitle>
-                        <div className="flex flex-wrap items-center text-muted-foreground gap-2 sm:gap-3 md:gap-6">
-                          <div className="flex items-center bg-secondary rounded-md px-2 sm:px-3 py-1">
+                        <div className="flex flex-wrap items-center text-muted-foreground gap-2 sm:gap-3">
+                          <div className="flex items-center bg-secondary/50 rounded-md px-2 sm:px-3 py-1">
                             <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
                             <span className="font-medium text-xs sm:text-sm">
                               {new Date(goal.targetDate).toLocaleDateString()}
@@ -354,7 +354,7 @@ export default function GoalsPage() {
                           </div>
                           {daysUntilTarget !== 0 && (
                             <div className={`flex items-center rounded-md px-2 sm:px-3 py-1 ${
-                              daysUntilTarget > 0 ? 'bg-blue-50 text-blue-700' : 'bg-red-50 text-red-700'
+                              daysUntilTarget > 0 ? 'bg-blue-50 text-blue-700 border border-blue-100' : 'bg-red-50 text-red-700 border border-red-100'
                             }`}>
                               <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
                               <span className="font-medium text-xs sm:text-sm">
@@ -363,14 +363,14 @@ export default function GoalsPage() {
                             </div>
                           )}
                           {daysUntilTarget === 0 && (
-                            <div className="flex items-center bg-orange-50 text-orange-700 rounded-md px-2 sm:px-3 py-1">
+                            <div className="flex items-center bg-orange-50 text-orange-700 rounded-md px-2 sm:px-3 py-1 border border-orange-100">
                               <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
                               <span className="font-medium text-xs sm:text-sm">Due Today!</span>
                             </div>
                           )}
                         </div>
                       </div>
-                      <div className="flex space-x-1 sm:space-x-2 ml-2 sm:ml-4 md:ml-6 flex-shrink-0">
+                      <div className="flex space-x-1 sm:space-x-2 ml-2 sm:ml-4 flex-shrink-0">
                         <Button 
                           variant="ghost" 
                           size="sm" 
@@ -396,54 +396,54 @@ export default function GoalsPage() {
                   <CardContent className="pt-0">
                     <div className="space-y-4 sm:space-y-6">
                       <div>
-                        <div className="flex justify-between text-sm mb-2">
-                          <span className="font-medium text-muted-foreground">Progress</span>
-                          <span className="font-bold text-foreground">{goal.progressPercentage || 0}%</span>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">Progress</span>
+                          <span className="text-sm sm:text-base font-bold text-foreground">{goal.progressPercentage || 0}%</span>
                         </div>
                         <Progress value={goal.progressPercentage || 0} className="h-2 bg-secondary" />
                       </div>
                       
-                      <div className="bg-secondary/30 rounded-lg p-4 border border-border/50">
-                        <p className="font-semibold text-foreground mb-1 text-sm">Why this matters:</p>
-                        <p className="text-muted-foreground text-sm line-clamp-2 italic">{goal.whyLeverage}</p>
+                      <div className="bg-secondary/30 rounded-lg p-3 sm:p-4 border border-border/50">
+                        <p className="text-xs sm:text-sm font-semibold text-foreground mb-1.5 sm:mb-2">Why this matters:</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 italic leading-relaxed">{goal.whyLeverage}</p>
                       </div>
 
-                      <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
+                      <div className="grid md:grid-cols-2 gap-3 sm:gap-4">
                         {goal.obstacles && goal.obstacles.length > 0 && (
-                          <div className="bg-red-50/50 rounded-lg p-3 sm:p-4 border border-red-100">
-                            <p className="font-semibold text-red-800 mb-2 flex items-center text-sm">
-                              <AlertTriangle className="w-3 h-3 mr-2" />
+                          <div className="bg-red-50/50 rounded-lg p-3 sm:p-4 border border-red-100/50">
+                            <p className="text-xs sm:text-sm font-semibold text-red-800 mb-2 flex items-center">
+                              <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 flex-shrink-0" />
                               Obstacles
                             </p>
                             <ul className="space-y-1.5">
                               {goal.obstacles.slice(0, 2).map((obstacle, index) => (
-                                <li key={index} className="text-red-700 text-xs sm:text-sm flex items-start">
+                                <li key={index} className="text-xs sm:text-sm text-red-700 flex items-start">
                                   <span className="w-1.5 h-1.5 bg-red-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
                                   <span className="line-clamp-1">{obstacle}</span>
                                 </li>
                               ))}
                               {goal.obstacles.length > 2 && (
-                                <li className="text-red-600 text-xs">+ {goal.obstacles.length - 2} more</li>
+                                <li className="text-xs text-red-600">+ {goal.obstacles.length - 2} more</li>
                               )}
                             </ul>
                           </div>
                         )}
 
                         {goal.resources && goal.resources.length > 0 && (
-                          <div className="bg-green-50/50 rounded-lg p-3 sm:p-4 border border-green-100">
-                            <p className="font-semibold text-green-800 mb-2 flex items-center text-sm">
-                              <CheckCircle className="w-3 h-3 mr-2" />
+                          <div className="bg-emerald-50/50 rounded-lg p-3 sm:p-4 border border-emerald-100/50">
+                            <p className="text-xs sm:text-sm font-semibold text-emerald-800 mb-2 flex items-center">
+                              <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 flex-shrink-0" />
                               Resources
                             </p>
                             <ul className="space-y-1.5">
                               {goal.resources.slice(0, 2).map((resource, index) => (
-                                <li key={index} className="text-green-700 text-xs sm:text-sm flex items-start">
-                                  <span className="w-1.5 h-1.5 bg-green-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
+                                <li key={index} className="text-xs sm:text-sm text-emerald-700 flex items-start">
+                                  <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
                                   <span className="line-clamp-1">{resource}</span>
                                 </li>
                               ))}
                               {goal.resources.length > 2 && (
-                                <li className="text-green-600 text-xs">+ {goal.resources.length - 2} more</li>
+                                <li className="text-xs text-emerald-600">+ {goal.resources.length - 2} more</li>
                               )}
                             </ul>
                           </div>

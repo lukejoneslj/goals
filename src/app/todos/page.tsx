@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -577,17 +578,17 @@ export default function TodosPage() {
               return (
                 <Card 
                   key={todo.id} 
-                  className={`border border-border shadow-sm hover:shadow-md transition-all duration-200 bg-card group cursor-pointer hover:scale-[1.02] active:scale-[0.98] flex flex-col h-full ${
+                  className={`bg-card border-border shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer flex flex-col h-full ${
                     todo.isCompleted ? 'opacity-75' : ''
                   }`}
                 >
                   {todoCategory && <div className={`h-1 bg-gradient-to-r ${todoCategory.color}`}></div>}
-                  <CardContent className="p-4 flex flex-col flex-1">
+                  <CardContent className="p-3 sm:p-4 md:p-5 flex flex-col flex-1">
                     {/* Header */}
                     <div className="mb-3">
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="flex-1 min-w-0">
-                          <h3 className={`text-base font-bold text-foreground tracking-tight line-clamp-2 ${
+                          <h3 className={`text-base sm:text-lg font-bold text-foreground tracking-tight line-clamp-2 ${
                             todo.isCompleted ? 'line-through text-muted-foreground' : ''
                           }`}>
                             {todo.title}
@@ -622,15 +623,15 @@ export default function TodosPage() {
                       {/* Badges */}
                       <div className="flex flex-wrap gap-1.5 mb-2">
                         {todoCategory && (
-                          <div className={`flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${todoCategory.bgColor} ${todoCategory.textColor} border ${todoCategory.borderColor}`}>
+                          <Badge variant="outline" className={`${todoCategory.textColor} border-${todoCategory.borderColor.split('-')[1]}-200 bg-transparent px-2 py-0.5 text-xs`}>
                             {CategoryIcon && <CategoryIcon className="w-3 h-3 mr-1 flex-shrink-0" />}
                             <span className="whitespace-nowrap">{todoCategory.title}</span>
-                          </div>
+                          </Badge>
                         )}
                       </div>
                       
                       {todo.description && (
-                        <p className={`text-xs text-muted-foreground mb-2 line-clamp-2 ${
+                        <p className={`text-xs sm:text-sm text-muted-foreground mb-2 line-clamp-2 leading-relaxed ${
                           todo.isCompleted ? 'line-through' : ''
                         }`}>
                           {todo.description}
