@@ -197,7 +197,7 @@ export default function Home() {
           
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             <Card className="text-center hover:shadow-lg transition-all duration-300 border border-border bg-card">
-              <CardHeader className="pb-4 pt-6">
+              <CardHeader className="pb-3">
                 <div className="flex justify-center mb-4">
                   <div className="w-16 h-16 bg-violet-50 rounded-2xl flex items-center justify-center">
                     <Heart className="w-8 h-8 text-violet-600" />
@@ -205,7 +205,7 @@ export default function Home() {
                 </div>
                 <CardTitle className="text-xl font-bold text-foreground">🙏 Spiritual</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 <CardDescription className="text-muted-foreground text-base">
                   Faith, values, and character development. Strengthen your relationship with God and develop Christlike attributes.
                 </CardDescription>
@@ -213,7 +213,7 @@ export default function Home() {
             </Card>
             
             <Card className="text-center hover:shadow-lg transition-all duration-300 border border-border bg-card">
-              <CardHeader className="pb-4 pt-6">
+              <CardHeader className="pb-3">
                 <div className="flex justify-center mb-4">
                   <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center">
                     <Dumbbell className="w-8 h-8 text-rose-600" />
@@ -221,7 +221,7 @@ export default function Home() {
                 </div>
                 <CardTitle className="text-xl font-bold text-foreground">💪 Physical</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 <CardDescription className="text-muted-foreground text-base">
                   Health, fitness, and physical well-being. Honor your body as a temple and build healthy habits.
                 </CardDescription>
@@ -229,7 +229,7 @@ export default function Home() {
             </Card>
             
             <Card className="text-center hover:shadow-lg transition-all duration-300 border border-border bg-card">
-              <CardHeader className="pb-4 pt-6">
+              <CardHeader className="pb-3">
                 <div className="flex justify-center mb-4">
                   <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center">
                     <Users className="w-8 h-8 text-emerald-600" />
@@ -237,7 +237,7 @@ export default function Home() {
                 </div>
                 <CardTitle className="text-xl font-bold text-foreground">👥 Social</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 <CardDescription className="text-muted-foreground text-base">
                   Relationships and social connections. Build meaningful friendships and strengthen family bonds.
                 </CardDescription>
@@ -245,7 +245,7 @@ export default function Home() {
             </Card>
             
             <Card className="text-center hover:shadow-lg transition-all duration-300 border border-border bg-card">
-              <CardHeader className="pb-4 pt-6">
+              <CardHeader className="pb-3">
                 <div className="flex justify-center mb-4">
                   <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center">
                     <Brain className="w-8 h-8 text-blue-600" />
@@ -253,7 +253,7 @@ export default function Home() {
                 </div>
                 <CardTitle className="text-xl font-bold text-foreground">🧠 Intellectual</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 <CardDescription className="text-muted-foreground text-base">
                   Learning, skills, and knowledge growth. Develop your mind and acquire valuable skills for life.
                 </CardDescription>
@@ -278,7 +278,7 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
             {/* Goal Setting */}
             <Card className="hover:shadow-lg transition-all duration-300 bg-secondary/10 border border-border group">
-              <CardHeader className="text-center pb-6">
+              <CardHeader className="text-center pb-3">
                 <div className="flex justify-center mb-4">
                   <div className="w-20 h-20 bg-primary rounded-3xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
                     <Target className="w-10 h-10 text-primary-foreground" />
@@ -289,7 +289,7 @@ export default function Home() {
                   For your biggest dreams and life-changing aspirations
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="pt-0 space-y-4">
                 <p className="text-foreground leading-relaxed">
                   Perfect for major goals that require planning, strategy, and sustained effort. Whether it&apos;s getting in shape, 
                   advancing your career, strengthening relationships, or deepening your faith—our comprehensive seven-step process 
@@ -322,7 +322,7 @@ export default function Home() {
 
             {/* Daily Streaks */}
             <Card className="hover:shadow-lg transition-all duration-300 bg-orange-50/30 border border-orange-100 group">
-              <CardHeader className="text-center pb-6">
+              <CardHeader className="text-center pb-3">
                 <div className="flex justify-center mb-4">
                   <div className="w-20 h-20 bg-orange-500 rounded-3xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
                     <span className="text-4xl">🔥</span>
@@ -333,7 +333,7 @@ export default function Home() {
                   For the small, consistent habits that transform your character
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="pt-0 space-y-4">
                 <p className="text-foreground leading-relaxed">
                   Some of life&apos;s most important practices don&apos;t need elaborate plans—they just need consistency. 
                   Daily Streaks helps you build momentum with simple habits that compound over time, creating lasting change 

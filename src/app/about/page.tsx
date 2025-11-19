@@ -90,7 +90,7 @@ export default function About() {
           <div className="grid md:grid-cols-2 gap-6 sm:gap-8 md:gap-12 mb-8 sm:mb-12 md:mb-16">
             {/* Creator */}
             <Card className="border border-border bg-card shadow-md hover:shadow-lg transition-all">
-              <CardHeader className="pb-4 sm:pb-6">
+              <CardHeader className="pb-3">
                 <div className="flex items-center mb-3 sm:mb-4">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-xl flex items-center justify-center mr-3 sm:mr-4">
                     <User className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
@@ -98,7 +98,7 @@ export default function About() {
                   <CardTitle className="text-xl sm:text-2xl font-bold text-foreground">Built by Luke Jones</CardTitle>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 <p className="text-muted-foreground mb-4 sm:mb-6 leading-relaxed">
                   As a returned missionary and lifelong member of The Church of Jesus Christ of Latter-day Saints, 
                   I've seen firsthand how powerful goal setting can be when combined with daily repentance and faith in Jesus Christ.
@@ -131,7 +131,7 @@ export default function About() {
 
             {/* Missionary Experience */}
             <Card className="border border-border bg-card shadow-md hover:shadow-lg transition-all">
-              <CardHeader className="pb-4 sm:pb-6">
+              <CardHeader className="pb-3">
                 <div className="flex items-center mb-3 sm:mb-4">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-50 rounded-xl flex items-center justify-center mr-3 sm:mr-4">
                     <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600" />
@@ -139,7 +139,7 @@ export default function About() {
                   <CardTitle className="text-xl sm:text-2xl font-bold text-foreground">A Life-Changing Lesson</CardTitle>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 <p className="text-muted-foreground leading-relaxed">
                   The core goal-setting methodology came from Kevin Pearson of the Seventy during a zone conference 
                   while I was serving as a missionary. His teachings on the seven critical steps to effective goal 

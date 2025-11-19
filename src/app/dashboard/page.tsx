@@ -381,7 +381,7 @@ export default function Dashboard() {
                   className="group cursor-pointer hover:shadow-lg transition-all duration-300 bg-card border-border overflow-hidden"
                 >
                   <div className={`h-1 bg-gradient-to-r ${config.color}`}></div>
-                  <CardHeader className="pb-4 pt-5">
+                  <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <div>
                         <CardTitle className="text-lg font-bold text-foreground mb-1">
@@ -396,7 +396,7 @@ export default function Dashboard() {
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="pt-0">
                     <div className="space-y-4">
                       <div>
                         <div className="flex justify-between text-sm mb-2">
@@ -480,7 +480,7 @@ export default function Dashboard() {
                     onClick={() => handleViewGoal(goal.id)}
                   >
                     <div className={`h-1 bg-gradient-to-r ${config.color}`}></div>
-                    <CardHeader className="pb-4 sm:pb-6">
+                    <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center mb-3 sm:mb-4">
@@ -549,7 +549,7 @@ export default function Dashboard() {
                       </div>
                     </CardHeader>
                     <CardContent className="pt-0">
-                      <div className="space-y-6">
+                      <div className="space-y-4 sm:space-y-6">
                         <div>
                           <div className="flex justify-between text-sm mb-2">
                             <span className="font-medium text-muted-foreground">Progress</span>
