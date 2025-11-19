@@ -69,10 +69,10 @@ service cloud.firestore {
         request.auth.uid == resource.data.userId;
     }
 
-    // Users can only read/write their own ELO data
+    // Users can read all ELO data for comparison, but only write their own
     match /user_elo/{eloId} {
-      allow read: if request.auth != null &&
-        request.auth.uid == resource.data.userId;
+      // Allow reading all ELO data for leaderboard/comparison
+      allow read: if request.auth != null;
 
       allow create: if request.auth != null &&
         request.auth.uid == request.resource.data.userId &&

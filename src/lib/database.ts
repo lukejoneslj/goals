@@ -616,6 +616,28 @@ export const userELOService = {
     } catch (error) {
       return { error: { message: (error as Error).message } }
     }
+  },
+
+  // Get all users' ELO data for comparison (public leaderboard)
+  async getAllUsers() {
+    try {
+      const firestoreDb = ensureFirebase()
+      const querySnapshot = await getDocs(collection(firestoreDb, 'user_elo'))
+      
+      const users = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as UserELO[]
+
+      // Sort by ELO rating descending
+      users.sort((a, b) => b.eloRating - a.eloRating)
+
+      return { data: users, error: null }
+    } catch (error) {
+      console.error('Error getting all users ELO:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: [], error: { message: `Failed to get users: ${errorMessage}` } }
+    }
   }
 }
 
