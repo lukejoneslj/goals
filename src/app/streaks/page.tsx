@@ -3,11 +3,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Progress } from '@/components/ui/progress'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { 
   Plus, 
   Flame, 
@@ -21,7 +22,10 @@ import {
   Users,
   Dumbbell,
   Filter,
-  X
+  X,
+  ChevronDown,
+  ChevronUp,
+  BarChart3
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { Habit, UserELO } from '@/lib/firebase'
@@ -94,6 +98,7 @@ export default function StreaksPage() {
   const [eloLoading, setEloLoading] = useState(true)
   const [eloNotification, setEloNotification] = useState<{ change: number; newElo: number; isWin: boolean } | null>(null)
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all')
+  const [showStats, setShowStats] = useState(false)
   
   // Form state
   const [formData, setFormData] = useState({
@@ -434,13 +439,6 @@ export default function StreaksPage() {
 
 
 
-  const getMotivationalMessage = (streak: number) => {
-    if (streak === 0) return "Start your streak today! 💪"
-    if (streak < 7) return "You're on fire! Keep it up! 🔥"
-    if (streak < 30) return "Amazing consistency! You're crushing it! 🌟"
-    if (streak < 100) return "Incredible dedication! You're unstoppable! 🚀"
-    return "LEGENDARY! You're a habit master! 👑"
-  }
 
   if (authLoading || loading) {
     return (
@@ -501,53 +499,49 @@ export default function StreaksPage() {
           </Button>
         </div>
 
-        {/* Category Filter */}
-        <Card className="mb-6 sm:mb-8">
-          <CardContent className="p-4 sm:p-6">
-            <div className="flex items-center gap-3 flex-wrap">
-              <Filter className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm font-medium text-muted-foreground">Filter by Category:</span>
-              <div className="flex flex-wrap gap-2">
-                {(['all', 'spiritual', 'physical', 'social', 'intellectual'] as CategoryFilter[]).map((category) => {
-                  const config = category === 'all' ? null : categoryConfig[category]
-                  return (
-                    <Button
-                      key={category}
-                      variant={categoryFilter === category ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setCategoryFilter(category)}
-                      className={`text-xs sm:text-sm transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 ${
-                        categoryFilter === category && config
-                          ? `${config.bgColor} ${config.textColor} border-${config.borderColor.split('-')[1]}-200`
-                          : ''
-                      }`}
-                    >
-                      {category === 'all' ? (
-                        'All Categories'
-                      ) : (
-                        <>
-                          {config && <config.icon className="w-3 h-3 mr-1.5" />}
-                          {config?.title}
-                        </>
-                      )}
-                    </Button>
-                  )
-                })}
-              </div>
-              {categoryFilter !== 'all' && (
+        {/* Category Filter - Compact */}
+        <div className="mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3 flex-wrap">
+          <Filter className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+          <span className="text-xs sm:text-sm font-medium text-muted-foreground whitespace-nowrap">Category:</span>
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 flex-1">
+            {(['all', 'spiritual', 'physical', 'social', 'intellectual'] as CategoryFilter[]).map((category) => {
+              const config = category === 'all' ? null : categoryConfig[category]
+              return (
                 <Button
-                  variant="ghost"
+                  key={category}
+                  variant={categoryFilter === category ? 'default' : 'outline'}
                   size="sm"
-                  onClick={() => setCategoryFilter('all')}
-                  className="ml-auto text-xs"
+                  onClick={() => setCategoryFilter(category)}
+                  className={`text-xs transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 ${
+                    categoryFilter === category && config
+                      ? `${config.bgColor} ${config.textColor} border-${config.borderColor.split('-')[1]}-200`
+                      : ''
+                  }`}
                 >
-                  <X className="w-3 h-3 mr-1" />
-                  Clear
+                  {category === 'all' ? (
+                    'All'
+                  ) : (
+                    <>
+                      {config && <config.icon className="w-3 h-3 mr-1" />}
+                      <span className="hidden xs:inline">{config?.title}</span>
+                      <span className="xs:hidden">{config?.title.split(' ')[1]}</span>
+                    </>
+                  )}
                 </Button>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+              )
+            })}
+          </div>
+          {categoryFilter !== 'all' && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setCategoryFilter('all')}
+              className="text-xs px-2"
+            >
+              <X className="w-3 h-3" />
+            </Button>
+          )}
+        </div>
 
         {/* ELO Change Notification */}
         {eloNotification && (
@@ -578,22 +572,23 @@ export default function StreaksPage() {
           </div>
         )}
 
-        {/* Date Picker and Stats */}
-        <div className="mb-6 sm:mb-8 md:mb-10">
+        {/* Quick Stats and Date Picker - Compact */}
+        <div className="mb-4 sm:mb-6">
           <Card className="border border-border shadow-sm bg-card">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex flex-col space-y-6">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 border-b border-border pb-6">
+            <CardContent className="p-4 sm:p-5">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                {/* Date Picker */}
+                <div className="flex items-center gap-3">
                   <div className="w-full sm:w-auto">
-                    <Label htmlFor="date-picker" className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                      Select Date
+                    <Label htmlFor="date-picker" className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      Date
                     </Label>
                     <Input
                       id="date-picker"
                       type="date"
                       value={selectedDate}
                       onChange={(e) => setSelectedDate(e.target.value)}
-                      className="mt-2 w-full sm:w-48 text-sm bg-background"
+                      className="mt-1.5 w-full sm:w-40 text-sm bg-background"
                       max={new Date().toISOString().split('T')[0]}
                     />
                   </div>
@@ -602,114 +597,123 @@ export default function StreaksPage() {
                       onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
                       variant="outline"
                       size="sm"
-                      className="mt-auto w-full sm:w-auto"
+                      className="mt-auto"
                     >
-                      Back to Today
+                      Today
                     </Button>
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-                  <div className="text-center p-4 bg-secondary/30 rounded-xl">
-                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-primary">
+                {/* Quick Stats */}
+                <div className="grid grid-cols-4 gap-3 sm:gap-4 flex-1">
+                  <div className="text-center p-3 bg-secondary/30 rounded-lg">
+                    <div className="text-lg sm:text-xl font-bold text-primary">
                       {habits.reduce((sum, habit) => sum + (habit.currentStreak || 0), 0)}
                     </div>
-                    <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">Total Streak Days</div>
+                    <div className="text-[10px] xs:text-xs text-muted-foreground font-medium mt-0.5">Streaks</div>
                   </div>
-                  <div className="text-center p-4 bg-secondary/30 rounded-xl">
-                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-emerald-600">
+                  <div className="text-center p-3 bg-secondary/30 rounded-lg">
+                    <div className="text-lg sm:text-xl font-bold text-emerald-600">
                       {todayCompletions.length}
                     </div>
-                    <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">Completed Today</div>
+                    <div className="text-[10px] xs:text-xs text-muted-foreground font-medium mt-0.5">Today</div>
                   </div>
-                  <div className="text-center p-4 bg-secondary/30 rounded-xl">
-                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-violet-600">
+                  <div className="text-center p-3 bg-secondary/30 rounded-lg">
+                    <div className="text-lg sm:text-xl font-bold text-violet-600">
                       {habits.reduce((max, habit) => Math.max(max, habit.longestStreak || 0), 0)}
                     </div>
-                    <div className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">Best Streak</div>
+                    <div className="text-[10px] xs:text-xs text-muted-foreground font-medium mt-0.5">Best</div>
                   </div>
-                  <div className="text-center col-span-2 sm:col-span-1 p-4 bg-orange-50 rounded-xl border border-orange-100 flex flex-col justify-center items-center">
-                    <div className="text-sm sm:text-base font-bold text-orange-700 mb-1">
-                      {getMotivationalMessage(habits.reduce((sum, habit) => sum + (habit.currentStreak || 0), 0))}
-                    </div>
-                    <div className="text-xs text-orange-600/80">Keep up the great work!</div>
-                  </div>
-                </div>
-
-                {/* ELO Rating Section */}
-                {!eloLoading && userELO && (
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 pt-4 border-t border-border">
-                    <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border border-purple-200">
-                      <div className="flex items-center justify-center mb-2">
-                        <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${getRankInfo(userELO.currentRank).color} flex items-center justify-center text-white font-bold text-sm`}>
+                  {!eloLoading && userELO && (
+                    <div className="text-center p-3 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg border border-purple-200 cursor-pointer hover:shadow-md transition-all duration-300"
+                         onClick={() => setShowStats(!showStats)}>
+                      <div className="flex items-center justify-center mb-1">
+                        <div className={`w-6 h-6 rounded-full bg-gradient-to-r ${getRankInfo(userELO.currentRank).color} flex items-center justify-center text-white font-bold text-xs`}>
                           {userELO.currentRank.split(' ')[0][0]}{userELO.currentRank.split(' ')[1]?.[0] || ''}
                         </div>
                       </div>
-                      <div className="text-lg sm:text-xl font-bold text-purple-700">
-                        {userELO.eloRating}
+                      <div className="text-xs sm:text-sm font-bold text-purple-700">{userELO.eloRating}</div>
+                      <div className="text-[10px] text-purple-600 font-medium">ELO</div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Expand Stats Button */}
+                {!eloLoading && userELO && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowStats(!showStats)}
+                    className="cursor-pointer"
+                  >
+                    <BarChart3 className="w-4 h-4 mr-1.5" />
+                    {showStats ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  </Button>
+                )}
+              </div>
+
+              {/* Expanded Stats Section */}
+              {showStats && !eloLoading && userELO && (
+                <div className="mt-4 pt-4 border-t border-border space-y-4 animate-fade-in">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border border-purple-200">
+                      <div className="flex items-center justify-center mb-2">
+                        <div className={`w-10 h-10 rounded-full bg-gradient-to-r ${getRankInfo(userELO.currentRank).color} flex items-center justify-center text-white font-bold text-sm`}>
+                          {userELO.currentRank.split(' ')[0][0]}{userELO.currentRank.split(' ')[1]?.[0] || ''}
+                        </div>
                       </div>
-                      <div className="text-xs sm:text-sm text-purple-600 font-medium">ELO Rating</div>
+                      <div className="text-xl font-bold text-purple-700">{userELO.eloRating}</div>
+                      <div className="text-xs text-purple-600 font-medium">ELO Rating</div>
                     </div>
 
                     <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-200">
-                      <div className="text-lg sm:text-xl font-bold text-blue-700 mb-1">
-                        {userELO.currentRank}
-                      </div>
-                      <div className="text-xs sm:text-sm text-blue-600 font-medium mb-2">Current Rank</div>
+                      <div className="text-xl font-bold text-blue-700 mb-1">{userELO.currentRank}</div>
+                      <div className="text-xs text-blue-600 font-medium mb-2">Current Rank</div>
                       {getNextRank(userELO.eloRating) && (
-                        <div className="text-xs text-blue-500">
-                          Next: {getNextRank(userELO.eloRating)}
-                        </div>
+                        <div className="text-xs text-blue-500">Next: {getNextRank(userELO.eloRating)}</div>
                       )}
                     </div>
 
                     <div className="text-center p-4 bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl border border-emerald-200">
-                      <div className="text-lg sm:text-xl font-bold text-emerald-700 mb-1">
+                      <div className="text-xl font-bold text-emerald-700 mb-1">
                         {userELO.totalWins}/{userELO.totalWins + userELO.totalLosses}
                       </div>
-                      <div className="text-xs sm:text-sm text-emerald-600 font-medium mb-2">Win Rate</div>
+                      <div className="text-xs text-emerald-600 font-medium mb-2">Win Rate</div>
                       <div className="text-xs text-emerald-500">
                         {userELO.totalWins + userELO.totalLosses > 0
                           ? `${Math.round((userELO.totalWins / (userELO.totalWins + userELO.totalLosses)) * 100)}%`
-                          : '0%'
-                        }
+                          : '0%'}
                       </div>
                     </div>
                   </div>
-                )}
 
-                {/* Rank Progress Bar */}
-                {!eloLoading && userELO && (
-                  <div className="mt-4 p-4 bg-secondary/30 rounded-xl border border-border">
+                  {/* Rank Progress Bar */}
+                  <div className="p-4 bg-secondary/30 rounded-xl border border-border">
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm font-medium text-foreground">Rank Progress</span>
                       <span className="text-sm text-muted-foreground">
                         {getEloProgress(userELO.eloRating).percentage}% to next rank
                       </span>
                     </div>
-                    <Progress
-                      value={getEloProgress(userELO.eloRating).percentage}
-                      className="h-3 bg-secondary"
-                    />
+                    <Progress value={getEloProgress(userELO.eloRating).percentage} className="h-3 bg-secondary" />
                     <div className="flex justify-between text-xs text-muted-foreground mt-1">
                       <span>{userELO.currentRank}</span>
                       <span>{getNextRank(userELO.eloRating) || 'Max Rank'}</span>
                     </div>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
 
-        {/* Add/Edit Form */}
-        {showAddForm && (
-          <Card className="mb-6 sm:mb-8 md:mb-10 border border-border shadow-lg bg-card">
-            <CardHeader className="p-4 sm:p-6 border-b border-border/50">
-              <CardTitle className="text-lg sm:text-xl font-bold">{editingHabit ? 'Edit Habit' : 'Add New Habit'}</CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 sm:p-6">
-              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+        {/* Add/Edit Form Modal */}
+        <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-xl sm:text-2xl font-bold">{editingHabit ? 'Edit Habit' : 'Add New Habit'}</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 mt-4">
                 <div>
                   <Label htmlFor="name">Habit Name</Label>
                   <Input
@@ -801,12 +805,11 @@ export default function StreaksPage() {
                   </Button>
                 </div>
               </form>
-            </CardContent>
-          </Card>
-        )}
+          </DialogContent>
+        </Dialog>
 
         {/* Habits List */}
-        <div className="grid gap-6">
+        <div className="grid gap-3 sm:gap-4">
           {habits.length === 0 ? (
             <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm">
               <CardContent className="text-center py-12">
@@ -889,31 +892,31 @@ export default function StreaksPage() {
               const CategoryIcon = habitCategory?.icon
 
               return (
-                <Card key={habit.id} className="border border-border shadow-sm hover:shadow-md transition-all duration-200 bg-card group">
+                <Card key={habit.id} className="border border-border shadow-sm hover:shadow-md transition-all duration-200 bg-card group cursor-pointer hover:scale-[1.01] active:scale-[0.99]">
                   {habitCategory && <div className={`h-1 bg-gradient-to-r ${habitCategory.color}`}></div>}
-                  <CardContent className="p-4 sm:p-6">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <CardContent className="p-3 sm:p-4">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                       <div className="flex-1 min-w-0 w-full">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 sm:space-x-4 mb-2 sm:mb-3">
-                          <h3 className="text-lg sm:text-xl font-bold text-foreground truncate w-full sm:w-auto tracking-tight">{habit.name}</h3>
-                          <div className="flex flex-wrap gap-2 sm:gap-3">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-2">
+                          <h3 className="text-base sm:text-lg font-bold text-foreground truncate w-full sm:w-auto tracking-tight">{habit.name}</h3>
+                          <div className="flex flex-wrap gap-1.5 sm:gap-2">
                             {habitCategory && (
-                              <div className={`flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${habitCategory.bgColor} ${habitCategory.textColor} border ${habitCategory.borderColor}`}>
-                                {CategoryIcon && <CategoryIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />}
+                              <div className={`flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${habitCategory.bgColor} ${habitCategory.textColor} border ${habitCategory.borderColor}`}>
+                                {CategoryIcon && <CategoryIcon className="w-3 h-3 mr-1 flex-shrink-0" />}
                                 <span className="whitespace-nowrap">{habitCategory.title}</span>
                               </div>
                             )}
-                            <div className={`flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium transition-colors ${
+                            <div className={`flex items-center px-2 py-0.5 rounded-full text-xs font-medium transition-colors ${
                               habit.currentStreak > 0
                                 ? 'bg-orange-100 text-orange-800 border border-orange-200'
                                 : 'bg-secondary text-muted-foreground border border-border'
                             }`}>
-                              <Flame className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0 ${habit.currentStreak > 0 ? 'text-orange-500' : 'text-muted-foreground'}`} />
-                              <span className="whitespace-nowrap">{habit.currentStreak} day streak</span>
+                              <Flame className={`w-3 h-3 mr-1 flex-shrink-0 ${habit.currentStreak > 0 ? 'text-orange-500' : 'text-muted-foreground'}`} />
+                              <span className="whitespace-nowrap">{habit.currentStreak} day</span>
                             </div>
-                            {habit.longestStreak > 0 && (
-                              <div className="flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-yellow-50 text-yellow-800 border border-yellow-200">
-                                <Trophy className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-yellow-600 flex-shrink-0" />
+                            {habit.longestStreak > 0 && habit.longestStreak !== habit.currentStreak && (
+                              <div className="flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-50 text-yellow-800 border border-yellow-200">
+                                <Trophy className="w-3 h-3 mr-1 text-yellow-600 flex-shrink-0" />
                                 <span className="whitespace-nowrap">Best: {habit.longestStreak}</span>
                               </div>
                             )}
@@ -921,12 +924,12 @@ export default function StreaksPage() {
                         </div>
                         
                         {habit.description && (
-                          <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4 leading-relaxed">{habit.description}</p>
+                          <p className="text-xs sm:text-sm text-muted-foreground mb-2 line-clamp-1">{habit.description}</p>
                         )}
                         
-                        <div className="flex items-center space-x-2 mb-3 sm:mb-0">
-                          <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground flex-shrink-0" />
-                          <span className="text-xs sm:text-sm text-muted-foreground">
+                        <div className="flex items-center space-x-2">
+                          <Calendar className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                          <span className="text-xs text-muted-foreground">
                             {DAYS.filter(day => habit[day.key as keyof Habit] as boolean).map(day => day.label).join(', ')}
                           </span>
                         </div>
