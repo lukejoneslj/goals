@@ -15,14 +15,13 @@ import {
   Calendar,
   Check,
   Edit3,
-  Trash2,
-  ArrowLeft
+  Trash2
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { Habit, UserELO } from '@/lib/firebase'
 import { habitsService, habitCompletionsService, userELOService } from '@/lib/database'
 import { calculateHabitEloChange, getRankInfo, getEloProgress, getNextRank } from '@/lib/elo'
-import Link from 'next/link'
+import DashboardNav from '@/components/DashboardNav'
 
 // Make this a dynamic route to prevent static generation
 export const dynamic = 'force-dynamic'
@@ -406,23 +405,17 @@ export default function StreaksPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <DashboardNav />
+      
       <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8 md:py-12">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 md:mb-10 gap-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 flex-1 min-w-0">
-            <Link href="/dashboard" className="w-full sm:w-auto">
-              <Button variant="ghost" size="sm" className="w-full sm:w-auto pl-0 sm:pl-3 hover:bg-transparent hover:text-primary">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
-              </Button>
-            </Link>
-            <div className="min-w-0 flex-1">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground flex items-center tracking-tight">
-                <Flame className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-orange-500 mr-2 sm:mr-3 flex-shrink-0" />
-                <span className="truncate">Daily Streaks</span>
-              </h1>
-              <p className="text-sm sm:text-base text-muted-foreground mt-1">Build consistent habits and track your progress</p>
-            </div>
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground flex items-center tracking-tight">
+              <Flame className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-orange-500 mr-2 sm:mr-3 flex-shrink-0" />
+              <span className="truncate">Daily Streaks</span>
+            </h1>
+            <p className="text-sm sm:text-base text-muted-foreground mt-1">Build consistent habits and track your progress</p>
           </div>
           <Button 
             onClick={() => {
