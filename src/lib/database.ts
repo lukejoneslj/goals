@@ -639,14 +639,20 @@ export const todosService = {
       const q = query(
         collection(firestoreDb, 'todos'),
         where('userId', '==', userId),
-        where('dueDate', '==', date),
-        orderBy('createdAt', 'desc')
+        where('dueDate', '==', date)
       )
       const querySnapshot = await getDocs(q)
       const todos = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       })) as Todo[]
+
+      // Sort in memory to avoid requiring composite index
+      todos.sort((a, b) => {
+        const dateA = new Date(a.createdAt).getTime()
+        const dateB = new Date(b.createdAt).getTime()
+        return dateB - dateA // Descending order
+      })
 
       return { data: todos, error: null }
     } catch (error) {
@@ -662,15 +668,26 @@ export const todosService = {
       const firestoreDb = ensureFirebase()
       const q = query(
         collection(firestoreDb, 'todos'),
-        where('userId', '==', userId),
-        orderBy('dueDate', 'desc'),
-        orderBy('createdAt', 'desc')
+        where('userId', '==', userId)
       )
       const querySnapshot = await getDocs(q)
       const todos = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       })) as Todo[]
+
+      // Sort in memory to avoid requiring composite index
+      todos.sort((a, b) => {
+        const dateA = new Date(a.dueDate).getTime()
+        const dateB = new Date(b.dueDate).getTime()
+        if (dateB !== dateA) {
+          return dateB - dateA // Descending order by due date
+        }
+        // If same due date, sort by createdAt
+        const createdAtA = new Date(a.createdAt).getTime()
+        const createdAtB = new Date(b.createdAt).getTime()
+        return createdAtB - createdAtA // Descending order
+      })
 
       return { data: todos, error: null }
     } catch (error) {
