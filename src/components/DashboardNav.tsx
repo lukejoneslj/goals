@@ -3,7 +3,8 @@
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Target, LogOut, Home, ListTodo, Flame, CheckSquare, Trophy } from 'lucide-react'
+import { LogOut, Home, ListTodo, Flame, CheckSquare, Trophy } from 'lucide-react'
+import Image from 'next/image'
 import { useAuth } from '@/hooks/useAuth'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -35,8 +36,15 @@ export default function DashboardNav() {
             href="/dashboard" 
             className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1 group cursor-pointer"
           >
-            <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-primary rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:shadow-md group-hover:bg-primary/90">
-              <Target className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-primary-foreground transition-transform duration-300 group-hover:rotate-12" />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110">
+              <Image 
+                src="/logo.png" 
+                alt="RepentDaily Logo" 
+                width={40} 
+                height={40} 
+                className="w-full h-full object-contain"
+                priority
+              />
             </div>
             <span className="text-lg sm:text-xl md:text-2xl font-bold text-foreground tracking-tight truncate transition-colors duration-300 group-hover:text-primary">
               RepentDaily

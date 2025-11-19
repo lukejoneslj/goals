@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -38,8 +39,15 @@ export default function GoalsGuide() {
           <div className="flex justify-between items-center py-2 sm:py-3 md:py-4">
             <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
               <Link href="/" className="flex items-center space-x-2 sm:space-x-3 min-w-0">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Target className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 flex items-center justify-center flex-shrink-0">
+                  <Image 
+                    src="/logo.png" 
+                    alt="RepentDaily Logo" 
+                    width={40} 
+                    height={40} 
+                    className="w-full h-full object-contain"
+                    priority
+                  />
                 </div>
                 <span className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent truncate">
                   RepentDaily

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -30,14 +31,21 @@ export default function Home() {
       <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           <div className="flex justify-between items-center py-2 sm:py-3 md:py-4">
-            <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-primary rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                <Target className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-primary-foreground" />
+            <Link href="/" className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 flex items-center justify-center flex-shrink-0">
+                <Image 
+                  src="/logo.png" 
+                  alt="RepentDaily Logo" 
+                  width={40} 
+                  height={40} 
+                  className="w-full h-full object-contain"
+                  priority
+                />
               </div>
               <span className="text-lg sm:text-xl md:text-2xl font-bold text-foreground tracking-tight truncate">
                 RepentDaily
               </span>
-            </div>
+            </Link>
             <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 flex-shrink-0">
               <Link href="/goals-guide" className="text-muted-foreground hover:text-foreground font-medium transition-colors text-xs sm:text-sm hidden md:block">
                 Goals Guide
@@ -679,8 +687,14 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center space-x-3 mb-4">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-sm shadow-primary/20">
-                <Target className="w-5 h-5 text-primary-foreground" />
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Image 
+                  src="/logo.png" 
+                  alt="RepentDaily Logo" 
+                  width={32} 
+                  height={32} 
+                  className="w-full h-full object-contain"
+                />
               </div>
               <span className="text-xl font-bold">RepentDaily</span>
             </div>

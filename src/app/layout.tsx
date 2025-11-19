@@ -18,6 +18,11 @@ export const metadata: Metadata = {
     template: "%s | Repent Daily"
   },
   description: "Repent Daily - A free goal-setting platform for spiritual growth. Set goals, build daily habits, and transform your life through daily repentance. Based on Luke 2:52, helping you grow spiritually, physically, socially, and intellectually.",
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
   keywords: [
     "repent daily",
     "daily repentance",
