@@ -11,7 +11,7 @@ import {
   orderBy,
   onSnapshot
 } from 'firebase/firestore'
-import { db, Goal, ActionItem, Habit, HabitCompletion, UserELO, getTimestamp } from './firebase'
+import { db, Goal, ActionItem, Habit, HabitCompletion, UserELO, Todo, getTimestamp } from './firebase'
 
 // Helper function to ensure Firebase is initialized
 const ensureFirebase = () => {
@@ -581,5 +581,150 @@ export const userELOService = {
     if (elo >= 1300) return 'Bronze I'
     if (elo >= 1150) return 'Bronze II'
     return 'Bronze III'
+  },
+
+  // Simple ELO update for todos (+1 for complete, -1 for incomplete)
+  async updateTodoELO(userId: string, isComplete: boolean) {
+    try {
+      const currentELO = await this.getOrCreate(userId)
+      if (currentELO.error || !currentELO.data) return currentELO
+
+      const eloChange = isComplete ? 1 : -1
+      const newElo = Math.max(0, currentELO.data.eloRating + eloChange)
+
+      await this.updateELO(userId, {
+        eloRating: newElo,
+        currentRank: this.getRankFromElo(newElo),
+        ...(isComplete ? {
+          totalWins: currentELO.data.totalWins + 1,
+          winStreak: currentELO.data.winStreak + 1,
+          bestWinStreak: Math.max(currentELO.data.bestWinStreak, currentELO.data.winStreak + 1)
+        } : {
+          totalLosses: currentELO.data.totalLosses + 1,
+          winStreak: 0
+        })
+      })
+
+      return { data: { ...currentELO.data, eloRating: newElo }, error: null }
+    } catch (error) {
+      return { error: { message: (error as Error).message } }
+    }
+  }
+}
+
+// Todos collection operations
+export const todosService = {
+  // Create a new todo
+  async create(todoData: Omit<Todo, 'id' | 'createdAt' | 'updatedAt'>) {
+    try {
+      const firestoreDb = ensureFirebase()
+
+      const docRef = await addDoc(collection(firestoreDb, 'todos'), {
+        ...todoData,
+        createdAt: getTimestamp(),
+        updatedAt: getTimestamp()
+      })
+      return { data: { id: docRef.id, ...todoData }, error: null }
+    } catch (error) {
+      console.error('Error creating todo:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: null, error: { message: `Failed to create todo: ${errorMessage}` } }
+    }
+  },
+
+  // Get all todos for a user for a specific date
+  async getByDate(userId: string, date: string) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const q = query(
+        collection(firestoreDb, 'todos'),
+        where('userId', '==', userId),
+        where('dueDate', '==', date),
+        orderBy('createdAt', 'desc')
+      )
+      const querySnapshot = await getDocs(q)
+      const todos = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Todo[]
+
+      return { data: todos, error: null }
+    } catch (error) {
+      console.error('Error fetching todos:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: [], error: { message: `Failed to fetch todos: ${errorMessage}` } }
+    }
+  },
+
+  // Get all todos for a user
+  async getAll(userId: string) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const q = query(
+        collection(firestoreDb, 'todos'),
+        where('userId', '==', userId),
+        orderBy('dueDate', 'desc'),
+        orderBy('createdAt', 'desc')
+      )
+      const querySnapshot = await getDocs(q)
+      const todos = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Todo[]
+
+      return { data: todos, error: null }
+    } catch (error) {
+      console.error('Error fetching todos:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: [], error: { message: `Failed to fetch todos: ${errorMessage}` } }
+    }
+  },
+
+  // Update a todo
+  async update(todoId: string, updates: Partial<Todo>) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const todoRef = doc(firestoreDb, 'todos', todoId)
+      await updateDoc(todoRef, {
+        ...updates,
+        updatedAt: getTimestamp()
+      })
+      return { data: { id: todoId, ...updates }, error: null }
+    } catch (error) {
+      console.error('Error updating todo:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: null, error: { message: `Failed to update todo: ${errorMessage}` } }
+    }
+  },
+
+  // Delete a todo
+  async delete(todoId: string) {
+    try {
+      const firestoreDb = ensureFirebase()
+      await deleteDoc(doc(firestoreDb, 'todos', todoId))
+      return { data: { id: todoId }, error: null }
+    } catch (error) {
+      console.error('Error deleting todo:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: null, error: { message: `Failed to delete todo: ${errorMessage}` } }
+    }
+  },
+
+  // Toggle completion status
+  async toggleComplete(todoId: string, isCompleted: boolean) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const todoRef = doc(firestoreDb, 'todos', todoId)
+      await updateDoc(todoRef, {
+        isCompleted,
+        completedAt: isCompleted ? getTimestamp() : null,
+        updatedAt: getTimestamp()
+      })
+      return { data: { id: todoId, isCompleted }, error: null }
+    } catch (error) {
+      console.error('Error toggling todo completion:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: null, error: { message: `Failed to toggle todo: ${errorMessage}` } }
+    }
   }
 }

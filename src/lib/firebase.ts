@@ -138,3 +138,16 @@ export type HabitCompletion = {
   completionDate: string
   createdAt: string
 }
+
+export type Todo = {
+  id: string
+  userId: string
+  title: string
+  description?: string
+  category?: 'spiritual' | 'physical' | 'social' | 'intellectual'
+  isCompleted: boolean
+  dueDate: string // ISO date string for the day this todo is due
+  completedAt?: string
+  createdAt: string
+  updatedAt?: string
+}
