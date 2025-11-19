@@ -208,8 +208,8 @@ export default function Home() {
             <Card className="text-center hover:shadow-lg transition-all duration-300 border border-border bg-card">
               <CardHeader className="pb-3">
                 <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-violet-50 rounded-2xl flex items-center justify-center">
-                    <Heart className="w-8 h-8 text-violet-600" />
+                  <div className="w-16 h-16 bg-purple-50/50 rounded-2xl flex items-center justify-center">
+                    <Heart className="w-8 h-8 text-purple-500" />
                   </div>
                 </div>
                 <CardTitle className="text-xl font-bold text-foreground">🙏 Spiritual</CardTitle>
@@ -224,8 +224,8 @@ export default function Home() {
             <Card className="text-center hover:shadow-lg transition-all duration-300 border border-border bg-card">
               <CardHeader className="pb-3">
                 <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center">
-                    <Dumbbell className="w-8 h-8 text-rose-600" />
+                  <div className="w-16 h-16 bg-rose-50/50 rounded-2xl flex items-center justify-center">
+                    <Dumbbell className="w-8 h-8 text-rose-500" />
                   </div>
                 </div>
                 <CardTitle className="text-xl font-bold text-foreground">💪 Physical</CardTitle>
@@ -240,8 +240,8 @@ export default function Home() {
             <Card className="text-center hover:shadow-lg transition-all duration-300 border border-border bg-card">
               <CardHeader className="pb-3">
                 <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center">
-                    <Users className="w-8 h-8 text-emerald-600" />
+                  <div className="w-16 h-16 bg-emerald-50/50 rounded-2xl flex items-center justify-center">
+                    <Users className="w-8 h-8 text-emerald-500" />
                   </div>
                 </div>
                 <CardTitle className="text-xl font-bold text-foreground">👥 Social</CardTitle>
@@ -256,8 +256,8 @@ export default function Home() {
             <Card className="text-center hover:shadow-lg transition-all duration-300 border border-border bg-card">
               <CardHeader className="pb-3">
                 <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center">
-                    <Brain className="w-8 h-8 text-blue-600" />
+                  <div className="w-16 h-16 bg-blue-50/50 rounded-2xl flex items-center justify-center">
+                    <Brain className="w-8 h-8 text-blue-500" />
                   </div>
                 </div>
                 <CardTitle className="text-xl font-bold text-foreground">🧠 Intellectual</CardTitle>
@@ -439,8 +439,8 @@ export default function Home() {
             
             <div className="bg-card rounded-xl p-6 border border-border shadow-sm">
               <div className="flex items-center mb-4">
-                <Badge variant="secondary" className="bg-violet-50 text-violet-700 mr-3 px-2.5 py-0.5 text-xs font-bold border border-violet-100">5</Badge>
-                <FileText className="w-5 h-5 text-violet-600" />
+                <Badge variant="secondary" className="bg-purple-50/50 text-purple-700 mr-3 px-2.5 py-0.5 text-xs font-bold border border-purple-200">5</Badge>
+                <FileText className="w-5 h-5 text-purple-500" />
               </div>
               <h3 className="font-bold text-foreground mb-2">Create Detailed Plan</h3>
               <p className="text-sm text-muted-foreground">Map out your strategy step by step.</p>
@@ -550,7 +550,7 @@ export default function Home() {
             <Card className="text-center hover:shadow-lg transition-all duration-300 border border-border bg-card">
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <Trophy className="w-12 h-12 text-purple-600/80" />
+                  <Trophy className="w-12 h-12 text-purple-500/80" />
                 </div>
                 <CardTitle className="text-xl font-semibold text-foreground">
                   ELO Rankings & Competition
@@ -571,7 +571,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <Trophy className="w-10 h-10 sm:w-12 sm:h-12 text-purple-600" />
+              <Trophy className="w-10 h-10 sm:w-12 sm:h-12 text-purple-500" />
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground tracking-tight">
                 Friendly Competition That Motivates
               </h2>
@@ -582,9 +582,9 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
-            <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200 hover:shadow-lg transition-all">
+            <Card className="bg-gradient-to-br from-purple-50/50 to-blue-50/50 border-purple-200 hover:shadow-lg transition-all">
               <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-blue-400 rounded-xl flex items-center justify-center mb-4">
                   <Trophy className="w-6 h-6 text-white" />
                 </div>
                 <CardTitle className="text-xl font-bold text-foreground">
@@ -606,8 +606,8 @@ export default function Home() {
 
             <Card className="bg-card border-border hover:shadow-lg transition-all">
               <CardHeader>
-                <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mb-4">
-                  <TrendingUp className="w-6 h-6 text-emerald-600" />
+                <div className="w-12 h-12 bg-emerald-100/50 rounded-xl flex items-center justify-center mb-4">
+                  <TrendingUp className="w-6 h-6 text-emerald-500" />
                 </div>
                 <CardTitle className="text-xl font-bold text-foreground">
                   Level Up Through Consistency
@@ -619,11 +619,11 @@ export default function Home() {
                 </p>
                 <div className="space-y-2 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-600" />
+                    <CheckCircle className="w-4 h-4 text-emerald-500" />
                     <span>Complete habits = Gain ELO</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-600" />
+                    <CheckCircle className="w-4 h-4 text-emerald-500" />
                     <span>Longer streaks = More points</span>
                   </div>
                 </div>
@@ -632,8 +632,8 @@ export default function Home() {
 
             <Card className="bg-card border-border hover:shadow-lg transition-all">
               <CardHeader>
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
-                  <Users className="w-6 h-6 text-blue-600" />
+                <div className="w-12 h-12 bg-blue-100/50 rounded-xl flex items-center justify-center mb-4">
+                  <Users className="w-6 h-6 text-blue-500" />
                 </div>
                 <CardTitle className="text-xl font-bold text-foreground">
                   Compare & Compete

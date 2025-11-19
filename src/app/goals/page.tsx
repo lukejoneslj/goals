@@ -34,34 +34,34 @@ import DashboardNav from '@/components/DashboardNav'
 const categoryConfig = {
   spiritual: {
     icon: Heart,
-    color: 'from-purple-500 to-purple-600',
-    textColor: 'text-purple-600',
-    bgColor: 'bg-purple-50',
-    borderColor: 'border-purple-500',
+    color: 'from-purple-300 to-purple-400',
+    textColor: 'text-purple-500',
+    bgColor: 'bg-purple-50/50',
+    borderColor: 'border-purple-300',
     title: '🙏 Spiritual'
   },
   physical: {
     icon: Dumbbell,
-    color: 'from-red-500 to-red-600',
-    textColor: 'text-red-600',
-    bgColor: 'bg-red-50',
-    borderColor: 'border-red-500',
+    color: 'from-rose-300 to-rose-400',
+    textColor: 'text-rose-500',
+    bgColor: 'bg-rose-50/50',
+    borderColor: 'border-rose-300',
     title: '💪 Physical'
   },
   social: {
     icon: Users,
-    color: 'from-green-500 to-green-600',
-    textColor: 'text-green-600',
-    bgColor: 'bg-green-50',
-    borderColor: 'border-green-500',
+    color: 'from-emerald-300 to-emerald-400',
+    textColor: 'text-emerald-500',
+    bgColor: 'bg-emerald-50/50',
+    borderColor: 'border-emerald-300',
     title: '👥 Social'
   },
   intellectual: {
     icon: Brain,
-    color: 'from-blue-500 to-blue-600',
-    textColor: 'text-blue-600',
-    bgColor: 'bg-blue-50',
-    borderColor: 'border-blue-500',
+    color: 'from-blue-300 to-blue-400',
+    textColor: 'text-blue-500',
+    bgColor: 'bg-blue-50/50',
+    borderColor: 'border-blue-300',
     title: '🧠 Intellectual'
   }
 }
@@ -321,18 +321,20 @@ export default function GoalsPage() {
               return (
                 <Card 
                   key={goal.id}
-                  className="group bg-card border-border shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer overflow-hidden"
+                  className={`group bg-card border-border shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer overflow-hidden ${
+                    goal.status === 'completed' ? 'opacity-50 grayscale' : ''
+                  }`}
                   onClick={() => handleViewGoal(goal.id)}
                 >
-                  <div className={`h-1 bg-gradient-to-r ${config.color}`}></div>
-                  <CardHeader className="pb-3 sm:pb-4">
+                  <div className={`h-1 bg-gradient-to-r ${config.color} ${goal.status === 'completed' ? 'opacity-50' : ''}`}></div>
+                  <CardHeader className={`pb-3 sm:pb-4 ${goal.status === 'completed' ? 'opacity-75' : ''}`}>
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center mb-3 sm:mb-4 flex-wrap gap-2">
                           <div className={`p-2 rounded-lg ${config.bgColor} flex-shrink-0`}>
                             <IconComponent className={`w-4 h-4 ${config.textColor}`} />
                           </div>
-                          <Badge variant="outline" className={`${config.textColor} border-${config.borderColor.split('-')[1]}-200 bg-transparent px-2 sm:px-3 py-0.5 sm:py-1 text-xs`}>
+                          <Badge variant="outline" className={`${config.textColor} ${config.borderColor} bg-transparent px-2 sm:px-3 py-0.5 sm:py-1 text-xs opacity-70`}>
                             {config.title}
                           </Badge>
                           <Badge 

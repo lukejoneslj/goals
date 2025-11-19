@@ -23,37 +23,37 @@ import {
 const categoryConfig = {
   spiritual: {
     icon: Heart,
-    color: 'from-purple-500 to-purple-600',
-    textColor: 'text-purple-600',
-    bgColor: 'bg-purple-50',
-    borderColor: 'border-purple-500',
+    color: 'from-purple-300 to-purple-400',
+    textColor: 'text-purple-500',
+    bgColor: 'bg-purple-50/50',
+    borderColor: 'border-purple-300',
     title: '🙏 Spiritual',
     description: 'Faith, values, and character development'
   },
   physical: {
     icon: Dumbbell,
-    color: 'from-red-500 to-red-600',
-    textColor: 'text-red-600',
-    bgColor: 'bg-red-50',
-    borderColor: 'border-red-500',
+    color: 'from-rose-300 to-rose-400',
+    textColor: 'text-rose-500',
+    bgColor: 'bg-rose-50/50',
+    borderColor: 'border-rose-300',
     title: '💪 Physical',
     description: 'Health, fitness, and physical well-being'
   },
   social: {
     icon: Users,
-    color: 'from-green-500 to-green-600',
-    textColor: 'text-green-600',
-    bgColor: 'bg-green-50',
-    borderColor: 'border-green-500',
+    color: 'from-emerald-300 to-emerald-400',
+    textColor: 'text-emerald-500',
+    bgColor: 'bg-emerald-50/50',
+    borderColor: 'border-emerald-300',
     title: '👥 Social',
     description: 'Relationships and social connections'
   },
   intellectual: {
     icon: Brain,
-    color: 'from-blue-500 to-blue-600',
-    textColor: 'text-blue-600',
-    bgColor: 'bg-blue-50',
-    borderColor: 'border-blue-500',
+    color: 'from-blue-300 to-blue-400',
+    textColor: 'text-blue-500',
+    bgColor: 'bg-blue-50/50',
+    borderColor: 'border-blue-300',
     title: '🧠 Intellectual',
     description: 'Learning, skills, and knowledge growth'
   }
@@ -221,13 +221,13 @@ export default function HowItWorksPage() {
         <Card className="mb-12 bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200 shadow-lg">
           <CardContent className="p-6 sm:p-8">
             <div className="flex items-start gap-4 mb-6">
-              <div className="w-14 h-14 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                <div className="w-14 h-14 bg-gradient-to-br from-purple-400 to-blue-400 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
                 <Trophy className="w-7 h-7 text-white" />
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-3">
                   <h2 className="text-2xl sm:text-3xl font-bold text-foreground">ELO Rankings & Competition</h2>
-                  <Sparkles className="w-5 h-5 text-purple-600" />
+                  <Sparkles className="w-5 h-5 text-purple-500" />
                 </div>
                 <p className="text-muted-foreground mb-6 leading-relaxed">
                   Every habit you complete increases your ELO rating. Climb the ranks from Bronze III to Challenger and see how you compare to others in friendly competition.
@@ -236,7 +236,7 @@ export default function HowItWorksPage() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-                      <Award className="w-5 h-5 text-purple-600" />
+                      <Award className="w-5 h-5 text-purple-500" />
                       How It Works
                     </h3>
                     <ul className="space-y-2 text-sm text-muted-foreground">
@@ -257,7 +257,7 @@ export default function HowItWorksPage() {
                   
                   <div>
                     <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 text-blue-600" />
+                      <TrendingUp className="w-5 h-5 text-blue-500" />
                       The Ranks
                     </h3>
                     <div className="grid grid-cols-3 gap-2 text-xs">
