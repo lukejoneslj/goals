@@ -68,5 +68,22 @@ service cloud.firestore {
       allow delete: if request.auth != null &&
         request.auth.uid == resource.data.userId;
     }
+
+    // Users can only read/write their own ELO data
+    match /user_elo/{eloId} {
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.userId is string &&
+        request.resource.data.userId.size() > 0;
+
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      allow delete: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+    }
   }
 }
