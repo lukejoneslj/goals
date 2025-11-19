@@ -395,8 +395,19 @@ export default function StreaksPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center animate-fade-in">
+          <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 mx-auto animate-pulse">
+            <Flame className="w-10 h-10 text-orange-500 animate-pulse" />
+          </div>
+          <h3 className="text-xl font-semibold text-foreground mb-2 animate-pulse">Loading Your Streaks</h3>
+          <p className="text-muted-foreground animate-pulse">Preparing your habits...</p>
+          <div className="mt-8 flex justify-center gap-2">
+            <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+            <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+            <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          </div>
+        </div>
       </div>
     )
   }

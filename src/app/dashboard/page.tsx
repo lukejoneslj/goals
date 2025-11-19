@@ -149,12 +149,17 @@ export default function Dashboard() {
   if (loading || loadingGoals) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 mx-auto">
-            <Target className="w-8 h-8 text-primary animate-spin" />
+        <div className="text-center animate-fade-in">
+          <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 mx-auto animate-pulse">
+            <Target className="w-10 h-10 text-primary animate-spin" />
           </div>
-          <h3 className="text-xl font-semibold text-foreground mb-2">Loading Your Dashboard</h3>
-          <p className="text-muted-foreground">Preparing your goals and progress...</p>
+          <h3 className="text-xl font-semibold text-foreground mb-2 animate-pulse">Loading Your Dashboard</h3>
+          <p className="text-muted-foreground animate-pulse">Preparing your goals and progress...</p>
+          <div className="mt-8 flex justify-center gap-2">
+            <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+            <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+            <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          </div>
         </div>
       </div>
     )
@@ -260,7 +265,7 @@ export default function Dashboard() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
-          <Card className="bg-primary text-primary-foreground border-none shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
+          <Card className="bg-primary text-primary-foreground border-none shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group hover:scale-[1.02] active:scale-[0.98]"
                 onClick={handleCreateGoal}>
             <CardContent className="p-6 sm:p-8">
               <div className="flex items-center gap-4">
@@ -278,19 +283,19 @@ export default function Dashboard() {
           </Card>
 
           <Link href="/streaks">
-            <Card className="bg-orange-50 border-orange-100 hover:border-orange-200 transition-all duration-300 cursor-pointer group">
+            <Card className="bg-orange-50 border-orange-100 hover:border-orange-200 transition-all duration-300 cursor-pointer group hover:scale-[1.02] active:scale-[0.98] hover:shadow-lg">
               <CardContent className="p-6 sm:p-8">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Flame className="w-6 h-6 sm:w-7 sm:h-7 text-orange-600" />
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    <Flame className="w-6 h-6 sm:w-7 sm:h-7 text-orange-600 group-hover:animate-pulse" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-xl sm:text-2xl font-bold text-orange-900 mb-1">Daily Streaks</h3>
+                    <h3 className="text-xl sm:text-2xl font-bold text-orange-900 mb-1 transition-colors duration-300 group-hover:text-orange-700">Daily Streaks</h3>
                     <p className="text-sm sm:text-base text-orange-800/80">
                       Build consistent habits
                     </p>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-orange-600 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-5 h-5 text-orange-600 group-hover:translate-x-1 transition-transform duration-300" />
                 </div>
               </CardContent>
             </Card>
@@ -315,21 +320,21 @@ export default function Dashboard() {
                 const IconComponent = config.icon
                 return (
                   <Link key={goal.id} href="/goals">
-                    <Card className="hover:shadow-md transition-all duration-300 border bg-card cursor-pointer overflow-hidden">
+                    <Card className="hover:shadow-md transition-all duration-300 border bg-card cursor-pointer overflow-hidden hover:scale-[1.01] active:scale-[0.99] group">
                       <div className={`h-1 bg-gradient-to-r ${config.color}`}></div>
                       <CardContent className="p-4 sm:p-5">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex items-start gap-3 flex-1 min-w-0">
-                            <div className={`p-2 rounded-lg ${config.bgColor} flex-shrink-0`}>
-                              <IconComponent className={`w-4 h-4 ${config.textColor}`} />
+                            <div className={`p-2 rounded-lg ${config.bgColor} flex-shrink-0 group-hover:scale-110 transition-transform duration-300`}>
+                              <IconComponent className={`w-4 h-4 ${config.textColor} transition-transform duration-300 group-hover:rotate-6`} />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h3 className="font-bold text-foreground mb-1 truncate">{goal.outcome}</h3>
+                              <h3 className="font-bold text-foreground mb-1 truncate group-hover:text-primary transition-colors duration-300">{goal.outcome}</h3>
                               <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                                <Badge variant="outline" className="text-xs">
+                                <Badge variant="outline" className="text-xs transition-colors duration-300 group-hover:border-primary/50">
                                   {config.title}
                                 </Badge>
-                                <span className={`font-medium ${
+                                <span className={`font-medium transition-colors duration-300 ${
                                   goal.daysUntil < 0 ? 'text-red-600' : 
                                   goal.daysUntil === 0 ? 'text-orange-600' : 
                                   'text-blue-600'
@@ -342,7 +347,7 @@ export default function Dashboard() {
                             </div>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            <div className="text-2xl font-bold text-foreground">{goal.progressPercentage || 0}%</div>
+                            <div className="text-2xl font-bold text-foreground transition-transform duration-300 group-hover:scale-110">{goal.progressPercentage || 0}%</div>
                             <div className="text-xs text-muted-foreground">Progress</div>
                           </div>
                         </div>
@@ -358,21 +363,21 @@ export default function Dashboard() {
         {/* View All Goals CTA */}
         {goals.length > 0 && (
           <Link href="/goals">
-            <Card className="bg-secondary/30 border border-border hover:border-primary/30 transition-all duration-300 cursor-pointer">
+            <Card className="bg-secondary/30 border border-border hover:border-primary/30 transition-all duration-300 cursor-pointer hover:scale-[1.01] active:scale-[0.99] hover:shadow-lg group">
               <CardContent className="p-6 sm:p-8">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-primary text-primary-foreground rounded-xl flex items-center justify-center flex-shrink-0">
-                      <ListTodo className="w-6 h-6" />
+                    <div className="w-12 h-12 bg-primary text-primary-foreground rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                      <ListTodo className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
                     </div>
                     <div>
-                      <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-1">View All Goals</h3>
+                      <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors duration-300">View All Goals</h3>
                       <p className="text-sm sm:text-base text-muted-foreground">
                         Manage and track all your goals in one place
                       </p>
                     </div>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground" />
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:translate-x-1 group-hover:text-primary transition-all duration-300" />
                 </div>
               </CardContent>
             </Card>
