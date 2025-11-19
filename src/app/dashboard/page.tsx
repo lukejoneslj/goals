@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { 
   Target, 
   Plus, 
@@ -18,12 +19,15 @@ import {
   ArrowRight,
   ListTodo,
   Flame,
-  BookOpen
+  BookOpen,
+  Info,
+  Trophy,
+  CheckSquare
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { Goal, UserELO } from '@/lib/firebase'
 import { goalsService, userELOService } from '@/lib/database'
-import { getRankInfo } from '@/lib/elo'
+import { getRankInfo, ELO_RANKS, getEloProgress, getNextRank } from '@/lib/elo'
 import GoalModal from '@/components/GoalModal'
 import DashboardNav from '@/components/DashboardNav'
 import Link from 'next/link'
@@ -176,10 +180,11 @@ export default function Dashboard() {
   const todaysFocus = getTodaysFocus()
 
   return (
-    <div className="min-h-screen bg-background">
-      <DashboardNav />
+    <TooltipProvider>
+      <div className="min-h-screen bg-background">
+        <DashboardNav />
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
         {/* Welcome Section */}
         <div className="mb-6 sm:mb-8 md:mb-10">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground tracking-tight mb-2 sm:mb-3">
@@ -251,20 +256,132 @@ export default function Dashboard() {
 
           {/* ELO Rank Card */}
           {!eloLoading && userELO && (
-            <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200 shadow-sm mb-6 sm:mb-8">
-              <CardContent className="p-4 sm:p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">Habit Rank</p>
-                    <p className="text-xl sm:text-2xl font-bold text-purple-700">{userELO.currentRank}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{userELO.eloRating} ELO</p>
+            <div className="mb-6 sm:mb-8 space-y-4">
+              <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200 shadow-sm">
+                <CardContent className="p-4 sm:p-5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">Habit Rank</p>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button className="text-muted-foreground hover:text-foreground transition-colors">
+                                <Info className="w-3 h-3 sm:w-4 sm:h-4" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs p-3">
+                              <div className="space-y-2 text-sm">
+                                <p className="font-semibold text-foreground">What is ELO?</p>
+                                <p className="text-muted-foreground">
+                                  ELO is a rating system that tracks your habit consistency. Complete habits to gain ELO points and level up your rank.
+                                </p>
+                                <p className="font-semibold text-foreground mt-3">How to Rank Up:</p>
+                                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                                  <li>Complete daily habits to gain ELO</li>
+                                  <li>Longer streaks = more ELO points</li>
+                                  <li>Your rank updates automatically</li>
+                                </ul>
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                      <p className="text-xl sm:text-2xl font-bold text-purple-700">{userELO.currentRank}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-xs text-muted-foreground">{userELO.eloRating} ELO</p>
+                        {(() => {
+                          const nextRank = getNextRank(userELO.eloRating)
+                          const progress = getEloProgress(userELO.eloRating)
+                          if (nextRank) {
+                            const nextRankInfo = ELO_RANKS.find(r => r.rank === nextRank)
+                            return (
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button className="text-xs text-purple-600 hover:text-purple-700 transition-colors">
+                                      <Info className="w-3 h-3" />
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-xs p-3">
+                                    <div className="space-y-2 text-sm">
+                                      <p className="font-semibold text-foreground">Rank Progress</p>
+                                      <p className="text-muted-foreground">
+                                        You&apos;re {progress.percentage}% of the way to <strong>{nextRank}</strong>
+                                      </p>
+                                      {nextRankInfo && (
+                                        <p className="text-xs text-muted-foreground">
+                                          Need {nextRankInfo.minElo - userELO.eloRating} more ELO to reach {nextRank}
+                                        </p>
+                                      )}
+                                      <div className="mt-2 pt-2 border-t border-border">
+                                        <p className="font-semibold text-foreground mb-1">All Ranks:</p>
+                                        <div className="grid grid-cols-2 gap-1 text-xs">
+                                          {ELO_RANKS.slice(0, 6).map(rank => (
+                                            <div key={rank.rank} className="text-muted-foreground">
+                                              {rank.rank}: {rank.minElo}-{rank.maxElo}
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            )
+                          }
+                          return null
+                        })()}
+                      </div>
+                    </div>
+                    <div className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r ${getRankInfo(userELO.currentRank).color} rounded-xl flex items-center justify-center text-white font-bold text-sm sm:text-base shadow-md`}>
+                      <span>{userELO.currentRank.split(' ')[0][0]}{userELO.currentRank.split(' ')[1]?.[0] || ''}</span>
+                    </div>
                   </div>
-                  <div className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r ${getRankInfo(userELO.currentRank).color} rounded-xl flex items-center justify-center text-white font-bold text-sm sm:text-base shadow-md`}>
-                    <span>{userELO.currentRank.split(' ')[0][0]}{userELO.currentRank.split(' ')[1]?.[0] || ''}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+
+              {/* To Do and Compete Shortcuts */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <Link href="/todos">
+                  <Card className="bg-emerald-50 border-emerald-100 hover:border-emerald-200 transition-all duration-300 cursor-pointer group hover:scale-[1.02] active:scale-[0.98] hover:shadow-lg">
+                    <CardContent className="p-4 sm:p-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                          <CheckSquare className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-lg sm:text-xl font-bold text-emerald-900 mb-1 transition-colors duration-300 group-hover:text-emerald-700">To Do List</h3>
+                          <p className="text-sm text-emerald-800/80">
+                            Complete tasks and gain ELO
+                          </p>
+                        </div>
+                        <ArrowRight className="w-5 h-5 text-emerald-600 group-hover:translate-x-1 transition-transform duration-300" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+
+                <Link href="/compete">
+                  <Card className="bg-purple-50 border-purple-100 hover:border-purple-200 transition-all duration-300 cursor-pointer group hover:scale-[1.02] active:scale-[0.98] hover:shadow-lg">
+                    <CardContent className="p-4 sm:p-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                          <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-lg sm:text-xl font-bold text-purple-900 mb-1 transition-colors duration-300 group-hover:text-purple-700">Compete</h3>
+                          <p className="text-sm text-purple-800/80">
+                            See leaderboards and rankings
+                          </p>
+                        </div>
+                        <ArrowRight className="w-5 h-5 text-purple-600 group-hover:translate-x-1 transition-transform duration-300" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </div>
+            </div>
           )}
         </div>
 
@@ -409,13 +526,14 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Modals */}
-      <GoalModal
-        isOpen={isGoalModalOpen}
-        onClose={() => setIsGoalModalOpen(false)}
-        onGoalCreated={handleGoalCreated}
-        userId={user.uid}
-      />
-    </div>
+        {/* Modals */}
+        <GoalModal
+          isOpen={isGoalModalOpen}
+          onClose={() => setIsGoalModalOpen(false)}
+          onGoalCreated={handleGoalCreated}
+          userId={user.uid}
+        />
+      </div>
+    </TooltipProvider>
   )
 } 
