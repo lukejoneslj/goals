@@ -250,56 +250,56 @@ export default function Dashboard() {
           {/* Overall Stats */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8 md:mb-10">
             <Card className="bg-card border-border shadow-sm hover:shadow-md transition-all duration-300">
-              <CardContent className="p-4 sm:p-5 md:p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">Total Goals</p>
-                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mt-1">{overallStats.totalGoals}</p>
+              <CardContent className="p-3 sm:p-4 md:p-5 lg:p-6">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] xs:text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider truncate">Total Goals</p>
+                    <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-foreground mt-0.5 sm:mt-1 leading-tight">{overallStats.totalGoals}</p>
                   </div>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-primary/5 rounded-xl flex items-center justify-center flex-shrink-0 text-primary">
-                    <Target className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border-border shadow-sm hover:shadow-md transition-all duration-300">
-              <CardContent className="p-4 sm:p-5 md:p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">Completed</p>
-                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-emerald-600 mt-1">{overallStats.completedGoals}</p>
-                  </div>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-emerald-50 rounded-xl flex items-center justify-center flex-shrink-0 text-emerald-600">
-                    <Award className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-primary/5 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 text-primary">
+                    <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card className="bg-card border-border shadow-sm hover:shadow-md transition-all duration-300">
-              <CardContent className="p-4 sm:p-5 md:p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">Active</p>
-                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-amber-600 mt-1">{overallStats.activeGoals}</p>
+              <CardContent className="p-3 sm:p-4 md:p-5 lg:p-6">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] xs:text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider truncate">Completed</p>
+                    <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-emerald-600 mt-0.5 sm:mt-1 leading-tight">{overallStats.completedGoals}</p>
                   </div>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0 text-amber-600">
-                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-emerald-50 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 text-emerald-600">
+                    <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card className="bg-card border-border shadow-sm hover:shadow-md transition-all duration-300">
-              <CardContent className="p-4 sm:p-5 md:p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">Avg Progress</p>
-                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-violet-600 mt-1">{overallStats.avgProgress}%</p>
+              <CardContent className="p-3 sm:p-4 md:p-5 lg:p-6">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] xs:text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider truncate">Active</p>
+                    <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-amber-600 mt-0.5 sm:mt-1 leading-tight">{overallStats.activeGoals}</p>
                   </div>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-violet-50 rounded-xl flex items-center justify-center flex-shrink-0 text-violet-600">
-                    <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-amber-50 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 text-amber-600">
+                    <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border shadow-sm hover:shadow-md transition-all duration-300">
+              <CardContent className="p-3 sm:p-4 md:p-5 lg:p-6">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] xs:text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider truncate">Avg Progress</p>
+                    <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-violet-600 mt-0.5 sm:mt-1 leading-tight">{overallStats.avgProgress}%</p>
+                  </div>
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-violet-50 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 text-violet-600">
+                    <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
                   </div>
                 </div>
               </CardContent>
@@ -307,15 +307,15 @@ export default function Dashboard() {
 
             {!eloLoading && userELO && (
               <Card className="bg-card border-border shadow-sm hover:shadow-md transition-all duration-300">
-                <CardContent className="p-4 sm:p-5 md:p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">Habit Rank</p>
-                      <p className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-600 mt-1">{userELO.currentRank}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{userELO.eloRating} ELO</p>
+                <CardContent className="p-3 sm:p-4 md:p-5 lg:p-6">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10px] xs:text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider truncate">Habit Rank</p>
+                      <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-purple-600 mt-0.5 sm:mt-1 leading-tight break-words">{userELO.currentRank}</p>
+                      <p className="text-[10px] xs:text-xs text-muted-foreground mt-0.5 sm:mt-1 leading-tight">{userELO.eloRating} ELO</p>
                     </div>
-                    <div className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-r ${getRankInfo(userELO.currentRank).color} rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold text-xs sm:text-sm md:text-base`}>
-                      {userELO.currentRank.split(' ')[0][0]}{userELO.currentRank.split(' ')[1]?.[0] || ''}
+                    <div className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-gradient-to-r ${getRankInfo(userELO.currentRank).color} rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold text-[10px] xs:text-xs sm:text-sm md:text-base shadow-sm`}>
+                      <span className="leading-none">{userELO.currentRank.split(' ')[0][0]}{userELO.currentRank.split(' ')[1]?.[0] || ''}</span>
                     </div>
                   </div>
                 </CardContent>
