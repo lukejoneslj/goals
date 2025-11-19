@@ -83,6 +83,7 @@ export type Habit = {
   userId: string
   name: string
   description?: string
+  category?: 'spiritual' | 'physical' | 'social' | 'intellectual'
   monday: boolean
   tuesday: boolean
   wednesday: boolean

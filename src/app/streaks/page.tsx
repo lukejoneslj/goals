@@ -15,7 +15,13 @@ import {
   Calendar,
   Check,
   Edit3,
-  Trash2
+  Trash2,
+  Brain,
+  Heart,
+  Users,
+  Dumbbell,
+  Filter,
+  X
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { Habit, UserELO } from '@/lib/firebase'
@@ -36,6 +42,43 @@ const DAYS = [
   { key: 'sunday', label: 'Sun', full: 'Sunday' }
 ]
 
+const categoryConfig = {
+  spiritual: {
+    icon: Heart,
+    color: 'from-purple-500 to-purple-600',
+    textColor: 'text-purple-600',
+    bgColor: 'bg-purple-50',
+    borderColor: 'border-purple-500',
+    title: '🙏 Spiritual'
+  },
+  physical: {
+    icon: Dumbbell,
+    color: 'from-red-500 to-red-600',
+    textColor: 'text-red-600',
+    bgColor: 'bg-red-50',
+    borderColor: 'border-red-500',
+    title: '💪 Physical'
+  },
+  social: {
+    icon: Users,
+    color: 'from-green-500 to-green-600',
+    textColor: 'text-green-600',
+    bgColor: 'bg-green-50',
+    borderColor: 'border-green-500',
+    title: '👥 Social'
+  },
+  intellectual: {
+    icon: Brain,
+    color: 'from-blue-500 to-blue-600',
+    textColor: 'text-blue-600',
+    bgColor: 'bg-blue-50',
+    borderColor: 'border-blue-500',
+    title: '🧠 Intellectual'
+  }
+}
+
+type CategoryFilter = 'all' | 'spiritual' | 'physical' | 'social' | 'intellectual'
+
 export default function StreaksPage() {
   const { user, loading: authLoading } = useAuth()
   const router = useRouter()
@@ -50,11 +93,13 @@ export default function StreaksPage() {
   const [userELO, setUserELO] = useState<UserELO | null>(null)
   const [eloLoading, setEloLoading] = useState(true)
   const [eloNotification, setEloNotification] = useState<{ change: number; newElo: number; isWin: boolean } | null>(null)
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all')
   
   // Form state
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    category: '' as 'spiritual' | 'physical' | 'social' | 'intellectual' | '',
     monday: false,
     tuesday: false,
     wednesday: false,
@@ -163,6 +208,7 @@ export default function StreaksPage() {
         const { error } = await habitsService.update(editingHabit.id, {
           name: formData.name,
           description: formData.description,
+          category: formData.category || undefined,
           monday: formData.monday,
           tuesday: formData.tuesday,
           wednesday: formData.wednesday,
@@ -179,6 +225,7 @@ export default function StreaksPage() {
           userId: user!.uid,
           name: formData.name,
           description: formData.description,
+          category: formData.category || undefined,
           monday: formData.monday,
           tuesday: formData.tuesday,
           wednesday: formData.wednesday,
@@ -201,6 +248,7 @@ export default function StreaksPage() {
       setFormData({
         name: '',
         description: '',
+        category: '',
         monday: false,
         tuesday: false,
         wednesday: false,
@@ -321,6 +369,7 @@ export default function StreaksPage() {
     setFormData({
       name: habit.name,
       description: habit.description || '',
+      category: habit.category || '',
       monday: habit.monday,
       tuesday: habit.tuesday,
       wednesday: habit.wednesday,
@@ -435,6 +484,7 @@ export default function StreaksPage() {
               setFormData({
                 name: '',
                 description: '',
+                category: '',
                 monday: false,
                 tuesday: false,
                 wednesday: false,
@@ -450,6 +500,54 @@ export default function StreaksPage() {
             Add Habit
           </Button>
         </div>
+
+        {/* Category Filter */}
+        <Card className="mb-6 sm:mb-8">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex items-center gap-3 flex-wrap">
+              <Filter className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-medium text-muted-foreground">Filter by Category:</span>
+              <div className="flex flex-wrap gap-2">
+                {(['all', 'spiritual', 'physical', 'social', 'intellectual'] as CategoryFilter[]).map((category) => {
+                  const config = category === 'all' ? null : categoryConfig[category]
+                  return (
+                    <Button
+                      key={category}
+                      variant={categoryFilter === category ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setCategoryFilter(category)}
+                      className={`text-xs sm:text-sm transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 ${
+                        categoryFilter === category && config
+                          ? `${config.bgColor} ${config.textColor} border-${config.borderColor.split('-')[1]}-200`
+                          : ''
+                      }`}
+                    >
+                      {category === 'all' ? (
+                        'All Categories'
+                      ) : (
+                        <>
+                          {config && <config.icon className="w-3 h-3 mr-1.5" />}
+                          {config?.title}
+                        </>
+                      )}
+                    </Button>
+                  )
+                })}
+              </div>
+              {categoryFilter !== 'all' && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setCategoryFilter('all')}
+                  className="ml-auto text-xs"
+                >
+                  <X className="w-3 h-3 mr-1" />
+                  Clear
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* ELO Change Notification */}
         {eloNotification && (
@@ -635,6 +733,37 @@ export default function StreaksPage() {
                 </div>
 
                 <div>
+                  <Label>Category (optional)</Label>
+                  <p className="text-xs text-muted-foreground mb-2">Which area of life does this habit support?</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
+                    {Object.entries(categoryConfig).map(([key, config]) => {
+                      const IconComponent = config.icon
+                      const isSelected = formData.category === key
+                      return (
+                        <Button
+                          key={key}
+                          type="button"
+                          variant={isSelected ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setFormData({ 
+                            ...formData, 
+                            category: isSelected ? '' : key as typeof formData.category
+                          })}
+                          className={`transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 ${
+                            isSelected 
+                              ? `${config.bgColor} ${config.textColor} border-${config.borderColor.split('-')[1]}-200` 
+                              : ''
+                          }`}
+                        >
+                          <IconComponent className="w-4 h-4 mr-1.5" />
+                          <span className="text-xs">{config.title}</span>
+                        </Button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                <div>
                   <Label>Which days do you want to do this?</Label>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {DAYS.map(day => (
@@ -685,7 +814,21 @@ export default function StreaksPage() {
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">No habits yet</h3>
                 <p className="text-gray-600 mb-6">Start building consistent daily habits to achieve your goals!</p>
                 <Button 
-                  onClick={() => setShowAddForm(true)}
+                  onClick={() => {
+                    setShowAddForm(true)
+                    setFormData({
+                      name: '',
+                      description: '',
+                      category: '',
+                      monday: false,
+                      tuesday: false,
+                      wednesday: false,
+                      thursday: false,
+                      friday: false,
+                      saturday: false,
+                      sunday: false
+                    })
+                  }}
                   className="bg-blue-600 hover:bg-blue-700"
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -693,8 +836,46 @@ export default function StreaksPage() {
                 </Button>
               </CardContent>
             </Card>
+          ) : habits.filter(habit => categoryFilter === 'all' || habit.category === categoryFilter).length === 0 ? (
+            <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm">
+              <CardContent className="text-center py-12">
+                <Filter className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">No habits in this category</h3>
+                <p className="text-gray-600 mb-6">Try selecting a different category or add a new habit.</p>
+                <div className="flex gap-3 justify-center">
+                  <Button 
+                    variant="outline"
+                    onClick={() => setCategoryFilter('all')}
+                  >
+                    View All Habits
+                  </Button>
+                  <Button 
+                    onClick={() => {
+                      setShowAddForm(true)
+                      setFormData({
+                        name: '',
+                        description: '',
+                        category: categoryFilter !== 'all' ? categoryFilter : '',
+                        monday: false,
+                        tuesday: false,
+                        wednesday: false,
+                        thursday: false,
+                        friday: false,
+                        saturday: false,
+                        sunday: false
+                      })
+                    }}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Habit
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           ) : (
-            habits.map(habit => {
+            habits
+              .filter(habit => categoryFilter === 'all' || habit.category === categoryFilter)
+              .map(habit => {
               const isTodaySelected = selectedDate === new Date().toISOString().split('T')[0]
               const currentCompletions = isTodaySelected ? todayCompletions : dateCompletions
               const isCompletedToday = currentCompletions.includes(habit.id)
@@ -704,17 +885,24 @@ export default function StreaksPage() {
               const selectedDayOfWeek = selectedDateObj.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase()
               const isScheduledForDate = habit[selectedDayOfWeek as keyof Habit] as boolean
 
-              // Debug logging (remove in production)
-              // console.log('Habit:', habit.name, 'isScheduledForDate:', isScheduledForDate, 'isCompletedToday:', isCompletedToday)
+              const habitCategory = habit.category ? categoryConfig[habit.category] : null
+              const CategoryIcon = habitCategory?.icon
 
               return (
                 <Card key={habit.id} className="border border-border shadow-sm hover:shadow-md transition-all duration-200 bg-card group">
+                  {habitCategory && <div className={`h-1 bg-gradient-to-r ${habitCategory.color}`}></div>}
                   <CardContent className="p-4 sm:p-6">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                       <div className="flex-1 min-w-0 w-full">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 sm:space-x-4 mb-2 sm:mb-3">
                           <h3 className="text-lg sm:text-xl font-bold text-foreground truncate w-full sm:w-auto tracking-tight">{habit.name}</h3>
                           <div className="flex flex-wrap gap-2 sm:gap-3">
+                            {habitCategory && (
+                              <div className={`flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${habitCategory.bgColor} ${habitCategory.textColor} border ${habitCategory.borderColor}`}>
+                                {CategoryIcon && <CategoryIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />}
+                                <span className="whitespace-nowrap">{habitCategory.title}</span>
+                              </div>
+                            )}
                             <div className={`flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium transition-colors ${
                               habit.currentStreak > 0
                                 ? 'bg-orange-100 text-orange-800 border border-orange-200'
