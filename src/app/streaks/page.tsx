@@ -345,22 +345,22 @@ export default function StreaksPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-4">
-            <Link href="/dashboard">
-              <Button variant="ghost" size="sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 md:mb-8 gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 flex-1 min-w-0">
+            <Link href="/dashboard" className="w-full sm:w-auto">
+              <Button variant="ghost" size="sm" className="w-full sm:w-auto">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Dashboard
               </Button>
             </Link>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                <Flame className="w-8 h-8 text-orange-500 mr-3" />
-                Daily Streaks
+            <div className="min-w-0 flex-1">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 flex items-center">
+                <Flame className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-orange-500 mr-2 sm:mr-3 flex-shrink-0" />
+                <span className="truncate">Daily Streaks</span>
               </h1>
-              <p className="text-gray-600">Build consistent habits and track your progress</p>
+              <p className="text-sm sm:text-base text-gray-600">Build consistent habits and track your progress</p>
             </div>
           </div>
           <Button 
@@ -379,7 +379,7 @@ export default function StreaksPage() {
                 sunday: false
               })
             }}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Habit
@@ -387,13 +387,13 @@ export default function StreaksPage() {
         </div>
 
         {/* Date Picker and Stats */}
-        <div className="mb-8">
+        <div className="mb-4 sm:mb-6 md:mb-8">
           <Card className="border-0 shadow-xl bg-gradient-to-r from-blue-50 to-purple-50">
-            <CardContent className="p-6">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-                <div className="flex items-center space-x-4">
-                  <div>
-                    <Label htmlFor="date-picker" className="text-sm font-medium text-gray-700">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col space-y-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+                  <div className="w-full sm:w-auto">
+                    <Label htmlFor="date-picker" className="text-xs sm:text-sm font-medium text-gray-700">
                       Select Date
                     </Label>
                     <Input
@@ -401,7 +401,7 @@ export default function StreaksPage() {
                       type="date"
                       value={selectedDate}
                       onChange={(e) => setSelectedDate(e.target.value)}
-                      className="mt-1 w-40"
+                      className="mt-1 w-full sm:w-40 text-sm"
                       max={new Date().toISOString().split('T')[0]}
                     />
                   </div>
@@ -410,34 +410,34 @@ export default function StreaksPage() {
                       onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
                       variant="outline"
                       size="sm"
-                      className="mt-6"
+                      className="mt-6 sm:mt-0 w-full sm:w-auto"
                     >
                       Back to Today
                     </Button>
                   )}
                 </div>
 
-                <div className="flex items-center space-x-8">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-blue-600">
+                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600">
                       {habits.reduce((sum, habit) => sum + (habit.currentStreak || 0), 0)}
                     </div>
-                    <div className="text-sm text-gray-600">Total Streak Days</div>
+                    <div className="text-xs sm:text-sm text-gray-600">Total Streak Days</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-green-600">
+                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600">
                       {todayCompletions.length}
                     </div>
-                    <div className="text-sm text-gray-600">Completed Today</div>
+                    <div className="text-xs sm:text-sm text-gray-600">Completed Today</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-purple-600">
+                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-600">
                       {habits.reduce((max, habit) => Math.max(max, habit.longestStreak || 0), 0)}
                     </div>
-                    <div className="text-sm text-gray-600">Best Streak</div>
+                    <div className="text-xs sm:text-sm text-gray-600">Best Streak</div>
                   </div>
-                  <div className="text-center max-w-xs">
-                    <div className="text-lg font-semibold text-orange-600 mb-1">
+                  <div className="text-center col-span-2 sm:col-span-1">
+                    <div className="text-sm sm:text-base md:text-lg font-semibold text-orange-600 mb-1">
                       {getMotivationalMessage(habits.reduce((sum, habit) => sum + (habit.currentStreak || 0), 0))}
                     </div>
                     <div className="text-xs text-gray-500">Keep up the great work!</div>
@@ -450,12 +450,12 @@ export default function StreaksPage() {
 
         {/* Add/Edit Form */}
         {showAddForm && (
-          <Card className="mb-8 border-0 shadow-xl bg-white/90 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle>{editingHabit ? 'Edit Habit' : 'Add New Habit'}</CardTitle>
+          <Card className="mb-4 sm:mb-6 md:mb-8 border-0 shadow-xl bg-white/90 backdrop-blur-sm">
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="text-lg sm:text-xl">{editingHabit ? 'Edit Habit' : 'Add New Habit'}</CardTitle>
             </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
+            <CardContent className="p-4 sm:p-6 pt-0">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 <div>
                   <Label htmlFor="name">Habit Name</Label>
                   <Input
@@ -499,8 +499,8 @@ export default function StreaksPage() {
                   </div>
                 </div>
 
-                <div className="flex space-x-4">
-                  <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <Button type="submit" className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
                     {editingHabit ? 'Update Habit' : 'Create Habit'}
                   </Button>
                   <Button 
@@ -510,6 +510,7 @@ export default function StreaksPage() {
                       setShowAddForm(false)
                       setEditingHabit(null)
                     }}
+                    className="w-full sm:w-auto"
                   >
                     Cancel
                   </Button>
@@ -552,87 +553,90 @@ export default function StreaksPage() {
 
               return (
                 <Card key={habit.id} className="border-0 shadow-xl bg-white/90 backdrop-blur-sm">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-4 mb-3">
-                          <h3 className="text-xl font-semibold text-gray-900">{habit.name}</h3>
-                          <div className="flex space-x-3">
-                            <div className={`flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                      <div className="flex-1 min-w-0 w-full">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 sm:space-x-4 mb-2 sm:mb-3">
+                          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 truncate w-full sm:w-auto">{habit.name}</h3>
+                          <div className="flex flex-wrap gap-2 sm:gap-3">
+                            <div className={`flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
                               habit.currentStreak > 0
                                 ? 'bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 border border-orange-200'
                                 : 'bg-gray-100 text-gray-600 border border-gray-200'
                             }`}>
-                              <Flame className={`w-4 h-4 mr-2 ${habit.currentStreak > 0 ? 'text-orange-500' : 'text-gray-400'}`} />
-                              {habit.currentStreak} day streak
+                              <Flame className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0 ${habit.currentStreak > 0 ? 'text-orange-500' : 'text-gray-400'}`} />
+                              <span className="whitespace-nowrap">{habit.currentStreak} day streak</span>
                             </div>
                             {habit.longestStreak > 0 && (
-                              <div className="flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border border-yellow-200">
-                                <Trophy className="w-4 h-4 mr-2 text-yellow-600" />
-                                Best: {habit.longestStreak}
+                              <div className="flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border border-yellow-200">
+                                <Trophy className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-yellow-600 flex-shrink-0" />
+                                <span className="whitespace-nowrap">Best: {habit.longestStreak}</span>
                               </div>
                             )}
                           </div>
                         </div>
                         
                         {habit.description && (
-                          <p className="text-gray-600 mb-3">{habit.description}</p>
+                          <p className="text-sm sm:text-base text-gray-600 mb-2 sm:mb-3">{habit.description}</p>
                         )}
                         
-                        <div className="flex items-center space-x-2 mb-4">
-                          <Calendar className="w-4 h-4 text-gray-500" />
-                          <span className="text-sm text-gray-600">
+                        <div className="flex items-center space-x-2 mb-3 sm:mb-4">
+                          <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 flex-shrink-0" />
+                          <span className="text-xs sm:text-sm text-gray-600">
                             {DAYS.filter(day => habit[day.key as keyof Habit] as boolean).map(day => day.label).join(', ')}
                           </span>
                         </div>
                       </div>
                       
-                      <div className="flex items-center space-x-2">
+                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:space-x-2 w-full sm:w-auto">
                         {isScheduledForDate && (
                           <Button
                             onClick={() => toggleCompletion(habit.id)}
                             variant={isCompletedToday ? "default" : "outline"}
                             size="sm"
                             className={isCompletedToday ?
-                              "bg-green-600 hover:bg-green-700 text-white shadow-md" :
-                              "border-green-600 text-green-600 hover:bg-green-50 shadow-sm"
+                              "bg-green-600 hover:bg-green-700 text-white shadow-md w-full sm:w-auto" :
+                              "border-green-600 text-green-600 hover:bg-green-50 shadow-sm w-full sm:w-auto"
                             }
                           >
                             {isCompletedToday ? (
                               <>
-                                <Check className="w-4 h-4 mr-1" />
-                                Completed
+                                <Check className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                                <span className="text-xs sm:text-sm">Completed</span>
                               </>
                             ) : (
                               <>
-                                <Check className="w-4 h-4 mr-1" />
-                                Mark Complete
+                                <Check className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                                <span className="text-xs sm:text-sm">Mark Complete</span>
                               </>
                             )}
                           </Button>
                         )}
                         {!isScheduledForDate && (
-                          <span className="text-xs text-gray-500 italic">
+                          <span className="text-xs text-gray-500 italic text-center sm:text-left py-2">
                             Not scheduled for {selectedDayOfWeek}
                           </span>
                         )}
                         
-                        <Button
-                          onClick={() => startEdit(habit)}
-                          variant="ghost"
-                          size="sm"
-                        >
-                          <Edit3 className="w-4 h-4" />
-                        </Button>
-                        
-                        <Button
-                          onClick={() => deleteHabit(habit.id)}
-                          variant="ghost"
-                          size="sm"
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        <div className="flex gap-2 sm:gap-0">
+                          <Button
+                            onClick={() => startEdit(habit)}
+                            variant="ghost"
+                            size="sm"
+                            className="flex-1 sm:flex-none"
+                          >
+                            <Edit3 className="w-3 h-3 sm:w-4 sm:h-4" />
+                          </Button>
+                          
+                          <Button
+                            onClick={() => deleteHabit(habit.id)}
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50 flex-1 sm:flex-none"
+                          >
+                            <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>

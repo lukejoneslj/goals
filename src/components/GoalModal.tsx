@@ -227,22 +227,22 @@ export default function GoalModal({ isOpen, onClose, onGoalCreated, userId }: Go
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="!max-w-[90vw] !w-[90vw] max-h-[95vh] overflow-y-auto p-8">
-        <DialogHeader className="pb-6">
-          <DialogTitle className="text-3xl font-bold flex items-center">
-            <Target className="w-8 h-8 mr-3 text-blue-600" />
-            Create New Goal
+      <DialogContent className="!max-w-[95vw] sm:!max-w-[90vw] !w-[95vw] sm:!w-[90vw] max-h-[95vh] overflow-y-auto p-4 sm:p-6 md:p-8">
+        <DialogHeader className="pb-4 sm:pb-5 md:pb-6">
+          <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-bold flex items-center">
+            <Target className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 mr-2 sm:mr-3 text-blue-600 flex-shrink-0" />
+            <span>Create New Goal</span>
           </DialogTitle>
         </DialogHeader>
 
         {currentStep === 'category' && (
-          <div className="space-y-8">
-            <div className="text-center space-y-4">
-              <h3 className="text-2xl font-semibold">Choose Your Goal Category</h3>
-              <p className="text-gray-600 text-lg">Based on Luke 2:52 - grow in all four areas of life</p>
+          <div className="space-y-4 sm:space-y-6 md:space-y-8">
+            <div className="text-center space-y-2 sm:space-y-3 md:space-y-4">
+              <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">Choose Your Goal Category</h3>
+              <p className="text-gray-600 text-sm sm:text-base md:text-lg">Based on Luke 2:52 - grow in all four areas of life</p>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 max-w-5xl mx-auto">
               {Object.entries(categoryConfig).map(([category, config]) => {
                 const IconComponent = config.icon
                 return (
@@ -251,12 +251,12 @@ export default function GoalModal({ isOpen, onClose, onGoalCreated, userId }: Go
                     className={`cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 ${config.borderColor} hover:border-opacity-100 border-opacity-50 h-full`}
                     onClick={() => handleCategorySelect(category as Category)}
                   >
-                    <CardContent className="p-8 text-center h-full flex flex-col justify-center">
-                      <div className={`inline-flex p-6 rounded-full ${config.bgColor} mb-6 mx-auto`}>
-                        <IconComponent className={`w-10 h-10 ${config.textColor}`} />
+                    <CardContent className="p-4 sm:p-6 md:p-8 text-center h-full flex flex-col justify-center">
+                      <div className={`inline-flex p-4 sm:p-5 md:p-6 rounded-full ${config.bgColor} mb-4 sm:mb-5 md:mb-6 mx-auto`}>
+                        <IconComponent className={`w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 ${config.textColor}`} />
                       </div>
-                      <h4 className="text-xl font-semibold mb-3">{config.title}</h4>
-                      <p className="text-gray-600">{config.description}</p>
+                      <h4 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3">{config.title}</h4>
+                      <p className="text-sm sm:text-base text-gray-600">{config.description}</p>
                     </CardContent>
                   </Card>
                 )
@@ -266,42 +266,44 @@ export default function GoalModal({ isOpen, onClose, onGoalCreated, userId }: Go
         )}
 
         {currentStep === 'seven-steps' && selectedCategory && (
-          <div className="space-y-8">
-            <div className="flex items-center justify-between pb-6 border-b border-gray-200">
-              <div className="flex items-center space-x-4">
+          <div className="space-y-4 sm:space-y-6 md:space-y-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 pb-4 sm:pb-5 md:pb-6 border-b border-gray-200">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 md:gap-4 w-full sm:w-auto">
                 <Button
                   variant="outline"
-                  size="lg"
+                  size="sm"
                   onClick={handleBackToCategory}
-                  className="mr-2"
+                  className="w-full sm:w-auto"
                 >
                   ← Back
                 </Button>
-                <Badge className={`${categoryConfig[selectedCategory].textColor} ${categoryConfig[selectedCategory].borderColor} text-lg px-4 py-2`}>
+                <Badge className={`${categoryConfig[selectedCategory].textColor} ${categoryConfig[selectedCategory].borderColor} text-sm sm:text-base md:text-lg px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2`}>
                   {categoryConfig[selectedCategory].title}
                 </Badge>
               </div>
-              <div className="text-lg text-gray-600 font-medium">
+              <div className="text-sm sm:text-base md:text-lg text-gray-600 font-medium w-full sm:w-auto text-center sm:text-left">
                 Seven Critical Steps to Effective Goal Setting
               </div>
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-12">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
               {/* Left Column - Steps 1-4 */}
-              <div className="space-y-8">
+              <div className="space-y-4 sm:space-y-6 md:space-y-8">
                 {/* Step 1: Outcome */}
-                <Card className="p-8 border-l-4 border-l-blue-500 bg-blue-50/30">
-                  <div className="space-y-6">
-                    <Label className="text-xl font-semibold flex items-center">
-                      <Badge className="bg-blue-500 text-white mr-4 px-3 py-1 text-lg">1</Badge>
-                      <Target className="w-6 h-6 mr-3" />
-                      Write down your desired OUTCOME *
+                <Card className="p-4 sm:p-6 md:p-8 border-l-4 border-l-blue-500 bg-blue-50/30">
+                  <div className="space-y-3 sm:space-y-4 md:space-y-6">
+                    <Label className="text-base sm:text-lg md:text-xl font-semibold flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-0">
+                      <div className="flex items-center">
+                        <Badge className="bg-blue-500 text-white mr-2 sm:mr-3 md:mr-4 px-2 sm:px-2.5 md:px-3 py-0.5 sm:py-1 text-sm sm:text-base md:text-lg">1</Badge>
+                        <Target className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 mr-2 sm:mr-3 flex-shrink-0" />
+                      </div>
+                      <span className="sm:ml-0">Write down your desired OUTCOME *</span>
                     </Label>
                     <Input
                       placeholder="What specific outcome do you want to achieve?"
                       value={formData.outcome}
                       onChange={(e) => setFormData(prev => ({ ...prev, outcome: e.target.value }))}
-                      className="text-lg py-4"
+                      className="text-sm sm:text-base md:text-lg py-2 sm:py-3 md:py-4"
                     />
                   </div>
                 </Card>
@@ -552,15 +554,15 @@ export default function GoalModal({ isOpen, onClose, onGoalCreated, userId }: Go
             </Card>
 
             {/* Submit Button */}
-            <div className="flex justify-end space-x-6 pt-8 border-t border-gray-200">
-              <Button variant="outline" onClick={onClose} size="lg" className="px-8">
+            <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 md:gap-6 pt-4 sm:pt-6 md:pt-8 border-t border-gray-200">
+              <Button variant="outline" onClick={onClose} size="lg" className="px-4 sm:px-6 md:px-8 w-full sm:w-auto">
                 Cancel
               </Button>
               <Button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
                 size="lg"
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-12"
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-6 sm:px-8 md:px-12 w-full sm:w-auto"
               >
                 {isSubmitting ? 'Creating Goal...' : 'Create Goal'}
               </Button>

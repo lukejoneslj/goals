@@ -185,101 +185,102 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       {/* Modern Navigation */}
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                <Target className="w-6 h-6 text-white" />
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-2 sm:py-3 md:py-4">
+            <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Target className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent truncate">
                 RepentDaily
               </span>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3 bg-gray-50 rounded-xl px-4 py-2">
-                <Avatar>
-                  <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-blue-600 font-semibold">
+            <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 flex-shrink-0">
+              <div className="hidden sm:flex items-center space-x-2 md:space-x-3 bg-gray-50 rounded-xl px-2 md:px-4 py-1.5 md:py-2">
+                <Avatar className="w-6 h-6 md:w-8 md:h-8">
+                  <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-blue-600 font-semibold text-xs md:text-sm">
                     {user.email?.[0].toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-gray-700 font-medium">{user.email || user.displayName}</span>
+                <span className="text-gray-700 font-medium text-xs md:text-sm hidden md:inline truncate max-w-[120px] lg:max-w-none">{user.email || user.displayName}</span>
               </div>
               <Button 
                 onClick={handleSignOut}
                 variant="outline"
-                className="hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all duration-300"
+                size="sm"
+                className="hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all duration-300 text-xs sm:text-sm px-2 sm:px-3 md:px-4"
               >
-                <LogOut className="mr-2 h-4 w-4" />
-                Sign Out
+                <LogOut className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Sign Out</span>
               </Button>
             </div>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
         {/* Welcome Section */}
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-4">
+        <div className="mb-6 sm:mb-8 md:mb-12">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-2 sm:mb-3 md:mb-4">
             Welcome back! 👋
           </h1>
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-4 sm:mb-6 md:mb-8">
             Track your progress and achieve your goals across all four areas of life.
           </p>
 
           {/* Overall Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8">
             <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-6">
+              <CardContent className="p-3 sm:p-4 md:p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total Goals</p>
-                    <p className="text-3xl font-bold text-gray-900">{overallStats.totalGoals}</p>
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">Total Goals</p>
+                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">{overallStats.totalGoals}</p>
                   </div>
-                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                    <Target className="w-6 h-6 text-blue-600" />
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Target className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-blue-600" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-6">
+              <CardContent className="p-3 sm:p-4 md:p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Completed</p>
-                    <p className="text-3xl font-bold text-green-600">{overallStats.completedGoals}</p>
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">Completed</p>
+                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600">{overallStats.completedGoals}</p>
                   </div>
-                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                    <Award className="w-6 h-6 text-green-600" />
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Award className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-600" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-6">
+              <CardContent className="p-3 sm:p-4 md:p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Active Goals</p>
-                    <p className="text-3xl font-bold text-orange-600">{overallStats.activeGoals}</p>
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">Active Goals</p>
+                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-orange-600">{overallStats.activeGoals}</p>
                   </div>
-                  <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
-                    <Clock className="w-6 h-6 text-orange-600" />
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-orange-600" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-6">
+              <CardContent className="p-3 sm:p-4 md:p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Avg Progress</p>
-                    <p className="text-3xl font-bold text-purple-600">{overallStats.avgProgress}%</p>
+                    <p className="text-xs sm:text-sm font-medium text-gray-600">Avg Progress</p>
+                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-600">{overallStats.avgProgress}%</p>
                   </div>
-                  <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-purple-600" />
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-purple-600" />
                   </div>
                 </div>
               </CardContent>
@@ -288,52 +289,52 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Navigation - Goal Creation CTA */}
-        <Card className="mb-8 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 cursor-pointer"
+        <Card className="mb-4 sm:mb-6 md:mb-8 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 cursor-pointer"
               onClick={() => {
                 const createGoalButton = document.querySelector('[data-create-goal-button]')
                 if (createGoalButton) {
                   createGoalButton.scrollIntoView({ behavior: 'smooth', block: 'center' })
                 }
               }}>
-          <CardContent className="p-8">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mr-6">
-                  <Target className="w-8 h-8 text-white" />
+          <CardContent className="p-4 sm:p-6 md:p-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center flex-1 min-w-0">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mr-3 sm:mr-4 md:mr-6 flex-shrink-0">
+                  <Target className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
                 </div>
-                <div>
-                  <h3 className="text-3xl font-bold text-gray-900 mb-2">Create New Goal</h3>
-                  <p className="text-xl text-gray-600">
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Create New Goal</h3>
+                  <p className="text-sm sm:text-base md:text-xl text-gray-600">
                     Set a new goal and start your journey toward growth
                   </p>
                 </div>
               </div>
               <Button 
                 size="lg"
-                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300"
+                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 w-full sm:w-auto"
                 onClick={(e) => {
                   e.stopPropagation()
                   handleCreateGoal()
                 }}
               >
                 Create Goal
-                <Plus className="ml-3 h-5 w-5" />
+                <Plus className="ml-2 sm:ml-3 h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </div>
           </CardContent>
         </Card>
 
         {/* Quick Navigation - Daily Streaks */}
-        <Card className="mb-12 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-200 hover:border-orange-300 transition-all duration-300 transform hover:scale-105">
-          <CardContent className="p-8">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mr-6">
-                  <span className="text-3xl">🔥</span>
+        <Card className="mb-4 sm:mb-6 md:mb-12 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-200 hover:border-orange-300 transition-all duration-300 transform hover:scale-105">
+          <CardContent className="p-4 sm:p-6 md:p-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center flex-1 min-w-0">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mr-3 sm:mr-4 md:mr-6 flex-shrink-0">
+                  <span className="text-2xl sm:text-3xl">🔥</span>
                 </div>
-                <div>
-                  <h3 className="text-3xl font-bold text-gray-900 mb-2">Daily Streaks</h3>
-                  <p className="text-xl text-gray-600">
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Daily Streaks</h3>
+                  <p className="text-sm sm:text-base md:text-xl text-gray-600">
                     Build consistent habits and track your daily progress
                   </p>
                 </div>
@@ -341,11 +342,11 @@ export default function Dashboard() {
               <Button 
                 asChild 
                 size="lg"
-                className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300"
+                className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 w-full sm:w-auto"
               >
                 <Link href="/streaks">
                   View Streaks
-                  <ArrowRight className="ml-3 h-5 w-5" />
+                  <ArrowRight className="ml-2 sm:ml-3 h-4 w-4 sm:h-5 sm:w-5" />
                 </Link>
               </Button>
             </div>
@@ -353,22 +354,22 @@ export default function Dashboard() {
         </Card>
 
         {/* Luke 2:52 Quote */}
-        <Card className="mb-12 bg-gradient-to-r from-purple-600 to-blue-600 border-0 text-white shadow-2xl">
-          <CardContent className="p-8 text-center">
-            <h2 className="text-3xl font-bold mb-4">
+        <Card className="mb-4 sm:mb-6 md:mb-12 bg-gradient-to-r from-purple-600 to-blue-600 border-0 text-white shadow-2xl">
+          <CardContent className="p-4 sm:p-6 md:p-8 text-center">
+            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3 md:mb-4">
               &ldquo;And Jesus increased in wisdom and stature, and in favour with God and man.&rdquo;
             </h2>
-            <p className="text-purple-100 text-xl mb-2">— Luke 2:52</p>
-            <p className="text-lg text-purple-200 mt-6">
+            <p className="text-purple-100 text-sm sm:text-base md:text-xl mb-2">— Luke 2:52</p>
+            <p className="text-sm sm:text-base md:text-lg text-purple-200 mt-4 sm:mt-6">
               Grow in all four areas: Spiritual • Physical • Social • Intellectual
             </p>
           </CardContent>
         </Card>
 
         {/* Goal Categories Overview */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Progress by Category</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="mb-6 sm:mb-8 md:mb-12">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8">Progress by Category</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             {Object.entries(categoryConfig).map(([category, config]) => {
               const stats = getCategoryStats(category)
               const IconComponent = config.icon
@@ -423,24 +424,24 @@ export default function Dashboard() {
         </div>
 
         {/* Add New Goal Button */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-6 sm:mb-8 md:mb-12">
           <Button 
             onClick={handleCreateGoal}
             data-create-goal-button
-            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-12 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 sm:px-8 md:px-12 py-2 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
             size="lg"
           >
-            <Plus className="mr-3 h-6 w-6" />
+            <Plus className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" />
             Create New Goal
           </Button>
-          <p className="text-gray-600 mt-4 text-lg">
+          <p className="text-gray-600 mt-3 sm:mt-4 text-sm sm:text-base md:text-lg">
             Set a new goal and start your journey toward growth
           </p>
         </div>
 
         {/* Goals List */}
-        <div className="space-y-8">
-          <h2 className="text-3xl font-bold text-gray-900">Your Goals</h2>
+        <div className="space-y-4 sm:space-y-6 md:space-y-8">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Your Goals</h2>
           
           {goals.length === 0 ? (
             <Card className="text-center py-16 bg-white/80 backdrop-blur-sm border-0 shadow-xl">
@@ -495,53 +496,53 @@ export default function Dashboard() {
                               {goal.status.charAt(0).toUpperCase() + goal.status.slice(1)}
                             </Badge>
                           </div>
-                          <CardTitle className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors duration-300">
+                          <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4 group-hover:text-blue-600 transition-colors duration-300">
                             {goal.outcome}
                           </CardTitle>
-                          <div className="flex items-center text-gray-600 space-x-6">
-                            <div className="flex items-center bg-gray-50 rounded-lg px-3 py-2">
-                              <Calendar className="w-4 h-4 mr-2" />
-                              <span className="font-medium">
+                          <div className="flex flex-wrap items-center text-gray-600 gap-2 sm:gap-3 md:gap-6">
+                            <div className="flex items-center bg-gray-50 rounded-lg px-2 sm:px-3 py-1 sm:py-2">
+                              <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+                              <span className="font-medium text-xs sm:text-sm">
                                 {new Date(goal.targetDate).toLocaleDateString()}
                               </span>
                             </div>
                             {daysUntilTarget !== 0 && (
-                              <div className={`flex items-center rounded-lg px-3 py-2 ${
+                              <div className={`flex items-center rounded-lg px-2 sm:px-3 py-1 sm:py-2 ${
                                 daysUntilTarget > 0 ? 'bg-blue-50 text-blue-700' : 'bg-red-50 text-red-700'
                               }`}>
-                                <Clock className="w-4 h-4 mr-2" />
-                                <span className="font-medium">
+                                <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+                                <span className="font-medium text-xs sm:text-sm">
                                   {daysUntilTarget > 0 ? `${daysUntilTarget} days left` : `${Math.abs(daysUntilTarget)} days overdue`}
                                 </span>
                               </div>
                             )}
                             {daysUntilTarget === 0 && (
-                              <div className="flex items-center bg-orange-50 text-orange-700 rounded-lg px-3 py-2">
-                                <Clock className="w-4 h-4 mr-2" />
-                                <span className="font-medium">Due Today!</span>
+                              <div className="flex items-center bg-orange-50 text-orange-700 rounded-lg px-2 sm:px-3 py-1 sm:py-2">
+                                <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+                                <span className="font-medium text-xs sm:text-sm">Due Today!</span>
                               </div>
                             )}
                           </div>
                         </div>
-                        <div className="flex space-x-2 ml-6">
+                        <div className="flex space-x-1 sm:space-x-2 ml-2 sm:ml-4 md:ml-6 flex-shrink-0">
                           <Button 
                             variant="outline" 
                             size="sm" 
-                            className="hover:scale-110 transition-transform duration-200 hover:bg-blue-50 hover:border-blue-200"
+                            className="hover:scale-110 transition-transform duration-200 hover:bg-blue-50 hover:border-blue-200 p-1.5 sm:p-2"
                             onClick={(e) => {
                               e.stopPropagation()
                               handleViewGoal(goal.id)
                             }}
                           >
-                            <Eye className="h-4 w-4" />
+                            <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
                           </Button>
                           <Button 
                             variant="outline" 
                             size="sm" 
-                            className="hover:scale-110 transition-transform duration-200 hover:bg-red-50 hover:border-red-200 hover:text-red-600"
+                            className="hover:scale-110 transition-transform duration-200 hover:bg-red-50 hover:border-red-200 hover:text-red-600 p-1.5 sm:p-2"
                             onClick={(e) => deleteGoal(goal.id, e)}
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                           </Button>
                         </div>
                       </div>
@@ -612,25 +613,25 @@ export default function Dashboard() {
         </div>
 
         {/* Goals Guide Link - Moved to bottom for better UX */}
-        <Card className="mb-12 bg-gradient-to-r from-green-50 to-blue-50 border-2 border-blue-200 hover:border-blue-300 transition-all duration-300 transform hover:scale-105">
-          <CardContent className="p-8 text-center">
-            <div className="flex items-center justify-center mb-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mr-4">
-                <FileText className="w-8 h-8 text-white" />
+        <Card className="mb-6 sm:mb-8 md:mb-12 bg-gradient-to-r from-green-50 to-blue-50 border-2 border-blue-200 hover:border-blue-300 transition-all duration-300 transform hover:scale-105">
+          <CardContent className="p-4 sm:p-6 md:p-8 text-center">
+            <div className="flex flex-col sm:flex-row items-center justify-center mb-3 sm:mb-4 gap-3 sm:gap-4">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <FileText className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
               </div>
-              <h3 className="text-3xl font-bold text-gray-900">Master Your Goal Setting</h3>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Master Your Goal Setting</h3>
             </div>
-            <p className="text-xl text-gray-600 mb-6 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 mb-4 sm:mb-6 max-w-2xl mx-auto">
               Ready to take your goals to the next level? Learn the complete methodology behind effective goal setting.
             </p>
             <Button 
               asChild 
               size="lg"
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 w-full sm:w-auto"
             >
               <Link href="/goals-guide">
                 Read the Complete Goal Mastery Guide
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Link>
             </Button>
           </CardContent>

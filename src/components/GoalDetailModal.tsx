@@ -171,18 +171,18 @@ export default function GoalDetailModal({ goalId, isOpen, onClose, onGoalUpdated
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-[95vw] sm:max-w-[90vw] md:max-w-6xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-2xl font-bold flex items-center">
-              <IconComponent className={`w-6 h-6 mr-3 ${config.textColor}`} />
-              {goal.outcome}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+            <DialogTitle className="text-lg sm:text-xl md:text-2xl font-bold flex items-center min-w-0 flex-1">
+              <IconComponent className={`w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 ${config.textColor} flex-shrink-0`} />
+              <span className="truncate">{goal.outcome}</span>
             </DialogTitle>
-            <div className="flex items-center space-x-2">
-              <Badge className={`${config.textColor} ${config.borderColor}`}>
+            <div className="flex items-center space-x-2 flex-wrap">
+              <Badge className={`${config.textColor} ${config.borderColor} text-xs sm:text-sm`}>
                 {config.title}
               </Badge>
-              <Badge className={status.color}>
+              <Badge className={`${status.color} text-xs sm:text-sm`}>
                 {status.label}
               </Badge>
             </div>

@@ -34,29 +34,29 @@ export default function GoalsGuide() {
     <div className="min-h-screen bg-white">
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-3">
-              <Link href="/" className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                  <Target className="w-6 h-6 text-white" />
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-2 sm:py-3 md:py-4">
+            <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+              <Link href="/" className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Target className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
                 </div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <span className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent truncate">
                   RepentDaily
                 </span>
               </Link>
             </div>
             <div className="hidden md:flex items-center space-x-6">
-              <Link href="/goals-guide" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+              <Link href="/goals-guide" className="text-gray-600 hover:text-gray-900 font-medium transition-colors text-sm">
                 Goals Guide
               </Link>
             </div>
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" asChild>
+            <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 flex-shrink-0">
+              <Button variant="ghost" asChild size="sm" className="text-xs sm:text-sm px-2 sm:px-3 md:px-4">
                 <Link href="/signin">Sign In</Link>
               </Button>
-              <Button asChild className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                <Link href="/signup">Get Started Free</Link>
+              <Button asChild size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-xs sm:text-sm px-2 sm:px-3 md:px-4">
+                <Link href="/signup">Get Started</Link>
               </Button>
             </div>
           </div>
@@ -64,23 +64,24 @@ export default function GoalsGuide() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-20 pb-16 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-14 md:pb-16 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="flex justify-center mb-8">
-              <Badge className="bg-blue-100 text-blue-800 px-4 py-2 text-sm font-medium">
-                <Mountain className="w-4 h-4 mr-2" />
-                The Complete Guide to Goal Mastery
+            <div className="flex justify-center mb-4 sm:mb-6 md:mb-8">
+              <Badge className="bg-blue-100 text-blue-800 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium">
+                <Mountain className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">The Complete Guide to Goal Mastery</span>
+                <span className="sm:hidden">Goal Mastery Guide</span>
               </Badge>
             </div>
             
-            <h1 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-8">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-4 sm:mb-6 md:mb-8 px-2">
               Master Your Goals,
               <br />
-              <span className="text-4xl sm:text-5xl">Change Your Life</span>
+              <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl">Change Your Life</span>
             </h1>
             
-            <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-8 sm:mb-10 md:mb-12 max-w-3xl mx-auto leading-relaxed px-2">
               Let's get real about goal setting. Most people fail not because they lack ambition, but because they lack a system. 
               Here's the truth about turning dreams into reality—no fluff, no corporate BS, just what actually works.
             </p>
@@ -89,18 +90,18 @@ export default function GoalsGuide() {
       </section>
 
       {/* Reality Check Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-8 border-l-4 border-red-400 mb-16">
-            <div className="flex items-start space-x-4">
-              <AlertTriangle className="w-8 h-8 text-red-600 mt-1 flex-shrink-0" />
+      <section className="py-8 sm:py-12 md:py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-4 sm:p-6 md:p-8 border-l-4 border-red-400 mb-8 sm:mb-12 md:mb-16">
+            <div className="flex items-start space-x-3 sm:space-x-4">
+              <AlertTriangle className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-red-600 mt-1 flex-shrink-0" />
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Let's Be Brutally Honest</h2>
-                <p className="text-lg text-gray-700 mb-4">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">Let's Be Brutally Honest</h2>
+                <p className="text-base sm:text-lg text-gray-700 mb-3 sm:mb-4">
                   <strong>92% of people</strong> abandon their goals within the first few months. You've probably been there—excited about a new goal, 
                   motivated for a few weeks, then... life happens. You lose steam. You make excuses. You quit.
                 </p>
-                <p className="text-lg text-gray-700">
+                <p className="text-base sm:text-lg text-gray-700">
                   Here's the thing: <strong>That's completely normal.</strong> The problem isn't you—it's that nobody taught you the actual system 
                   for goal achievement. Time to change that.
                 </p>
@@ -111,29 +112,29 @@ export default function GoalsGuide() {
       </section>
 
       {/* Seven Steps Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 sm:mb-6 px-2">
               The 7 Critical Steps That Actually Work
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-2">
               This isn't theory—this is the proven system used by high achievers. Follow these steps, and you'll join the 8% who actually reach their goals.
             </p>
           </div>
           
-          <div className="space-y-8">
+          <div className="space-y-4 sm:space-y-6 md:space-y-8">
             {/* Step 1 */}
             <Card className="overflow-hidden border-0 bg-white/80 backdrop-blur-sm shadow-xl">
-              <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
-                <div className="flex items-center space-x-4">
-                  <Badge className="bg-white text-blue-600 text-lg font-bold px-4 py-2">1</Badge>
-                  <Target className="w-8 h-8" />
-                  <h3 className="text-2xl font-bold">Write Down Your Desired OUTCOME</h3>
+              <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 sm:p-5 md:p-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 md:space-x-4">
+                  <Badge className="bg-white text-blue-600 text-sm sm:text-base md:text-lg font-bold px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 w-fit">1</Badge>
+                  <Target className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 flex-shrink-0" />
+                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold">Write Down Your Desired OUTCOME</h3>
                 </div>
               </div>
-              <CardContent className="p-8">
-                <div className="grid md:grid-cols-2 gap-8 items-center">
+              <CardContent className="p-4 sm:p-6 md:p-8">
+                <div className="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 items-center">
                   <div>
                     <p className="text-lg text-gray-700 mb-4">
                       <strong>Not "I want to be healthier."</strong> That's wishful thinking. Write: <strong>"I want to weigh 165 pounds and run a 5K in under 25 minutes."</strong>
