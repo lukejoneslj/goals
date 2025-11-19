@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { Progress } from '@/components/ui/progress'
 import { 
   Plus, 
   Flame, 
@@ -18,8 +19,9 @@ import {
   ArrowLeft
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
-import { Habit } from '@/lib/firebase'
-import { habitsService, habitCompletionsService } from '@/lib/database'
+import { Habit, UserELO } from '@/lib/firebase'
+import { habitsService, habitCompletionsService, userELOService } from '@/lib/database'
+import { calculateHabitEloChange, getRankInfo, getEloProgress, getNextRank } from '@/lib/elo'
 import Link from 'next/link'
 
 // Make this a dynamic route to prevent static generation
@@ -46,6 +48,9 @@ export default function StreaksPage() {
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null)
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0])
   const [dateCompletions, setDateCompletions] = useState<string[]>([])
+  const [userELO, setUserELO] = useState<UserELO | null>(null)
+  const [eloLoading, setEloLoading] = useState(true)
+  const [eloNotification, setEloNotification] = useState<{ change: number; newElo: number; isWin: boolean } | null>(null)
   
   // Form state
   const [formData, setFormData] = useState({
@@ -108,6 +113,22 @@ export default function StreaksPage() {
     }
   }, [user])
 
+  const loadUserELO = useCallback(async () => {
+    if (!user) return
+
+    try {
+      const { data, error } = await userELOService.getOrCreate(user.uid)
+
+      if (error) throw error
+
+      setUserELO(data as UserELO)
+    } catch (error) {
+      console.error('Error loading user ELO:', error)
+    } finally {
+      setEloLoading(false)
+    }
+  }, [user])
+
   // Redirect if not authenticated
   useEffect(() => {
     if (!authLoading && !user) {
@@ -115,14 +136,15 @@ export default function StreaksPage() {
     }
   }, [user, authLoading, router])
 
-  // Load habits and today's completions
+  // Load habits, today's completions, and ELO data
   useEffect(() => {
     if (user) {
       loadHabits()
       loadTodayCompletions()
       loadDateCompletions(selectedDate)
+      loadUserELO()
     }
-  }, [user, loadHabits, loadTodayCompletions, loadDateCompletions, selectedDate])
+  }, [user, loadHabits, loadTodayCompletions, loadDateCompletions, loadUserELO, selectedDate])
 
   // Load completions when selected date changes
   useEffect(() => {
@@ -235,7 +257,46 @@ export default function StreaksPage() {
 
       // Recalculate streak for this habit (only if we're working with today)
       if (isTodaySelected) {
+        const oldStreak = habits.find(h => h.id === habitId)?.currentStreak || 0
         await calculateAndUpdateStreak(habitId)
+
+        // Update ELO based on the action
+        if (user && userELO) {
+          try {
+            if (isCompleted) {
+              // User is breaking their streak (loss)
+              const { eloChange, newElo } = calculateHabitEloChange(
+                userELO.eloRating,
+                oldStreak,
+                false, // loss
+                userELO.winStreak
+              )
+
+              await userELOService.recordLoss(user.uid, eloChange)
+              setUserELO(prev => prev ? { ...prev, eloRating: newElo, winStreak: 0 } : null)
+              setEloNotification({ change: eloChange, newElo: newElo, isWin: false })
+              setTimeout(() => setEloNotification(null), 3000)
+            } else {
+              // User is maintaining/completing their streak (win)
+              const { eloChange, newElo } = calculateHabitEloChange(
+                userELO.eloRating,
+                oldStreak,
+                true, // win
+                userELO.winStreak
+              )
+
+              const result = await userELOService.recordWin(user.uid, eloChange)
+              if (result.data) {
+                setUserELO(result.data as UserELO)
+                setEloNotification({ change: eloChange, newElo: newElo, isWin: true })
+                setTimeout(() => setEloNotification(null), 3000)
+              }
+            }
+          } catch (error) {
+            console.error('Error updating ELO:', error)
+          }
+        }
+
         // Refresh habits to get updated streak counts
         loadHabits()
       }
@@ -386,6 +447,35 @@ export default function StreaksPage() {
           </Button>
         </div>
 
+        {/* ELO Change Notification */}
+        {eloNotification && (
+          <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg border transition-all duration-300 ${
+            eloNotification.isWin
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+              : 'bg-red-50 border-red-200 text-red-800'
+          }`}>
+            <div className="flex items-center space-x-2">
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                eloNotification.isWin ? 'bg-emerald-100' : 'bg-red-100'
+              }`}>
+                {eloNotification.isWin ? (
+                  <span className="text-emerald-600 text-sm">▲</span>
+                ) : (
+                  <span className="text-red-600 text-sm">▼</span>
+                )}
+              </div>
+              <div>
+                <p className="font-semibold text-sm">
+                  {eloNotification.isWin ? 'Streak Maintained!' : 'Streak Broken'}
+                </p>
+                <p className="text-xs">
+                  ELO {eloNotification.isWin ? '+' : ''}{eloNotification.change} → {eloNotification.newElo}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Date Picker and Stats */}
         <div className="mb-6 sm:mb-8 md:mb-10">
           <Card className="border border-border shadow-sm bg-card">
@@ -443,6 +533,68 @@ export default function StreaksPage() {
                     <div className="text-xs text-orange-600/80">Keep up the great work!</div>
                   </div>
                 </div>
+
+                {/* ELO Rating Section */}
+                {!eloLoading && userELO && (
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 pt-4 border-t border-border">
+                    <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border border-purple-200">
+                      <div className="flex items-center justify-center mb-2">
+                        <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${getRankInfo(userELO.currentRank).color} flex items-center justify-center text-white font-bold text-sm`}>
+                          {userELO.currentRank.split(' ')[0][0]}{userELO.currentRank.split(' ')[1]?.[0] || ''}
+                        </div>
+                      </div>
+                      <div className="text-lg sm:text-xl font-bold text-purple-700">
+                        {userELO.eloRating}
+                      </div>
+                      <div className="text-xs sm:text-sm text-purple-600 font-medium">ELO Rating</div>
+                    </div>
+
+                    <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-200">
+                      <div className="text-lg sm:text-xl font-bold text-blue-700 mb-1">
+                        {userELO.currentRank}
+                      </div>
+                      <div className="text-xs sm:text-sm text-blue-600 font-medium mb-2">Current Rank</div>
+                      {getNextRank(userELO.eloRating) && (
+                        <div className="text-xs text-blue-500">
+                          Next: {getNextRank(userELO.eloRating)}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="text-center p-4 bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl border border-emerald-200">
+                      <div className="text-lg sm:text-xl font-bold text-emerald-700 mb-1">
+                        {userELO.totalWins}/{userELO.totalWins + userELO.totalLosses}
+                      </div>
+                      <div className="text-xs sm:text-sm text-emerald-600 font-medium mb-2">Win Rate</div>
+                      <div className="text-xs text-emerald-500">
+                        {userELO.totalWins + userELO.totalLosses > 0
+                          ? `${Math.round((userELO.totalWins / (userELO.totalWins + userELO.totalLosses)) * 100)}%`
+                          : '0%'
+                        }
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Rank Progress Bar */}
+                {!eloLoading && userELO && (
+                  <div className="mt-4 p-4 bg-secondary/30 rounded-xl border border-border">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-medium text-foreground">Rank Progress</span>
+                      <span className="text-sm text-muted-foreground">
+                        {getEloProgress(userELO.eloRating).percentage}% to next rank
+                      </span>
+                    </div>
+                    <Progress
+                      value={getEloProgress(userELO.eloRating).percentage}
+                      className="h-3 bg-secondary"
+                    />
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                      <span>{userELO.currentRank}</span>
+                      <span>{getNextRank(userELO.eloRating) || 'Max Rank'}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

@@ -11,7 +11,7 @@ import {
   orderBy,
   onSnapshot
 } from 'firebase/firestore'
-import { db, Goal, ActionItem, Habit, HabitCompletion, getTimestamp } from './firebase'
+import { db, Goal, ActionItem, Habit, HabitCompletion, UserELO, getTimestamp } from './firebase'
 
 // Helper function to ensure Firebase is initialized
 const ensureFirebase = () => {
@@ -455,5 +455,131 @@ export const habitCompletionsService = {
     } catch (error) {
       return { error: { message: (error as Error).message } }
     }
+  }
+}
+
+// User ELO operations
+export const userELOService = {
+  // Get or create ELO data for a user
+  async getOrCreate(userId: string) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const q = query(collection(firestoreDb, 'user_elo'), where('userId', '==', userId))
+      const querySnapshot = await getDocs(q)
+
+      if (!querySnapshot.empty) {
+        const doc = querySnapshot.docs[0]
+        return { data: { id: doc.id, ...doc.data() } as UserELO, error: null }
+      }
+
+      // Create new ELO record
+      const newELOData = {
+        userId,
+        eloRating: 1000,
+        currentRank: 'Bronze III',
+        totalWins: 0,
+        totalLosses: 0,
+        winStreak: 0,
+        bestWinStreak: 0,
+        createdAt: getTimestamp(),
+        updatedAt: getTimestamp()
+      }
+
+      const docRef = await addDoc(collection(firestoreDb, 'user_elo'), newELOData)
+      return { data: { id: docRef.id, ...newELOData }, error: null }
+    } catch (error) {
+      console.error('Error getting/creating user ELO:', error)
+      return { data: null, error: { message: (error as Error).message } }
+    }
+  },
+
+  // Update ELO rating and stats
+  async updateELO(userId: string, updates: Partial<UserELO>) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const q = query(collection(firestoreDb, 'user_elo'), where('userId', '==', userId))
+      const querySnapshot = await getDocs(q)
+
+      if (querySnapshot.empty) {
+        return { error: { message: 'User ELO record not found' } }
+      }
+
+      const docRef = querySnapshot.docs[0].ref
+      await updateDoc(docRef, {
+        ...updates,
+        updatedAt: getTimestamp()
+      })
+
+      return { error: null }
+    } catch (error) {
+      console.error('Error updating user ELO:', error)
+      return { error: { message: (error as Error).message } }
+    }
+  },
+
+  // Record a win (habit maintained)
+  async recordWin(userId: string, eloChange: number) {
+    try {
+      const currentELO = await this.getOrCreate(userId)
+      if (currentELO.error || !currentELO.data) return currentELO
+
+      const newElo = currentELO.data.eloRating + eloChange
+      const newWinStreak = currentELO.data.winStreak + 1
+
+      await this.updateELO(userId, {
+        eloRating: newElo,
+        totalWins: currentELO.data.totalWins + 1,
+        winStreak: newWinStreak,
+        bestWinStreak: Math.max(currentELO.data.bestWinStreak, newWinStreak),
+        currentRank: this.getRankFromElo(newElo)
+      })
+
+      return { data: { ...currentELO.data, eloRating: newElo, winStreak: newWinStreak }, error: null }
+    } catch (error) {
+      return { error: { message: (error as Error).message } }
+    }
+  },
+
+  // Record a loss (habit broken)
+  async recordLoss(userId: string, eloChange: number) {
+    try {
+      const currentELO = await this.getOrCreate(userId)
+      if (currentELO.error || !currentELO.data) return currentELO
+
+      const newElo = Math.max(0, currentELO.data.eloRating + eloChange) // Don't go below 0
+
+      await this.updateELO(userId, {
+        eloRating: newElo,
+        totalLosses: currentELO.data.totalLosses + 1,
+        winStreak: 0, // Reset win streak on loss
+        currentRank: this.getRankFromElo(newElo)
+      })
+
+      return { data: { ...currentELO.data, eloRating: newElo, winStreak: 0 }, error: null }
+    } catch (error) {
+      return { error: { message: (error as Error).message } }
+    }
+  },
+
+  // Helper method to get rank from ELO
+  getRankFromElo(elo: number) {
+    if (elo >= 3000) return 'Challenger'
+    if (elo >= 2800) return 'Grandmaster'
+    if (elo >= 2600) return 'Master'
+    if (elo >= 2500) return 'Diamond I'
+    if (elo >= 2400) return 'Diamond II'
+    if (elo >= 2300) return 'Diamond III'
+    if (elo >= 2200) return 'Platinum I'
+    if (elo >= 2100) return 'Platinum II'
+    if (elo >= 2000) return 'Platinum III'
+    if (elo >= 1900) return 'Gold I'
+    if (elo >= 1800) return 'Gold II'
+    if (elo >= 1700) return 'Gold III'
+    if (elo >= 1600) return 'Silver I'
+    if (elo >= 1500) return 'Silver II'
+    if (elo >= 1400) return 'Silver III'
+    if (elo >= 1300) return 'Bronze I'
+    if (elo >= 1150) return 'Bronze II'
+    return 'Bronze III'
   }
 }

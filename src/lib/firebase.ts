@@ -97,6 +97,39 @@ export type Habit = {
   updatedAt?: string
 }
 
+export type UserELO = {
+  id: string
+  userId: string
+  eloRating: number
+  currentRank: ELO_RANK
+  totalWins: number
+  totalLosses: number
+  winStreak: number
+  bestWinStreak: number
+  createdAt: string
+  updatedAt?: string
+}
+
+export type ELO_RANK =
+  | 'Bronze III'
+  | 'Bronze II'
+  | 'Bronze I'
+  | 'Silver III'
+  | 'Silver II'
+  | 'Silver I'
+  | 'Gold III'
+  | 'Gold II'
+  | 'Gold I'
+  | 'Platinum III'
+  | 'Platinum II'
+  | 'Platinum I'
+  | 'Diamond III'
+  | 'Diamond II'
+  | 'Diamond I'
+  | 'Master'
+  | 'Grandmaster'
+  | 'Challenger'
+
 export type HabitCompletion = {
   id: string
   userId: string

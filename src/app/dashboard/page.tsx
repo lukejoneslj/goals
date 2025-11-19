@@ -27,8 +27,9 @@ import {
   ArrowRight
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
-import { Goal } from '@/lib/firebase'
-import { goalsService } from '@/lib/database'
+import { Goal, UserELO } from '@/lib/firebase'
+import { goalsService, userELOService } from '@/lib/database'
+import { getRankInfo } from '@/lib/elo'
 import GoalModal from '@/components/GoalModal'
 import GoalDetailModal from '@/components/GoalDetailModal'
 import Link from 'next/link'
@@ -76,6 +77,8 @@ export default function Dashboard() {
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false)
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
   const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null)
+  const [userELO, setUserELO] = useState<UserELO | null>(null)
+  const [eloLoading, setEloLoading] = useState(true)
 
   const loadGoals = useCallback(async () => {
     if (!user?.uid) return
@@ -92,13 +95,29 @@ export default function Dashboard() {
     }
   }, [user?.uid])
 
+  const loadUserELO = useCallback(async () => {
+    if (!user?.uid) return
+
+    try {
+      const { data, error } = await userELOService.getOrCreate(user.uid)
+
+      if (error) throw error
+      setUserELO(data as UserELO)
+    } catch (error) {
+      console.error('Error loading user ELO:', error)
+    } finally {
+      setEloLoading(false)
+    }
+  }, [user?.uid])
+
   useEffect(() => {
     if (!loading && !user) {
       router.push('/signin')
     } else if (user) {
       loadGoals()
+      loadUserELO()
     }
-  }, [user, loading, router, loadGoals])
+  }, [user, loading, router, loadGoals, loadUserELO])
 
   const handleSignOut = async () => {
     await signOut()
@@ -229,7 +248,7 @@ export default function Dashboard() {
           </p>
 
           {/* Overall Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8 md:mb-10">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8 md:mb-10">
             <Card className="bg-card border-border shadow-sm hover:shadow-md transition-all duration-300">
               <CardContent className="p-4 sm:p-5 md:p-6">
                 <div className="flex items-center justify-between">
@@ -285,6 +304,23 @@ export default function Dashboard() {
                 </div>
               </CardContent>
             </Card>
+
+            {!eloLoading && userELO && (
+              <Card className="bg-card border-border shadow-sm hover:shadow-md transition-all duration-300">
+                <CardContent className="p-4 sm:p-5 md:p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs sm:text-sm font-medium text-muted-foreground uppercase tracking-wider">Habit Rank</p>
+                      <p className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-600 mt-1">{userELO.currentRank}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{userELO.eloRating} ELO</p>
+                    </div>
+                    <div className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-r ${getRankInfo(userELO.currentRank).color} rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold text-xs sm:text-sm md:text-base`}>
+                      {userELO.currentRank.split(' ')[0][0]}{userELO.currentRank.split(' ')[1]?.[0] || ''}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
 
