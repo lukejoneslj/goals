@@ -19,7 +19,8 @@ import {
   AlertTriangle,
   Lightbulb,
   FileText,
-  MessageCircle
+  MessageCircle,
+  TrendingUp
 } from 'lucide-react'
 
 export default function Home() {
@@ -541,16 +542,105 @@ export default function Home() {
             <Card className="text-center hover:shadow-lg transition-all duration-300 border border-border bg-card">
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <Trophy className="w-12 h-12 text-amber-500/80" />
+                  <Trophy className="w-12 h-12 text-purple-600/80" />
                 </div>
                 <CardTitle className="text-xl font-semibold text-foreground">
-                  Achievement System
+                  ELO Rankings & Competition
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-muted-foreground">
-                  Celebrate your wins and build momentum with our achievement and milestone system.
+                  Level up from Bronze to Challenger. Complete habits to gain ELO points and see how you rank against others in friendly competition.
                 </CardDescription>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Competitive Features Section */}
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-secondary/20 to-background border-y border-border">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Trophy className="w-10 h-10 sm:w-12 sm:h-12 text-purple-600" />
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground tracking-tight">
+                Friendly Competition That Motivates
+              </h2>
+            </div>
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
+              Every habit you complete increases your ELO rating. Climb the ranks and see how you compare to others—all in the spirit of growth and encouragement.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
+            <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200 hover:shadow-lg transition-all">
+              <CardHeader>
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl flex items-center justify-center mb-4">
+                  <Trophy className="w-6 h-6 text-white" />
+                </div>
+                <CardTitle className="text-xl font-bold text-foreground">
+                  ELO Ranking System
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground mb-4">
+                  Start at Bronze III (1000 ELO) and work your way up through Silver, Gold, Platinum, Diamond, Master, and Challenger ranks.
+                </p>
+                <div className="flex items-center gap-2 text-sm">
+                  <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">Bronze</Badge>
+                  <Badge variant="outline" className="bg-slate-50 text-slate-700 border-slate-200">Silver</Badge>
+                  <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Gold</Badge>
+                  <Badge variant="outline" className="text-xs">+ More</Badge>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border hover:shadow-lg transition-all">
+              <CardHeader>
+                <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mb-4">
+                  <TrendingUp className="w-6 h-6 text-emerald-600" />
+                </div>
+                <CardTitle className="text-xl font-bold text-foreground">
+                  Level Up Through Consistency
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground mb-4">
+                  The longer your streak when you complete a habit, the more ELO points you gain. Consistency is rewarded, making every day count.
+                </p>
+                <div className="space-y-2 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-emerald-600" />
+                    <span>Complete habits = Gain ELO</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-emerald-600" />
+                    <span>Longer streaks = More points</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-border hover:shadow-lg transition-all">
+              <CardHeader>
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                  <Users className="w-6 h-6 text-blue-600" />
+                </div>
+                <CardTitle className="text-xl font-bold text-foreground">
+                  Compare & Compete
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground mb-4">
+                  Visit the Compete page to see leaderboards, check your percentile ranking, and see how you stack up against others. It's friendly competition that keeps everyone motivated!
+                </p>
+                <Button asChild variant="outline" size="sm" className="w-full">
+                  <Link href="/compete">
+                    View Competition
+                    <ArrowRight className="ml-2 w-4 h-4" />
+                  </Link>
+                </Button>
               </CardContent>
             </Card>
           </div>
