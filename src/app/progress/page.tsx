@@ -24,6 +24,7 @@ import { todosService, habitCompletionsService, habitsService } from '@/lib/data
 import { calculateHabitEloChange, DEFAULT_ELO } from '@/lib/elo'
 import { getTodayLocalDateString } from '@/lib/utils'
 import DashboardNav from '@/components/DashboardNav'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 const categoryConfig = {
   spiritual: {
@@ -264,17 +265,11 @@ export default function ProgressPage() {
   }, [todos, habitCompletions, habits])
 
   if (loading || authLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center animate-fade-in">
-          <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 mx-auto animate-pulse">
-            <BarChart3 className="w-10 h-10 text-primary animate-spin" />
-          </div>
-          <h3 className="text-xl font-semibold text-foreground mb-2 animate-pulse">Loading Progress</h3>
-          <p className="text-muted-foreground animate-pulse">Analyzing your growth...</p>
-        </div>
-      </div>
-    )
+    return <LoadingSpinner 
+      message="Loading Progress" 
+      subMessage="Analyzing your growth..."
+      icon={BarChart3}
+    />
   }
 
   if (!user) return null

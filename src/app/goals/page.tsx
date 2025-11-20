@@ -22,7 +22,8 @@ import {
   CheckCircle,
   Search,
   Filter,
-  X
+  X,
+  ListTodo
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { Goal } from '@/lib/firebase'
@@ -31,6 +32,7 @@ import { parseLocalDate } from '@/lib/utils'
 import GoalModal from '@/components/GoalModal'
 import GoalDetailModal from '@/components/GoalDetailModal'
 import DashboardNav from '@/components/DashboardNav'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 const categoryConfig = {
   spiritual: {
@@ -157,22 +159,11 @@ export default function GoalsPage() {
   const completedGoals = goals.filter(g => g.status === 'completed')
 
   if (loading || loadingGoals) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center animate-fade-in">
-          <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 mx-auto animate-pulse">
-            <Target className="w-10 h-10 text-primary animate-spin" />
-          </div>
-          <h3 className="text-xl font-semibold text-foreground mb-2 animate-pulse">Loading Your Goals</h3>
-          <p className="text-muted-foreground animate-pulse">Fetching your goals...</p>
-          <div className="mt-8 flex justify-center gap-2">
-            <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-            <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-            <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-          </div>
-        </div>
-      </div>
-    )
+    return <LoadingSpinner 
+      message="Loading Your Goals" 
+      subMessage="Fetching your goals..."
+      icon={ListTodo}
+    />
   }
 
   if (!user) return null

@@ -19,6 +19,7 @@ import { UserELO } from '@/lib/firebase'
 import { userELOService } from '@/lib/database'
 import { getRankInfo, ELO_RANKS } from '@/lib/elo'
 import DashboardNav from '@/components/DashboardNav'
+import LoadingSpinner from '@/components/LoadingSpinner'
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, BarChart, Bar } from 'recharts'
 
 export default function CompetePage() {
@@ -157,19 +158,12 @@ export default function CompetePage() {
   }, [allUsers])
 
   if (authLoading || loading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <DashboardNav />
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8 md:py-12">
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-center">
-              <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-muted-foreground">Loading competition data...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+    return <LoadingSpinner 
+      message="Loading Competition" 
+      subMessage="Loading competition data..."
+      icon={Trophy}
+      iconColor="text-purple-600"
+    />
   }
 
   if (!userELO) return null

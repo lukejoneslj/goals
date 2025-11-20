@@ -21,13 +21,15 @@ import {
   Dumbbell,
   Filter,
   X,
-  ListTodo
+  ListTodo,
+  CheckSquare
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { Todo, UserELO } from '@/lib/firebase'
 import { todosService, userELOService } from '@/lib/database'
 import { getTodayLocalDateString } from '@/lib/utils'
 import DashboardNav from '@/components/DashboardNav'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 const categoryConfig = {
   spiritual: {
@@ -249,19 +251,12 @@ export default function TodosPage() {
   const totalCount = filteredTodos.length
 
   if (authLoading || loading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <DashboardNav />
-        <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8 md:py-12">
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-center">
-              <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-muted-foreground">Loading...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+    return <LoadingSpinner 
+      message="Loading Your To-Dos" 
+      subMessage="Preparing your tasks..."
+      icon={CheckSquare}
+      iconColor="text-emerald-600"
+    />
   }
 
   return (
