@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://repentdaily.com'),
+  metadataBase: new URL('https://repentdaily.app'),
   alternates: {
     canonical: '/',
   },
@@ -66,9 +66,9 @@ export const metadata: Metadata = {
     siteName: "Repent Daily",
     images: [
       {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
+        url: "/logo.png",
+        width: 400,
+        height: 400,
         alt: "Repent Daily - Daily Repentance & Goal Setting Platform",
       },
     ],
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Repent Daily - Transform Your Life Through Daily Repentance",
     description: "A free goal-setting platform for spiritual growth. Set goals, build daily habits, and transform your life through daily repentance.",
-    images: ["/og-image.png"],
+    images: ["/logo.png"],
     creator: "@repentdaily",
   },
   robots: {
