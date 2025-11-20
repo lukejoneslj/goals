@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { 
+import { Button } from '@/components/ui/button'
+import {
   TrendingUp,
   CheckSquare,
   Flame,
@@ -16,11 +17,12 @@ import {
   BarChart3,
   Calendar,
   Trophy,
-  Target
+  Target,
+  Download
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
-import { Todo, HabitCompletion, Habit } from '@/lib/firebase'
-import { todosService, habitCompletionsService, habitsService } from '@/lib/database'
+import { Todo, HabitCompletion, Habit, Goal } from '@/lib/firebase'
+import { todosService, habitCompletionsService, habitsService, goalsService } from '@/lib/database'
 import { calculateHabitEloChange, DEFAULT_ELO } from '@/lib/elo'
 import { getTodayLocalDateString } from '@/lib/utils'
 import DashboardNav from '@/components/DashboardNav'
@@ -69,8 +71,10 @@ export default function ProgressPage() {
   
   const [timeFrame, setTimeFrame] = useState<TimeFrame>('month')
   const [todos, setTodos] = useState<Todo[]>([])
+  const [allTodos, setAllTodos] = useState<Todo[]>([])
   const [habitCompletions, setHabitCompletions] = useState<HabitCompletion[]>([])
   const [habits, setHabits] = useState<Habit[]>([])
+  const [goals, setGoals] = useState<Goal[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -123,20 +127,27 @@ export default function ProgressPage() {
     setLoading(true)
     try {
       const { start, end } = dateRange
-      
-      const [todosResult, completionsResult, habitsResult] = await Promise.all([
+
+      // Get all todos (not just completed ones) and all goals for the user
+      const [allTodosResult, todosResult, completionsResult, habitsResult, goalsResult] = await Promise.all([
+        todosService.getAll(user.uid), // Get all todos to check what was due each day
         todosService.getCompletedInRange(user.uid, start, end),
         habitCompletionsService.getCompletionsInRange(user.uid, start, end),
-        habitsService.getAll(user.uid)
+        habitsService.getAll(user.uid),
+        goalsService.getAll(user.uid)
       ])
 
+      if (allTodosResult.error) throw allTodosResult.error
       if (todosResult.error) throw todosResult.error
       if (completionsResult.error) throw completionsResult.error
       if (habitsResult.error) throw habitsResult.error
+      if (goalsResult.error) throw goalsResult.error
 
       setTodos(todosResult.data || [])
+      setAllTodos(allTodosResult.data || [])
       setHabitCompletions(completionsResult.data || [])
       setHabits(habitsResult.data || [])
+      setGoals(goalsResult.data || [])
     } catch (error) {
       console.error('Error loading progress data:', error)
     } finally {
@@ -264,9 +275,243 @@ export default function ProgressPage() {
     }
   }, [todos, habitCompletions, habits])
 
+  // Generate and export progress report
+  const generateProgressReport = async () => {
+    const { start, end } = dateRange
+    const report: string[] = []
+
+    // Header
+    report.push('='.repeat(80))
+    report.push('PROGRESS REPORT')
+    report.push('='.repeat(80))
+    report.push(`Period: ${start} to ${end}`)
+    report.push(`Generated: ${new Date().toLocaleString()}`)
+    report.push('')
+
+    // Calculate date range for iteration
+    const startDate = new Date(start)
+    const endDate = new Date(end)
+    const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
+
+    // Group completed data by date
+    const todosCompletedByDate: Record<string, Todo[]> = {}
+    const habitCompletionsByDate: Record<string, HabitCompletion[]> = {}
+
+    // Group todos by completion date
+    todos.forEach(todo => {
+      if (todo.completedAt) {
+        const dateKey = todo.completedAt.split('T')[0]
+        if (!todosCompletedByDate[dateKey]) todosCompletedByDate[dateKey] = []
+        todosCompletedByDate[dateKey].push(todo)
+      }
+    })
+
+    // Group habit completions by date
+    habitCompletions.forEach(completion => {
+      if (!habitCompletionsByDate[completion.completionDate]) {
+        habitCompletionsByDate[completion.completionDate] = []
+      }
+      habitCompletionsByDate[completion.completionDate].push(completion)
+    })
+
+    // Group completed goals by completion date (using updatedAt as proxy)
+    const goalsCompletedByDate: Record<string, Goal[]> = {}
+    goals.filter(goal => goal.status === 'completed').forEach(goal => {
+      if (goal.updatedAt) {
+        const dateKey = goal.updatedAt.split('T')[0]
+        if (!goalsCompletedByDate[dateKey]) goalsCompletedByDate[dateKey] = []
+        goalsCompletedByDate[dateKey].push(goal)
+      }
+    })
+
+    // Day-by-day breakdown
+    report.push('DAY-BY-DAY BREAKDOWN')
+    report.push('-'.repeat(80))
+
+    let totalTodosDue = 0
+    let totalTodosCompleted = 0
+    let totalHabitsDue = 0
+    let totalHabitsCompleted = 0
+
+    for (let i = 0; i < totalDays; i++) {
+      const currentDate = new Date(startDate)
+      currentDate.setDate(startDate.getDate() + i)
+      const dateKey = currentDate.toISOString().split('T')[0]
+      const dayOfWeek = currentDate.getDay() // 0 = Sunday, 1 = Monday, etc.
+      const formattedDate = currentDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+
+      // Get todos due on this date
+      const todosDueToday = allTodos.filter(todo => todo.dueDate === dateKey)
+      const todosCompletedToday = todosCompletedByDate[dateKey] || []
+
+      // Get habits scheduled for this day (based on day of week)
+      const habitsDueToday = habits.filter(habit => {
+        const dayMapping: Record<number, boolean> = {
+          0: habit.sunday,
+          1: habit.monday,
+          2: habit.tuesday,
+          3: habit.wednesday,
+          4: habit.thursday,
+          5: habit.friday,
+          6: habit.saturday
+        }
+        return dayMapping[dayOfWeek] && habit.isActive
+      })
+
+      // Get habit completions for this day
+      const habitCompletionsToday = habitCompletionsByDate[dateKey] || []
+
+      // Get goals completed on this day
+      const goalsCompletedToday = goalsCompletedByDate[dateKey] || []
+
+      // Update totals
+      totalTodosDue += todosDueToday.length
+      totalTodosCompleted += todosCompletedToday.length
+      totalHabitsDue += habitsDueToday.length
+      totalHabitsCompleted += habitCompletionsToday.length
+
+      report.push('')
+      report.push(`${formattedDate} (${dateKey})`)
+      report.push('-'.repeat(40))
+
+      // Todos section
+      report.push(`📝 TODOS (${todosCompletedToday.length}/${todosDueToday.length} completed):`)
+      if (todosDueToday.length > 0) {
+        todosDueToday.forEach(todo => {
+          const completed = todosCompletedToday.some(ct => ct.id === todo.id)
+          const status = completed ? '✅' : '❌'
+          report.push(`   ${status} ${todo.title}`)
+          if (todo.description) {
+            report.push(`       "${todo.description}"`)
+          }
+        })
+      } else {
+        report.push('   No todos were due today')
+      }
+
+      // Habits section
+      report.push(`🔥 HABITS (${habitCompletionsToday.length}/${habitsDueToday.length} completed):`)
+      if (habitsDueToday.length > 0) {
+        habitsDueToday.forEach(habit => {
+          const completed = habitCompletionsToday.some(c => c.habitId === habit.id)
+          const status = completed ? '✅' : '❌'
+          report.push(`   ${status} ${habit.name}`)
+          if (habit.description) {
+            report.push(`       "${habit.description}"`)
+          }
+        })
+      } else {
+        report.push('   No habits were scheduled today')
+      }
+
+      // Goals completed (only if actually completed)
+      if (goalsCompletedToday.length > 0) {
+        report.push(`🎯 GOALS COMPLETED (${goalsCompletedToday.length}):`)
+        goalsCompletedToday.forEach(goal => {
+          report.push(`   ✅ ${goal.outcome}`)
+          if (goal.category) {
+            report.push(`       Category: ${goal.category}`)
+          }
+        })
+      }
+    }
+
+    // Analytics section
+    report.push('')
+    report.push('ANALYTICS & STATISTICS')
+    report.push('='.repeat(80))
+
+    // Overall stats
+    const totalActions = totalTodosCompleted + totalHabitsCompleted
+    const totalItemsDue = totalTodosDue + totalHabitsDue
+    const overallCompletionRate = totalItemsDue > 0 ? ((totalActions / totalItemsDue) * 100).toFixed(1) : '0'
+    const daysWithActivity = new Set([
+      ...Object.keys(todosCompletedByDate),
+      ...Object.keys(habitCompletionsByDate)
+    ]).size
+    const averageActionsPerDay = daysWithActivity > 0 ? (totalActions / daysWithActivity).toFixed(1) : '0'
+
+    report.push(`PERIOD SUMMARY:`)
+    report.push(`   Total Days in Period: ${totalDays}`)
+    report.push(`   Days with Activity: ${daysWithActivity}`)
+    report.push(`   Overall Completion Rate: ${overallCompletionRate}%`)
+    report.push(`   Average Actions per Active Day: ${averageActionsPerDay}`)
+    report.push('')
+
+    // Todo analytics
+    const todoCompletionRate = totalTodosDue > 0 ? ((totalTodosCompleted / totalTodosDue) * 100).toFixed(1) : '0'
+    report.push(`TODO ANALYTICS:`)
+    report.push(`   Total Todos Due: ${totalTodosDue}`)
+    report.push(`   Total Todos Completed: ${totalTodosCompleted}`)
+    report.push(`   Completion Rate: ${todoCompletionRate}%`)
+    report.push('')
+
+    // Habit analytics
+    const habitCompletionRate = totalHabitsDue > 0 ? ((totalHabitsCompleted / totalHabitsDue) * 100).toFixed(1) : '0'
+    const uniqueHabitsWorked = new Set(habitCompletions.map(c => c.habitId)).size
+    report.push(`HABIT ANALYTICS:`)
+    report.push(`   Total Habits Due: ${totalHabitsDue}`)
+    report.push(`   Total Habit Completions: ${totalHabitsCompleted}`)
+    report.push(`   Completion Rate: ${habitCompletionRate}%`)
+    report.push(`   Unique Habits Worked On: ${uniqueHabitsWorked}`)
+    report.push('')
+
+    // Goal analytics
+    const totalGoals = goals.length
+    const completedGoals = goals.filter(g => g.status === 'completed').length
+    const goalCompletionRate = totalGoals > 0 ? ((completedGoals / totalGoals) * 100).toFixed(1) : '0'
+    report.push(`GOAL ANALYTICS:`)
+    report.push(`   Total Goals: ${totalGoals}`)
+    report.push(`   Goals Completed: ${completedGoals}`)
+    report.push(`   Goal Completion Rate: ${goalCompletionRate}%`)
+    report.push('')
+
+    // Category breakdown
+    report.push(`CATEGORY BREAKDOWN:`)
+    const categories = ['spiritual', 'physical', 'social', 'intellectual']
+    categories.forEach(category => {
+      // Count todos completed in this category during the period
+      const categoryTodosCompleted = todos.filter(t => t.category === category).length
+      // Count habit completions in this category during the period
+      const categoryHabitsCompleted = habitCompletions.filter(c => {
+        const habit = habits.find(h => h.id === c.habitId)
+        return habit?.category === category
+      }).length
+      // Count goals completed in this category
+      const categoryGoalsCompleted = goals.filter(g => g.category === category && g.status === 'completed').length
+
+      const totalCategoryActions = categoryTodosCompleted + categoryHabitsCompleted + categoryGoalsCompleted
+      report.push(`   ${category.charAt(0).toUpperCase() + category.slice(1)}: ${totalCategoryActions} actions (${categoryTodosCompleted} todos, ${categoryHabitsCompleted} habits, ${categoryGoalsCompleted} goals)`)
+    })
+
+    // ELO Analysis
+    report.push('')
+    report.push(`ELO ANALYSIS:`)
+    report.push(`   ELO Gained from Todos: +${stats.eloFromTodos}`)
+    report.push(`   ELO Gained from Habits: +${Math.round(stats.eloFromHabits)}`)
+    report.push(`   Total ELO Gained: +${stats.totalEloGained}`)
+
+    // Download the report
+    const reportText = report.join('\n')
+    const blob = new Blob([reportText], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `progress-report-${start}-to-${end}.txt`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
   if (loading || authLoading) {
-    return <LoadingSpinner 
-      message="Loading Progress" 
+    return <LoadingSpinner
+      message="Loading Progress"
       subMessage="Analyzing your growth..."
       icon={BarChart3}
     />
@@ -307,6 +552,15 @@ export default function ProgressPage() {
                   <SelectItem value="all">All Time</SelectItem>
                 </SelectContent>
               </Select>
+
+              <Button
+                onClick={generateProgressReport}
+                variant="outline"
+                className="flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Export Report
+              </Button>
             </div>
           </div>
 
