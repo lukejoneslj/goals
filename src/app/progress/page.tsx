@@ -24,7 +24,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { Todo, HabitCompletion, Habit, Goal } from '@/lib/firebase'
 import { todosService, habitCompletionsService, habitsService, goalsService } from '@/lib/database'
 import { calculateHabitEloChange, DEFAULT_ELO } from '@/lib/elo'
-import { getTodayLocalDateString } from '@/lib/utils'
+import { getTodayLocalDateString, formatDateAsLocalString, formatDateStringMountainTime, parseLocalDate } from '@/lib/utils'
 import DashboardNav from '@/components/DashboardNav'
 import LoadingSpinner from '@/components/LoadingSpinner'
 
@@ -115,7 +115,7 @@ export default function ProgressPage() {
         start.setMonth(today.getMonth() - 1)
     }
 
-    const startStr = start.toISOString().split('T')[0]
+    const startStr = formatDateAsLocalString(start)
     return { start: startStr, end }
   }, [])
 
@@ -288,9 +288,9 @@ export default function ProgressPage() {
     report.push(`Generated: ${new Date().toLocaleString()}`)
     report.push('')
 
-    // Calculate date range for iteration
-    const startDate = new Date(start)
-    const endDate = new Date(end)
+    // Calculate date range for iteration using local dates
+    const startDate = parseLocalDate(start)
+    const endDate = parseLocalDate(end)
     const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
 
     // Group completed data by date
@@ -334,16 +334,18 @@ export default function ProgressPage() {
     let totalHabitsCompleted = 0
 
     for (let i = 0; i < totalDays; i++) {
+      // Create date by adding days to start date
       const currentDate = new Date(startDate)
       currentDate.setDate(startDate.getDate() + i)
-      const dateKey = currentDate.toISOString().split('T')[0]
-      const dayOfWeek = currentDate.getDay() // 0 = Sunday, 1 = Monday, etc.
-      const formattedDate = currentDate.toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      })
+      
+      // Format date key using local date components (not ISO to avoid timezone issues)
+      const dateKey = formatDateAsLocalString(currentDate)
+      
+      // Get day of week (0 = Sunday, 1 = Monday, etc.)
+      const dayOfWeek = currentDate.getDay()
+      
+      // Format date in Mountain Time for display
+      const formattedDate = formatDateStringMountainTime(dateKey)
 
       // Get todos due on this date
       const todosDueToday = allTodos.filter(todo => todo.dueDate === dateKey)
