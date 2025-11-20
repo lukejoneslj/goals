@@ -3,7 +3,13 @@
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { LogOut, Home, ListTodo, Flame, CheckSquare, Trophy, BarChart3 } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { LogOut, Home, ListTodo, Flame, CheckSquare, Trophy, BarChart3, ChevronDown, Target } from 'lucide-react'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/useAuth'
 import Link from 'next/link'
@@ -19,14 +25,22 @@ export default function DashboardNav() {
     router.push('/')
   }
 
-  const navItems = [
+  const mainNavItems = [
     { href: '/dashboard', label: 'Dashboard', icon: Home },
-    { href: '/goals', label: 'Goals', icon: ListTodo },
-    { href: '/streaks', label: 'Streaks', icon: Flame },
-    { href: '/todos', label: 'To-Dos', icon: CheckSquare },
     { href: '/progress', label: 'Progress', icon: BarChart3 },
     { href: '/compete', label: 'Compete', icon: Trophy },
   ]
+
+  const activitiesItems = [
+    { href: '/goals', label: 'Goals', icon: ListTodo },
+    { href: '/streaks', label: 'Streaks', icon: Flame },
+    { href: '/todos', label: 'To-Dos', icon: CheckSquare },
+  ]
+
+  // Check if any activity item is active
+  const isActivitiesActive = activitiesItems.some(item => pathname === item.href)
+  // Get the active activity item label for the dropdown trigger
+  const activeActivityLabel = activitiesItems.find(item => pathname === item.href)?.label || 'Activities'
 
   return (
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border transition-all duration-300">
@@ -54,7 +68,7 @@ export default function DashboardNav() {
 
           {/* Navigation Links - Desktop */}
           <div className="hidden md:flex items-center space-x-1">
-            {navItems.map((item) => {
+            {mainNavItems.map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.href
               return (
@@ -78,6 +92,44 @@ export default function DashboardNav() {
                 </Link>
               )
             })}
+
+            {/* Activities Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant={isActivitiesActive ? 'secondary' : 'ghost'}
+                  size="sm"
+                  className={`transition-all duration-300 cursor-pointer ${
+                    isActivitiesActive 
+                      ? 'bg-secondary text-secondary-foreground shadow-sm' 
+                      : 'hover:bg-secondary/50 hover:shadow-sm hover:scale-105 active:scale-95'
+                  }`}
+                >
+                  <Target className="w-4 h-4 mr-2 transition-transform duration-300" />
+                  <span className="transition-all duration-300">{activeActivityLabel}</span>
+                  <ChevronDown className="w-3 h-3 ml-2 opacity-50" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                {activitiesItems.map((item) => {
+                  const Icon = item.icon
+                  const isActive = pathname === item.href
+                  return (
+                    <DropdownMenuItem key={item.href} asChild>
+                      <Link
+                        href={item.href}
+                        className={`cursor-pointer flex items-center ${
+                          isActive ? 'bg-secondary font-medium' : ''
+                        }`}
+                      >
+                        <Icon className="w-4 h-4 mr-2" />
+                        <span>{item.label}</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  )
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {/* User Menu */}
@@ -106,7 +158,7 @@ export default function DashboardNav() {
 
         {/* Mobile Navigation */}
         <div className="md:hidden pb-2 flex items-center space-x-1 overflow-x-auto">
-          {navItems.map((item) => {
+          {mainNavItems.map((item) => {
             const Icon = item.icon
             const isActive = pathname === item.href
             return (
@@ -130,6 +182,44 @@ export default function DashboardNav() {
               </Link>
             )
           })}
+
+          {/* Activities Dropdown for Mobile */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant={isActivitiesActive ? 'secondary' : 'ghost'}
+                size="sm"
+                className={`transition-all duration-300 whitespace-nowrap cursor-pointer ${
+                  isActivitiesActive 
+                    ? 'bg-secondary text-secondary-foreground shadow-sm' 
+                    : 'hover:bg-secondary/50 hover:shadow-sm hover:scale-105 active:scale-95'
+                }`}
+              >
+                <Target className="w-4 h-4 mr-1.5 transition-transform duration-300" />
+                {activeActivityLabel}
+                <ChevronDown className="w-3 h-3 ml-1.5 opacity-50" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              {activitiesItems.map((item) => {
+                const Icon = item.icon
+                const isActive = pathname === item.href
+                return (
+                  <DropdownMenuItem key={item.href} asChild>
+                    <Link
+                      href={item.href}
+                      className={`cursor-pointer flex items-center ${
+                        isActive ? 'bg-secondary font-medium' : ''
+                      }`}
+                    >
+                      <Icon className="w-4 h-4 mr-2" />
+                      <span>{item.label}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                )
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </nav>
