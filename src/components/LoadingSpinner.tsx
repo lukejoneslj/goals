@@ -27,21 +27,21 @@ export default function LoadingSpinner({
           <div className="absolute inset-0 bg-primary/10 rounded-2xl animate-pulse"></div>
           
           {/* Rotating outer ring */}
-          <div className={`absolute inset-0 border-4 border-transparent border-t-primary/30 rounded-2xl animate-spin`} style={{ animationDuration: '1.5s' }}></div>
+          <div className={`absolute inset-0 border-4 border-transparent border-t-primary/30 rounded-2xl animate-spin`} style={{ animationDuration: '0.8s' }}></div>
           
           {/* Icon */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <Icon className={`w-10 h-10 ${iconColor} animate-pulse`} style={{ animationDuration: '2s' }} />
+            <Icon className={`w-10 h-10 ${iconColor} animate-pulse`} style={{ animationDuration: '1s' }} />
           </div>
         </div>
 
         {/* Loading Text */}
-        <h3 className="text-xl font-semibold text-foreground mb-2 animate-pulse" style={{ animationDuration: '2s' }}>
+        <h3 className="text-xl font-semibold text-foreground mb-2 animate-pulse" style={{ animationDuration: '1s' }}>
           {message}
         </h3>
         
         {subMessage && (
-          <p className="text-muted-foreground animate-pulse mb-6" style={{ animationDuration: '2s' }}>
+          <p className="text-muted-foreground animate-pulse mb-6" style={{ animationDuration: '1s' }}>
             {subMessage}
           </p>
         )}
@@ -51,15 +51,15 @@ export default function LoadingSpinner({
           <div className="flex justify-center gap-2 mt-8">
             <div 
               className="w-2 h-2 bg-primary rounded-full animate-bounce" 
-              style={{ animationDelay: '0ms', animationDuration: '1.4s' }}
+              style={{ animationDelay: '0ms', animationDuration: '0.6s' }}
             ></div>
             <div 
               className="w-2 h-2 bg-primary rounded-full animate-bounce" 
-              style={{ animationDelay: '200ms', animationDuration: '1.4s' }}
+              style={{ animationDelay: '120ms', animationDuration: '0.6s' }}
             ></div>
             <div 
               className="w-2 h-2 bg-primary rounded-full animate-bounce" 
-              style={{ animationDelay: '400ms', animationDuration: '1.4s' }}
+              style={{ animationDelay: '240ms', animationDuration: '0.6s' }}
             ></div>
           </div>
         )}
