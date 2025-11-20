@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { LogOut, Home, ListTodo, Flame, CheckSquare, Trophy } from 'lucide-react'
+import { LogOut, Home, ListTodo, Flame, CheckSquare, Trophy, BarChart3 } from 'lucide-react'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/useAuth'
 import Link from 'next/link'
@@ -24,6 +24,7 @@ export default function DashboardNav() {
     { href: '/goals', label: 'Goals', icon: ListTodo },
     { href: '/streaks', label: 'Streaks', icon: Flame },
     { href: '/todos', label: 'To-Dos', icon: CheckSquare },
+    { href: '/progress', label: 'Progress', icon: BarChart3 },
     { href: '/compete', label: 'Compete', icon: Trophy },
   ]
 

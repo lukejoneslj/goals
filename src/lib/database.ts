@@ -462,6 +462,30 @@ export const habitCompletionsService = {
     } catch (error) {
       return { error: { message: (error as Error).message } }
     }
+  },
+
+  // Get habit completions within a date range
+  async getCompletionsInRange(userId: string, startDate: string, endDate: string) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const q = query(
+        collection(firestoreDb, 'habit_completions'),
+        where('userId', '==', userId)
+      )
+      const querySnapshot = await getDocs(q)
+      const completions = querySnapshot.docs
+        .map(doc => ({ id: doc.id, ...doc.data() } as HabitCompletion))
+        .filter(completion => {
+          return completion.completionDate >= startDate && completion.completionDate <= endDate
+        })
+        .sort((a, b) => a.completionDate.localeCompare(b.completionDate))
+
+      return { data: completions, error: null }
+    } catch (error) {
+      console.error('Error fetching habit completions in range:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: [], error: { message: `Failed to fetch completions: ${errorMessage}` } }
+    }
   }
 }
 
@@ -789,6 +813,32 @@ export const todosService = {
       console.error('Error toggling todo completion:', error)
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
       return { data: null, error: { message: `Failed to toggle todo: ${errorMessage}` } }
+    }
+  },
+
+  // Get completed todos within a date range
+  async getCompletedInRange(userId: string, startDate: string, endDate: string) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const q = query(
+        collection(firestoreDb, 'todos'),
+        where('userId', '==', userId),
+        where('isCompleted', '==', true)
+      )
+      const querySnapshot = await getDocs(q)
+      const todos = querySnapshot.docs
+        .map(doc => ({ id: doc.id, ...doc.data() } as Todo))
+        .filter(todo => {
+          if (!todo.completedAt) return false
+          const completedDate = todo.completedAt.split('T')[0] // Get YYYY-MM-DD part
+          return completedDate >= startDate && completedDate <= endDate
+        })
+
+      return { data: todos, error: null }
+    } catch (error) {
+      console.error('Error fetching completed todos in range:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: [], error: { message: `Failed to fetch todos: ${errorMessage}` } }
     }
   }
 }
