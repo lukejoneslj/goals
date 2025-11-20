@@ -26,6 +26,7 @@ import {
 import { useAuth } from '@/hooks/useAuth'
 import { Todo, UserELO } from '@/lib/firebase'
 import { todosService, userELOService } from '@/lib/database'
+import { getTodayLocalDateString } from '@/lib/utils'
 import DashboardNav from '@/components/DashboardNav'
 
 const categoryConfig = {
@@ -72,7 +73,7 @@ export default function TodosPage() {
   const [loading, setLoading] = useState(true)
   const [showAddForm, setShowAddForm] = useState(false)
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null)
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
+  const [selectedDate, setSelectedDate] = useState(getTodayLocalDateString())
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all')
   const [userELO, setUserELO] = useState<UserELO | null>(null)
   const [eloLoading, setEloLoading] = useState(true)
@@ -82,7 +83,7 @@ export default function TodosPage() {
     title: '',
     description: '',
     category: '' as '' | 'spiritual' | 'physical' | 'social' | 'intellectual',
-    dueDate: new Date().toISOString().split('T')[0]
+    dueDate: getTodayLocalDateString()
   })
 
   useEffect(() => {
@@ -178,7 +179,7 @@ export default function TodosPage() {
           title: '',
           description: '',
           category: '',
-          dueDate: new Date().toISOString().split('T')[0]
+          dueDate: getTodayLocalDateString()
         })
       }
       
@@ -339,9 +340,9 @@ export default function TodosPage() {
                   onChange={(e) => setSelectedDate(e.target.value)}
                   className="flex-1 text-sm bg-background"
                 />
-                {selectedDate !== new Date().toISOString().split('T')[0] && (
+                {selectedDate !== getTodayLocalDateString() && (
                   <Button
-                    onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
+                    onClick={() => setSelectedDate(getTodayLocalDateString())}
                     variant="outline"
                     size="sm"
                     className="flex-shrink-0"

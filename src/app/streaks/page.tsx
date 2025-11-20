@@ -32,7 +32,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { Habit, UserELO } from '@/lib/firebase'
 import { habitsService, habitCompletionsService, userELOService } from '@/lib/database'
 import { calculateHabitEloChange, getRankInfo, getEloProgress, getNextRank } from '@/lib/elo'
-import { getWeekdayFromDateString } from '@/lib/utils'
+import { getWeekdayFromDateString, getTodayLocalDateString } from '@/lib/utils'
 import DashboardNav from '@/components/DashboardNav'
 
 // Make this a dynamic route to prevent static generation
@@ -94,7 +94,7 @@ export default function StreaksPage() {
   const [loading, setLoading] = useState(true)
   const [showAddForm, setShowAddForm] = useState(false)
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null)
-  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0])
+  const [selectedDate, setSelectedDate] = useState<string>(getTodayLocalDateString())
   const [dateCompletions, setDateCompletions] = useState<string[]>([])
   const [userELO, setUserELO] = useState<UserELO | null>(null)
   const [eloLoading, setEloLoading] = useState(true)
@@ -137,7 +137,7 @@ export default function StreaksPage() {
     if (!user) return
 
     try {
-      const today = new Date().toISOString().split('T')[0]
+      const today = getTodayLocalDateString()
       const { data, error } = await habitCompletionsService.getForDate(today, user.uid)
 
       if (error) throw error
@@ -203,7 +203,7 @@ export default function StreaksPage() {
 
   // Load completions when selected date changes
   useEffect(() => {
-    if (user && selectedDate !== new Date().toISOString().split('T')[0]) {
+    if (user && selectedDate !== getTodayLocalDateString()) {
       loadDateCompletions(selectedDate)
     }
   }, [selectedDate, user, loadDateCompletions])
@@ -280,7 +280,7 @@ export default function StreaksPage() {
   const toggleCompletion = async (habitId: string) => {
     if (!user) return
 
-    const isTodaySelected = selectedDate === new Date().toISOString().split('T')[0]
+    const isTodaySelected = selectedDate === getTodayLocalDateString()
     const currentCompletions = isTodaySelected ? todayCompletions : dateCompletions
     const isCompleted = currentCompletions.includes(habitId)
 
@@ -593,11 +593,11 @@ export default function StreaksPage() {
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
                   className="flex-1 text-sm bg-background"
-                  max={new Date().toISOString().split('T')[0]}
+                  max={getTodayLocalDateString()}
                 />
-                {selectedDate !== new Date().toISOString().split('T')[0] && (
+                {selectedDate !== getTodayLocalDateString() && (
                   <Button
-                    onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
+                    onClick={() => setSelectedDate(getTodayLocalDateString())}
                     variant="outline"
                     size="sm"
                     className="flex-shrink-0"
@@ -886,7 +886,7 @@ export default function StreaksPage() {
             habits
               .filter(habit => categoryFilter === 'all' || habit.category === categoryFilter)
               .map(habit => {
-              const isTodaySelected = selectedDate === new Date().toISOString().split('T')[0]
+              const isTodaySelected = selectedDate === getTodayLocalDateString()
               const currentCompletions = isTodaySelected ? todayCompletions : dateCompletions
               const isCompletedToday = currentCompletions.includes(habit.id)
 
