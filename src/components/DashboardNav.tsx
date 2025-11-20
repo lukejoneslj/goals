@@ -68,32 +68,26 @@ export default function DashboardNav() {
 
           {/* Navigation Links - Desktop */}
           <div className="hidden md:flex items-center space-x-1">
-            {mainNavItems.map((item) => {
-              const Icon = item.icon
-              const isActive = pathname === item.href
-              return (
-                <Link 
-                  key={item.href} 
-                  href={item.href}
-                  className="cursor-pointer"
-                >
-                  <Button
-                    variant={isActive ? 'secondary' : 'ghost'}
-                    size="sm"
-                    className={`transition-all duration-300 cursor-pointer ${
-                      isActive 
-                        ? 'bg-secondary text-secondary-foreground shadow-sm' 
-                        : 'hover:bg-secondary/50 hover:shadow-sm hover:scale-105 active:scale-95'
-                    }`}
-                  >
-                    <Icon className={`w-4 h-4 mr-2 transition-transform duration-300 ${!isActive ? 'group-hover:scale-110' : ''}`} />
-                    <span className="transition-all duration-300">{item.label}</span>
-                  </Button>
-                </Link>
-              )
-            })}
+            {/* Dashboard - Always first */}
+            <Link 
+              href="/dashboard"
+              className="cursor-pointer"
+            >
+              <Button
+                variant={pathname === '/dashboard' ? 'secondary' : 'ghost'}
+                size="sm"
+                className={`transition-all duration-300 cursor-pointer ${
+                  pathname === '/dashboard'
+                    ? 'bg-secondary text-secondary-foreground shadow-sm' 
+                    : 'hover:bg-secondary/50 hover:shadow-sm hover:scale-105 active:scale-95'
+                }`}
+              >
+                <Home className={`w-4 h-4 mr-2 transition-transform duration-300`} />
+                <span className="transition-all duration-300">Dashboard</span>
+              </Button>
+            </Link>
 
-            {/* Activities Dropdown */}
+            {/* Activities Dropdown - Second */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -130,6 +124,32 @@ export default function DashboardNav() {
                 })}
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* Rest of main nav items (Progress, Compete) */}
+            {mainNavItems.filter(item => item.href !== '/dashboard').map((item) => {
+              const Icon = item.icon
+              const isActive = pathname === item.href
+              return (
+                <Link 
+                  key={item.href} 
+                  href={item.href}
+                  className="cursor-pointer"
+                >
+                  <Button
+                    variant={isActive ? 'secondary' : 'ghost'}
+                    size="sm"
+                    className={`transition-all duration-300 cursor-pointer ${
+                      isActive 
+                        ? 'bg-secondary text-secondary-foreground shadow-sm' 
+                        : 'hover:bg-secondary/50 hover:shadow-sm hover:scale-105 active:scale-95'
+                    }`}
+                  >
+                    <Icon className={`w-4 h-4 mr-2 transition-transform duration-300 ${!isActive ? 'group-hover:scale-110' : ''}`} />
+                    <span className="transition-all duration-300">{item.label}</span>
+                  </Button>
+                </Link>
+              )
+            })}
           </div>
 
           {/* User Menu */}
@@ -158,32 +178,26 @@ export default function DashboardNav() {
 
         {/* Mobile Navigation */}
         <div className="md:hidden pb-2 flex items-center space-x-1 overflow-x-auto">
-          {mainNavItems.map((item) => {
-            const Icon = item.icon
-            const isActive = pathname === item.href
-            return (
-              <Link 
-                key={item.href} 
-                href={item.href}
-                className="cursor-pointer"
-              >
-                <Button
-                  variant={isActive ? 'secondary' : 'ghost'}
-                  size="sm"
-                  className={`transition-all duration-300 whitespace-nowrap cursor-pointer ${
-                    isActive 
-                      ? 'bg-secondary text-secondary-foreground shadow-sm' 
-                      : 'hover:bg-secondary/50 hover:shadow-sm hover:scale-105 active:scale-95'
-                  }`}
-                >
-                  <Icon className="w-4 h-4 mr-1.5 transition-transform duration-300" />
-                  {item.label}
-                </Button>
-              </Link>
-            )
-          })}
+          {/* Dashboard - Always first */}
+          <Link 
+            href="/dashboard"
+            className="cursor-pointer"
+          >
+            <Button
+              variant={pathname === '/dashboard' ? 'secondary' : 'ghost'}
+              size="sm"
+              className={`transition-all duration-300 whitespace-nowrap cursor-pointer ${
+                pathname === '/dashboard'
+                  ? 'bg-secondary text-secondary-foreground shadow-sm' 
+                  : 'hover:bg-secondary/50 hover:shadow-sm hover:scale-105 active:scale-95'
+              }`}
+            >
+              <Home className="w-4 h-4 mr-1.5 transition-transform duration-300" />
+              Dashboard
+            </Button>
+          </Link>
 
-          {/* Activities Dropdown for Mobile */}
+          {/* Activities Dropdown for Mobile - Second */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -220,6 +234,32 @@ export default function DashboardNav() {
               })}
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* Rest of main nav items (Progress, Compete) */}
+          {mainNavItems.filter(item => item.href !== '/dashboard').map((item) => {
+            const Icon = item.icon
+            const isActive = pathname === item.href
+            return (
+              <Link 
+                key={item.href} 
+                href={item.href}
+                className="cursor-pointer"
+              >
+                <Button
+                  variant={isActive ? 'secondary' : 'ghost'}
+                  size="sm"
+                  className={`transition-all duration-300 whitespace-nowrap cursor-pointer ${
+                    isActive 
+                      ? 'bg-secondary text-secondary-foreground shadow-sm' 
+                      : 'hover:bg-secondary/50 hover:shadow-sm hover:scale-105 active:scale-95'
+                  }`}
+                >
+                  <Icon className="w-4 h-4 mr-1.5 transition-transform duration-300" />
+                  {item.label}
+                </Button>
+              </Link>
+            )
+          })}
         </div>
       </div>
     </nav>
