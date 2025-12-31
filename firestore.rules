@@ -102,5 +102,39 @@ service cloud.firestore {
       allow delete: if request.auth != null &&
         request.auth.uid == resource.data.userId;
     }
+
+    // Users can only read/write their own running plans
+    match /running_plans/{planId} {
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.userId is string &&
+        request.resource.data.userId.size() > 0;
+
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      allow delete: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+    }
+
+    // Users can only read/write their own running workouts
+    match /running_workouts/{workoutId} {
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.userId is string &&
+        request.resource.data.userId.size() > 0;
+
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+
+      allow delete: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+    }
   }
 }
