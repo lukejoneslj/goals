@@ -89,7 +89,7 @@ export default function RunningPage() {
       
       if (planError) throw planError
 
-      if (plan) {
+      if (plan && plan.raceType && plan.raceDate) {
         setActivePlan(plan)
         
         // Load workouts for this plan
@@ -99,10 +99,12 @@ export default function RunningPage() {
         setWorkouts(workoutsData || [])
         setShowOnboarding(false)
       } else {
+        // No valid plan found - show onboarding
         setShowOnboarding(true)
       }
     } catch (error) {
       console.error('Error loading running plan:', error)
+      setShowOnboarding(true)
     } finally {
       setLoadingPlan(false)
     }
@@ -554,6 +556,29 @@ export default function RunningPage() {
               >
                 <Edit className="w-4 h-4 mr-2" />
                 Adjust Plan
+              </Button>
+              <Button
+                variant="outline"
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                onClick={async () => {
+                  if (confirm('Are you sure you want to delete this plan and start over?')) {
+                    try {
+                      if (activePlan) {
+                        await runningWorkoutsService.deleteByPlan(activePlan.id)
+                        await runningPlansService.delete(activePlan.id)
+                        setActivePlan(null)
+                        setWorkouts([])
+                        setShowOnboarding(true)
+                      }
+                    } catch (error) {
+                      console.error('Error deleting plan:', error)
+                      alert('Failed to delete plan')
+                    }
+                  }
+                }}
+              >
+                <X className="w-4 h-4 mr-2" />
+                Start New Plan
               </Button>
             </div>
           </div>
