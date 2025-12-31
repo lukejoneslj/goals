@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { LogOut, Home, ListTodo, Flame, CheckSquare, Trophy, BarChart3, ChevronDown, Target } from 'lucide-react'
+import { LogOut, Home, ListTodo, Flame, CheckSquare, Trophy, BarChart3, ChevronDown, Target, TrendingUp } from 'lucide-react'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/useAuth'
 import Link from 'next/link'
@@ -35,6 +35,7 @@ export default function DashboardNav() {
     { href: '/goals', label: 'Goals', icon: ListTodo },
     { href: '/streaks', label: 'Streaks', icon: Flame },
     { href: '/todos', label: 'To-Dos', icon: CheckSquare },
+    { href: '/running', label: 'Running', icon: TrendingUp },
   ]
 
   // Check if any activity item is active

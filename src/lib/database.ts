@@ -11,7 +11,7 @@ import {
   orderBy,
   onSnapshot
 } from 'firebase/firestore'
-import { db, Goal, ActionItem, Habit, HabitCompletion, UserELO, Todo, getTimestamp } from './firebase'
+import { db, Goal, ActionItem, Habit, HabitCompletion, UserELO, Todo, RunningPlan, RunningWorkout, getTimestamp } from './firebase'
 
 // Helper function to ensure Firebase is initialized
 const ensureFirebase = () => {
@@ -839,6 +839,283 @@ export const todosService = {
       console.error('Error fetching completed todos in range:', error)
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
       return { data: [], error: { message: `Failed to fetch todos: ${errorMessage}` } }
+    }
+  }
+}
+
+// Running Plans collection operations
+export const runningPlansService = {
+  // Create a new running plan
+  async create(planData: Omit<RunningPlan, 'id' | 'createdAt' | 'updatedAt'>) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const docRef = await addDoc(collection(firestoreDb, 'running_plans'), {
+        ...removeUndefined(planData),
+        createdAt: getTimestamp(),
+        updatedAt: getTimestamp()
+      })
+      return { data: { id: docRef.id, ...planData }, error: null }
+    } catch (error) {
+      console.error('Error creating running plan:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: null, error: { message: `Failed to create running plan: ${errorMessage}` } }
+    }
+  },
+
+  // Get all running plans for a user
+  async getAll(userId: string) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const q = query(
+        collection(firestoreDb, 'running_plans'),
+        where('userId', '==', userId)
+      )
+      const querySnapshot = await getDocs(q)
+      const plans = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as RunningPlan[]
+
+      // Sort by createdAt descending
+      plans.sort((a, b) => {
+        const dateA = new Date(a.createdAt).getTime()
+        const dateB = new Date(b.createdAt).getTime()
+        return dateB - dateA
+      })
+
+      return { data: plans, error: null }
+    } catch (error) {
+      console.error('Error fetching running plans:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: [], error: { message: `Failed to fetch running plans: ${errorMessage}` } }
+    }
+  },
+
+  // Get active running plan for a user
+  async getActive(userId: string) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const q = query(
+        collection(firestoreDb, 'running_plans'),
+        where('userId', '==', userId),
+        where('status', '==', 'active')
+      )
+      const querySnapshot = await getDocs(q)
+      
+      if (querySnapshot.empty) {
+        return { data: null, error: null }
+      }
+
+      const doc = querySnapshot.docs[0]
+      return { data: { id: doc.id, ...doc.data() } as RunningPlan, error: null }
+    } catch (error) {
+      console.error('Error fetching active running plan:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: null, error: { message: `Failed to fetch active plan: ${errorMessage}` } }
+    }
+  },
+
+  // Get a single running plan
+  async get(planId: string) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const docRef = doc(firestoreDb, 'running_plans', planId)
+      const docSnap = await getDoc(docRef)
+
+      if (docSnap.exists()) {
+        return { data: { id: docSnap.id, ...docSnap.data() } as RunningPlan, error: null }
+      } else {
+        return { data: null, error: { message: 'Running plan not found' } }
+      }
+    } catch (error) {
+      console.error('Error fetching running plan:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: null, error: { message: `Failed to fetch plan: ${errorMessage}` } }
+    }
+  },
+
+  // Update a running plan
+  async update(planId: string, updates: Partial<Omit<RunningPlan, 'id' | 'createdAt'>>) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const docRef = doc(firestoreDb, 'running_plans', planId)
+      await updateDoc(docRef, {
+        ...removeUndefined(updates),
+        updatedAt: getTimestamp()
+      })
+      return { data: { id: planId, ...updates }, error: null }
+    } catch (error) {
+      console.error('Error updating running plan:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: null, error: { message: `Failed to update plan: ${errorMessage}` } }
+    }
+  },
+
+  // Delete a running plan
+  async delete(planId: string) {
+    try {
+      const firestoreDb = ensureFirebase()
+      await deleteDoc(doc(firestoreDb, 'running_plans', planId))
+      return { data: { id: planId }, error: null }
+    } catch (error) {
+      console.error('Error deleting running plan:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: null, error: { message: `Failed to delete plan: ${errorMessage}` } }
+    }
+  }
+}
+
+// Running Workouts collection operations
+export const runningWorkoutsService = {
+  // Create a new workout
+  async create(workoutData: Omit<RunningWorkout, 'id' | 'createdAt' | 'updatedAt'>) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const docRef = await addDoc(collection(firestoreDb, 'running_workouts'), {
+        ...removeUndefined(workoutData),
+        createdAt: getTimestamp(),
+        updatedAt: getTimestamp()
+      })
+      return { data: { id: docRef.id, ...workoutData }, error: null }
+    } catch (error) {
+      console.error('Error creating workout:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: null, error: { message: `Failed to create workout: ${errorMessage}` } }
+    }
+  },
+
+  // Batch create workouts
+  async batchCreate(workouts: Omit<RunningWorkout, 'id' | 'createdAt' | 'updatedAt'>[]) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const promises = workouts.map(workout =>
+        addDoc(collection(firestoreDb, 'running_workouts'), {
+          ...removeUndefined(workout),
+          createdAt: getTimestamp(),
+          updatedAt: getTimestamp()
+        })
+      )
+      await Promise.all(promises)
+      return { error: null }
+    } catch (error) {
+      console.error('Error batch creating workouts:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { error: { message: `Failed to create workouts: ${errorMessage}` } }
+    }
+  },
+
+  // Get all workouts for a plan
+  async getByPlan(planId: string) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const q = query(
+        collection(firestoreDb, 'running_workouts'),
+        where('planId', '==', planId)
+      )
+      const querySnapshot = await getDocs(q)
+      const workouts = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as RunningWorkout[]
+
+      // Sort by week and day
+      workouts.sort((a, b) => {
+        if (a.week !== b.week) return a.week - b.week
+        return a.day - b.day
+      })
+
+      return { data: workouts, error: null }
+    } catch (error) {
+      console.error('Error fetching workouts:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: [], error: { message: `Failed to fetch workouts: ${errorMessage}` } }
+    }
+  },
+
+  // Get workouts for a specific week
+  async getByWeek(planId: string, week: number) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const q = query(
+        collection(firestoreDb, 'running_workouts'),
+        where('planId', '==', planId),
+        where('week', '==', week)
+      )
+      const querySnapshot = await getDocs(q)
+      const workouts = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as RunningWorkout[]
+
+      workouts.sort((a, b) => a.day - b.day)
+
+      return { data: workouts, error: null }
+    } catch (error) {
+      console.error('Error fetching week workouts:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: [], error: { message: `Failed to fetch workouts: ${errorMessage}` } }
+    }
+  },
+
+  // Update a workout
+  async update(workoutId: string, updates: Partial<RunningWorkout>) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const docRef = doc(firestoreDb, 'running_workouts', workoutId)
+      await updateDoc(docRef, {
+        ...removeUndefined(updates),
+        updatedAt: getTimestamp()
+      })
+      return { data: { id: workoutId, ...updates }, error: null }
+    } catch (error) {
+      console.error('Error updating workout:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { data: null, error: { message: `Failed to update workout: ${errorMessage}` } }
+    }
+  },
+
+  // Complete a workout
+  async complete(
+    workoutId: string,
+    actualTime?: string,
+    actualDistance?: number,
+    userNotes?: string
+  ) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const docRef = doc(firestoreDb, 'running_workouts', workoutId)
+      await updateDoc(docRef, {
+        isCompleted: true,
+        completedAt: getTimestamp(),
+        actualTime,
+        actualDistance,
+        userNotes,
+        updatedAt: getTimestamp()
+      })
+      return { error: null }
+    } catch (error) {
+      console.error('Error completing workout:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { error: { message: `Failed to complete workout: ${errorMessage}` } }
+    }
+  },
+
+  // Delete all workouts for a plan
+  async deleteByPlan(planId: string) {
+    try {
+      const firestoreDb = ensureFirebase()
+      const q = query(
+        collection(firestoreDb, 'running_workouts'),
+        where('planId', '==', planId)
+      )
+      const querySnapshot = await getDocs(q)
+      const deletePromises = querySnapshot.docs.map(doc => deleteDoc(doc.ref))
+      await Promise.all(deletePromises)
+      return { error: null }
+    } catch (error) {
+      console.error('Error deleting workouts:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      return { error: { message: `Failed to delete workouts: ${errorMessage}` } }
     }
   }
 }

@@ -153,3 +153,54 @@ export type Todo = {
   createdAt: string
   updatedAt?: string
 }
+
+// Running Plan Types
+export type WorkoutTemplate = {
+  week: number
+  day: number
+  date: string
+  workoutType: 'easy_run' | 'long_run' | 'tempo_run' | 'intervals' | 'recovery' | 'rest' | 'race'
+  distance?: number
+  duration?: string
+  description: string
+  notes?: string
+}
+
+export type RunningPlan = {
+  id: string
+  userId: string
+  raceType: string // e.g., "5K", "10K", "Half Marathon", "Marathon"
+  raceDate: string // Target race date
+  previousRaceTime?: string // Previous time for this race distance
+  mileTime?: string // Current mile time
+  sixMileTime?: string // Current 6-mile time
+  restDays: string[] // e.g., ["Sunday", "Wednesday"]
+  concerns: string[] // User's concerns/worries about the race
+  additionalInfo?: string // Any other relevant information
+  plan: WorkoutTemplate[] // The generated workout plan template
+  currentWeek: number // Current week in the training plan
+  status: 'active' | 'completed' | 'paused'
+  createdAt: string
+  updatedAt?: string
+}
+
+export type RunningWorkout = {
+  id: string
+  planId: string
+  userId: string
+  week: number
+  day: number // Day of the week (1-7)
+  date: string // Specific date for this workout
+  workoutType: 'easy_run' | 'long_run' | 'tempo_run' | 'intervals' | 'recovery' | 'rest' | 'race'
+  distance?: number // Distance in miles
+  duration?: string // Expected duration or time goal
+  description: string // Detailed workout description
+  notes?: string // AI-generated notes or tips
+  isCompleted: boolean
+  completedAt?: string
+  actualTime?: string // User's actual completion time
+  actualDistance?: number // User's actual distance
+  userNotes?: string // User's notes after completing
+  createdAt: string
+  updatedAt?: string
+}
