@@ -1005,12 +1005,13 @@ export const runningWorkoutsService = {
   },
 
   // Get all workouts for a plan
-  async getByPlan(planId: string) {
+  async getByPlan(planId: string, userId: string) {
     try {
       const firestoreDb = ensureFirebase()
       const q = query(
         collection(firestoreDb, 'running_workouts'),
-        where('planId', '==', planId)
+        where('planId', '==', planId),
+        where('userId', '==', userId)
       )
       const querySnapshot = await getDocs(q)
       const workouts = querySnapshot.docs.map(doc => ({
@@ -1033,12 +1034,13 @@ export const runningWorkoutsService = {
   },
 
   // Get workouts for a specific week
-  async getByWeek(planId: string, week: number) {
+  async getByWeek(planId: string, week: number, userId: string) {
     try {
       const firestoreDb = ensureFirebase()
       const q = query(
         collection(firestoreDb, 'running_workouts'),
         where('planId', '==', planId),
+        where('userId', '==', userId),
         where('week', '==', week)
       )
       const querySnapshot = await getDocs(q)
@@ -1101,12 +1103,13 @@ export const runningWorkoutsService = {
   },
 
   // Delete all workouts for a plan
-  async deleteByPlan(planId: string) {
+  async deleteByPlan(planId: string, userId: string) {
     try {
       const firestoreDb = ensureFirebase()
       const q = query(
         collection(firestoreDb, 'running_workouts'),
-        where('planId', '==', planId)
+        where('planId', '==', planId),
+        where('userId', '==', userId)
       )
       const querySnapshot = await getDocs(q)
       const deletePromises = querySnapshot.docs.map(doc => deleteDoc(doc.ref))

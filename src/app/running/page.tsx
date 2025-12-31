@@ -93,7 +93,7 @@ export default function RunningPage() {
         setActivePlan(plan)
         
         // Load workouts for this plan
-        const { data: workoutsData, error: workoutsError } = await runningWorkoutsService.getByPlan(plan.id)
+        const { data: workoutsData, error: workoutsError } = await runningWorkoutsService.getByPlan(plan.id, user.uid)
         if (workoutsError) throw workoutsError
         
         setWorkouts(workoutsData || [])
@@ -238,7 +238,7 @@ export default function RunningPage() {
       )
 
       // Delete old workouts
-      await runningWorkoutsService.deleteByPlan(activePlan.id)
+      await runningWorkoutsService.deleteByPlan(activePlan.id, user.uid)
 
       // Update plan
       await runningPlansService.update(activePlan.id, {
@@ -563,8 +563,8 @@ export default function RunningPage() {
                 onClick={async () => {
                   if (confirm('Are you sure you want to delete this plan and start over?')) {
                     try {
-                      if (activePlan) {
-                        await runningWorkoutsService.deleteByPlan(activePlan.id)
+                      if (activePlan && user?.uid) {
+                        await runningWorkoutsService.deleteByPlan(activePlan.id, user.uid)
                         await runningPlansService.delete(activePlan.id)
                         setActivePlan(null)
                         setWorkouts([])
